@@ -1,13 +1,346 @@
-body {
+/* Reset styles */
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* General styles */
+body {
+  font-family: 'Rubik', sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header styles */
+.header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+}
+
+.header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+}
+
+.nav-links li {
+  margin-left: 20px;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #ccc;
+}
+
+/* Main content styles */
+.main-content {
+  padding: 80px 0;
+  text-align: center;
+}
+
+.hero-section {
+  background-color: #f4f4f4;
+  padding: 100px 0;
+}
+
+.hero-section h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.hero-section p {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.cta-btn {
+  display: inline-block;
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.cta-btn:hover {
+  background-color: #555;
+}
+
+.about-section,
+.services-section {
+  padding: 80px 0;
+}
+
+.section-heading {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+.about-section p,
+.services-section ul {
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.services-section ul {
+  list-style: none;
+}
+
+.services-section li {
+  margin-bottom: 10px;
+}
+
+/* Footer styles */
+.footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.page-body{
+}
+
+.form-builder-page-content{
+  display: flex;
+}
+.left-bar{
+  flex-direction: column;
+  display: flex;
+  width: 349px;
+  height: calc(-53px + 100vh);
+  box-sizing: border-box;
+  overflow-y: auto;
+  position: sticky;
+  top: 53px;
+  background-color: #f5f5f5;
+}
+
+.form-builder-components{
+  padding: 12px;
+}
+.form-builder-part{
+  background-color: #f5f5f5;
+  padding: 0px 20px;
+  flex: 1 1 0%;
+}
+.form-constructor-empty-state{
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  text-align: center;
+  padding: 51px;
+  margin-top: 12px;
+  border: 1px dashed rgb(211, 221, 225);
+  border-radius: 8px;
+  background-color: rgb(247, 248, 248);
+}
+.empty-state-icon{
+}
+.empty-state-title{
+  font-size: 21px;
+  line-height: 32px;
+  font-weight: 400;
+}
+.empty-state-subtitle{
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  color: rgb(69, 85, 96);
+}
+.form-constructor{
+  display: flex;
+  flex-direction: column;
+  background: #FFF;
+  height: 100%;
+  padding: 20px 0px;
+}
+
+.section-group {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.toggle-icon {
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.open {
+  transform: rotate(180deg);
+}
+
+.section-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 10px;
+}
+.form-builder-component{
+  font-size: 14px;
+  line-height: 19px;
+  position: relative;
+  -moz-box-align: center;
+  align-items: center;
+  flex-basis: calc(50% - 6px);
+  display: flex;
+  margin-bottom: 12px;
+  padding: 7px 12px 7px 9px;
+  box-sizing: border-box;
+  border-left: 4px solid rgb(211, 221, 225);
+    border-left-color: rgb(211, 221, 225);
+  border-radius: 4px;
+  color: rgb(69, 85, 96);
+  background-color: rgb(255, 255, 255);
+  user-select: none;
+  transition: opacity 200ms ease-in-out 0s, box-shadow 200ms ease-in-out 0s, border-left-color 200ms ease-in-out 0s;
+  cursor: move;
+}
+.form-builder-component:hover{
+  border-left-color: #a7d39f;
+}
+
+
+
+.form-field-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  margin: 0px calc(18.5px);
+}
+.form-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  margin: 0px calc(18.5px);
+}
+.form-component-title{
+  -moz-box-align: center;
+  align-items: center;
+  flex-wrap: wrap;
+  display: flex;
+  min-height: 5px;
+  margin-top: -5px;
+  margin-bottom: 5px;
+  color: rgb(69, 85, 96);
+  font-size: 14px;
+  font-weight: 600;
+}
+.form-component-input-div{
+  -moz-box-align: center;
+  align-items: center;
+  display: flex;
+  width: 100%;
+  padding: 7px 12px;
+  box-sizing: border-box;
+  border: 1px solid rgb(211, 221, 225);
+  border-radius: 4px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(69, 85, 96);
+}
+.form-component-name-fields{
+
+}
+.short{
+  height: 31px;
+}
+.long{
+  height: 82px;
+  overflow-y: auto;
+}
+.form-short-answer{
+  position: relative;
+  padding: 8px 13px 13px;
+  box-sizing: border-box;
+  border: 2px solid rgb(211, 221, 225);
+  border-radius: 4px;
+  background-color: rgb(255, 255, 255);
+}
+
+
+.remove-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0; /* Initially hide the remove button */
+  transition: opacity 0.3s ease;
+}
+
+.form-submit-button-container{
+  text-align: center;
+}
+.form-submit-button{
+  padding: 12px 55px;
+  border: medium;
+  border-radius: 4px;
+  background-color: rgb(69, 85, 96);
+  color: rgb(255, 255, 255);
+}
+
+.form-field:hover .remove-button {
+  opacity: 1; /* Show the remove button on hover */
+}
+
+.remove-icon {
+  width: 22px;
+  height: 22px;
+  font-size: 16px;
+  color: #ff0000; /* Red color for the remove icon */
+}
+.drop-area {
+  width: 100%;
+  height: 10px;
+  background-color: #fff;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.drop-over {
+  background-color: blue;
+}
+.drop-top{
+  margin-bottom: 5px;
+}
+.drop-bottom{
+  margin-top: 5px;
 }
