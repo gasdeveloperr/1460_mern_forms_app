@@ -124,9 +124,136 @@ body {
   text-align: center;
 }
 
-.page-body{
+.dashboard-page-heading{
+  display: flex;
+  -moz-box-pack: justify;
+  justify-content: space-between;
+  margin: 31px 31px 0px;
+}
+.dashboard-page-title{
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: 400;
+  margin: 0px;
+  color: rgb(21, 35, 43);
+}
+.dashboard-page-content{
+  display: flex;
+  justify-content: center;
+  padding: 20px 100px;
+}
+.dashboard-form-list{
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  list-style-type: none;
+  padding: 0;
 }
 
+.form-list-item {
+  background-color: #f4f4f4;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-list-item a {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.form-list-item a:hover {
+  color: #666;
+}
+
+/* Buttons */
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.form-actions a {
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #fff;
+}
+
+.form-actions .edit {
+  background-color: #4CAF50;
+}
+
+.form-actions .fill {
+  background-color: #2196F3;
+}
+
+.form-actions a:hover {
+  opacity: 0.8;
+}
+
+/* New Form Button */
+.new-form-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  -moz-box-align: center;
+  align-items: center;
+  display: inline-flex;
+  border-radius: 4px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  transition-duration: 200ms;
+  transition-property: color, background-color;
+  transition-timing-function: ease-in-out;
+}
+
+.new-form-btn:hover {
+  opacity: 0.8;
+}
+
+
+.page-body{
+}
+.form-builder-page-header{
+  z-index: 4;
+  -moz-box-align: center;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  padding: 12px;
+  border-bottom: 1px solid rgb(211, 221, 225);
+  background-color: rgb(255, 255, 255);
+}
+.form-builder-page-header-button{
+  -moz-box-align: center;
+  align-items: center;
+  display: inline-flex;
+  border-radius: 4px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  transition-duration: 200ms;
+  transition-property: color, background-color;
+  transition-timing-function: ease-in-out;
+  padding: 12px 12px;
+  color: rgb(255, 255, 255);
+  background-color: rgb(1, 151, 236);
+  cursor: pointer;
+}
+.form-builder-page-header-button:hover {
+  opacity: 0.8;
+}
 .form-builder-page-content{
   display: flex;
 }
