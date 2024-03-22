@@ -1,47 +1,56 @@
-import React, { useEffect, useState } from 'react';
-import { useDrop } from 'react-dnd';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
 import RemoveButton from './RemoveButton';
-import useOnclickOutside from "react-cool-onclickoutside"
+import { OutsideClickContext } from './OutsideClickContext';
+import FieldDropZone from './FieldDropZone';
 
-const FormBuilderField = ({field, index, isDragging, handleDrop, removeFormField, setEditor}) => {
+const FormBuilderField = ({field, index, isDragging, setIsDragging, 
+  handleDrop, removeFormField, 
+  editingField, setEditingField}) => {
 
-  const accept_types_array = ['short_answer', 'long_answer', 'name', 'address', 'email', 'phone',
-  'number', 'dropdown', 'radio', 'checkbox', 'credit_card', 'date_time', 'file_upload', 
-  'matrix', 'description', 'embed_code', 'event_product', 'signature', 'rating', 
-  'section']
-
+  const ref = useRef(null);
   
-  const formFieldRef = useOnclickOutside(() => {
-    setEditor('');
-  })
+  const { formFieldRef, registerOutsideClickHandler, unregisterOutsideClickHandler } = useContext(OutsideClickContext);
 
-  const useDropArea = (index, onDrop) => {
-    const [{ isOver }, drop] = useDrop({
-      accept:accept_types_array,
-      drop: (item) => onDrop(item, index),
-      collect: (monitor) => ({
-        isOver: monitor.isOver(),
-      }),
-    });
-  
-    return { isOver, drop };
+  const handleOutsideClick = () => {
+    setEditingField(prev => ({id: ''}));
   };
+
+  useEffect(() => {
+    registerOutsideClickHandler(handleOutsideClick);
+    return () => {
+      unregisterOutsideClickHandler(handleOutsideClick);
+    };
+  }, []);
+
+  const [{ isFieldDragging }, drag] = useDrag({
+    type: field.type,
+    item: { ...field, index },
+    collect: (monitor) => ({
+      isFieldDragging: monitor.isDragging()
+    })
+  });
+
+  useEffect(() => {
+    setIsDragging(isFieldDragging)
+  }, [isFieldDragging])
+
+  const opacity = isFieldDragging ? 0.7 : 1;
+
 
   const onClickEditorHandler = (fieldId) => {
     console.log('clicked', fieldId);
-    setEditor(fieldId)
+    setEditingField(fieldId)
   }
-
-  const { isOver: isOverTop, drop: dropTop } = useDropArea(index, handleDrop);
-  const { isOver: isOverBottom, drop: dropBottom } = useDropArea(index + 1, handleDrop);
+ 
+  drag(ref);
 
     return (
-      <div key={field.id} className="form-field-container">
-        <div
-          ref={dropTop}
-          className={`drop-area drop-top ${isDragging ? 'drop-over' : ''}`}
-        />
-        <div className="form-field" ref={formFieldRef} onClick={() => onClickEditorHandler(field.id)}>
+      <div key={field.id}  style={{ opacity }} className="form-field-container">
+        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'top'}/>
+        <div className={`form-field ${field.id === editingField.id ? 'chosen-field' : '' }`} ref={formFieldRef} 
+        onClick={() => onClickEditorHandler(field)}>
+          <div ref={ref}>
           {field.type === 'short_answer' && (
             <div className="form-short-answer">
               <div className='form-component-title'>
@@ -76,7 +85,6 @@ const FormBuilderField = ({field, index, isDragging, handleDrop, removeFormField
                 </div>
               </div>
               <div className="form-component-name-fields">
-                
                 <div className='form-component-label'>
                   {field.required && <span>*</span>}
                   {field.title}
@@ -90,10 +98,8 @@ const FormBuilderField = ({field, index, isDragging, handleDrop, removeFormField
           )}
           <RemoveButton onClick={() => removeFormField(field.id)} />
         </div>
-        <div
-          ref={dropBottom}
-          className={`drop-area drop-bottom ${isDragging ? 'drop-over' : ''}`}
-        />
+        </div>
+        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'bottom'}/>
       </div>
     );
 };

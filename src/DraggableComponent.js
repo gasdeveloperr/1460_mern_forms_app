@@ -7,6 +7,7 @@ const DraggableComponent = ({ type, title, onDragStart, onDragEnd }) => {
     type: type,
     item: {
       type: type, title: title,
+      index:'bar_component',
       onDragStart,
       onDragEnd,
     },

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import DraggableComponent from "./DraggableComponent";
+import FieldBuilderEditor from "./FormBuilderEditor";
 
-const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, editorMode}) => {
+const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, editingField, setEditingField}) => {
 
   const handleDragStart = () => {
     setIsDragging(true);
@@ -30,8 +31,8 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, editorMode}) =
   return (
     <div className='left-bar'>
       {
-        editorMode !== '' ? 
-        <></>
+        editingField && editingField.id !== '' ? 
+        <FieldBuilderEditor editingField={editingField} setEditingField={setEditingField}/>
         :
         <div className="form-builder-components">
           <div className="section-group">

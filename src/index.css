@@ -374,10 +374,18 @@ body {
 }
 .form-field {
   position: relative;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   flex: 0 1 auto;
   margin: 0px calc(18.5px);
+  padding: 8px 13px 13px;
+  border: 2px solid rgb(211, 221, 225);
+  border-radius: 4px;
+  cursor: move;
+}
+.chosen-field{
+  border: 2px solid rgb(33, 181, 115);
 }
 .form-component-title{
   -moz-box-align: center;
@@ -404,7 +412,13 @@ body {
   color: rgb(69, 85, 96);
 }
 .form-component-name-fields{
-
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.form-component-label{
+  font-size: 13px;
+  padding: 0px 6px;
 }
 .short{
   height: 31px;
@@ -415,10 +429,7 @@ body {
 }
 .form-short-answer{
   position: relative;
-  padding: 8px 13px 13px;
   box-sizing: border-box;
-  border: 2px solid rgb(211, 221, 225);
-  border-radius: 4px;
   background-color: rgb(255, 255, 255);
 }
 
@@ -460,7 +471,6 @@ body {
   height: 10px;
   background-color: #fff;
   opacity: 0.5;
-  pointer-events: none;
 }
 .drop-over {
   background-color: blue;

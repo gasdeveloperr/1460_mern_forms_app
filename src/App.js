@@ -5,6 +5,7 @@ import HomePage from './HomePage';
 import FormBuilder from './FormBuilder';
 import DashboardPage from './DashboardPage';
 import FormUsingPage from './FormUsingPage';
+import { OutsideClickProvider } from './OutsideClickContext';
 
 
 
@@ -14,15 +15,17 @@ const App = () => {
       <DndProvider backend={HTML5Backend}>
       <div className="App">
         <div className='content'>
-          <Routes >
-            <Route path='/' element={<HomePage />}/>
-            {/* <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} /> */}
-            
-            <Route path="/forms/builder/:formId?" element={<FormBuilder />} />
-            <Route path="/forms/dashboard" element={<DashboardPage />} />
-            <Route path="/forms/:formId" element={<FormUsingPage />} />
-          </Routes >
+          <OutsideClickProvider>
+            <Routes >
+              <Route path='/' element={<HomePage />}/>
+              {/* <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} /> */}
+              
+              <Route path="/forms/builder/:formId?" element={<FormBuilder />} />
+              <Route path="/forms/dashboard" element={<DashboardPage />} />
+              <Route path="/forms/:formId" element={<FormUsingPage />} />
+            </Routes >
+          </OutsideClickProvider>
         </div>
       </div>
       </DndProvider>
