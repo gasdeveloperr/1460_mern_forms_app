@@ -266,7 +266,7 @@ body {
   overflow-y: auto;
   position: sticky;
   top: 53px;
-  background-color: #f5f5f5;
+  border-right: 1px solid #c4c4c4;
 }
 
 .form-builder-components{
@@ -352,6 +352,9 @@ body {
   box-sizing: border-box;
   border-left: 4px solid rgb(211, 221, 225);
     border-left-color: rgb(211, 221, 225);
+  border-top: 1px solid rgb(211, 221, 225);
+  border-right: 1px solid rgb(211, 221, 225);
+  border-bottom: 1px solid rgb(211, 221, 225);
   border-radius: 4px;
   color: rgb(69, 85, 96);
   background-color: rgb(255, 255, 255);
@@ -360,10 +363,8 @@ body {
   cursor: move;
 }
 .form-builder-component:hover{
-  border-left-color: #a7d39f;
+  border-left-color: #a3d49a;
 }
-
-
 
 .form-field-container {
   position: relative;
