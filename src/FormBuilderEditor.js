@@ -1,8 +1,18 @@
 import { useContext } from 'react';
-import './FieldBuilderEditor.css';
+import './FormBuilderEditor.css';
 import { OutsideClickContext } from './OutsideClickContext';
+import { titles_to_types_object } from './consts';
 
 const FieldBuilderEditor = ({editingField, setEditingField}) => {
+
+  const changeFieldTitleHandler = (e) => {
+    setEditingField({...editingField, title: e.target.value})
+    //console.log('change editingField : ', editingField)
+  }
+  const changeFieldRequiredHandler = (e) => {
+    setEditingField({...editingField, required: !editingField.required})
+    console.log('change editingField : ', editingField)
+  }
 
   const { fieldEditorRef } = useContext(OutsideClickContext);
   return (
@@ -10,7 +20,7 @@ const FieldBuilderEditor = ({editingField, setEditingField}) => {
     { editingField && editingField.id !== '' ?
     <>
       <div className="field-editor__header">
-        <span>{editingField.title}</span>
+        <span>{titles_to_types_object[editingField.type]}</span>
         <div className="field-editor__actions">
           <button className="field-editor__action-btn">
             <i className="fas fa-edit"></i>
@@ -27,24 +37,27 @@ const FieldBuilderEditor = ({editingField, setEditingField}) => {
         <span className="field-editor__section-title">General</span>
         <div className="field-editor__field">
           <label className="field-editor__label">FIELD LABEL</label>
-          <input type="text" placeholder={editingField.title} className="field-editor__input" />
+          <input type="text" value={editingField.title} onChange={e => changeFieldTitleHandler(e)} className="field-editor__input" />
         </div>
-        <div className="field-editor__checkbox-group">
-          <div className="field-editor__checkbox">
-            <input type="checkbox" id="required" />
-            <label htmlFor="required">Required</label>
+        <div className="field-editor_checkbox-group">
+          <div className='field-editor_checkbox_container'>
+            <label htmlFor="required" className="field-editor-label">
+              <input type="checkbox" id="required" className='field-editor_checkbox' 
+              checked={editingField.required} onChange={changeFieldRequiredHandler}/>
+              Required
+            </label>
           </div>
-          <div className="field-editor__checkbox">
-            <input type="checkbox" id="read-only" />
-            <label htmlFor="read-only">Read-only</label>
+          <div className='field-editor_checkbox_container'>
+            <label className="field-editor-label">
+              <input type="checkbox" id="read-only" className='field-editor_checkbox' />
+              <label htmlFor="read-only">Read-only</label>
+            </label>
           </div>
-          <div className="field-editor__checkbox">
-            <input type="checkbox" id="hidden" />
-            <label htmlFor="hidden">Hidden</label>
-          </div>
-          <div className="field-editor__checkbox">
-            <input type="checkbox" id="hide-label" />
-            <label htmlFor="hide-label">Hide Label</label>
+          <div className='field-editor_checkbox_container'>
+            <label className="field-editor-label">
+              <input type="checkbox" id="hide-label" className='field-editor_checkbox' />
+              <label htmlFor="hide-label">Hide Label</label>
+            </label>
           </div>
         </div>
       </div>

@@ -1,27 +1,35 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import RemoveButton from './RemoveButton';
 import { OutsideClickContext } from './OutsideClickContext';
 import FieldDropZone from './FieldDropZone';
+import isEqual from 'lodash/isEqual';
 
 const FormBuilderField = ({field, index, isDragging, setIsDragging, 
-  handleDrop, removeFormField, 
+  handleDrop, 
+  updateFormField, removeFormField, 
   editingField, setEditingField}) => {
 
   const ref = useRef(null);
   
   const { formFieldRef, registerOutsideClickHandler, unregisterOutsideClickHandler } = useContext(OutsideClickContext);
 
-  const handleOutsideClick = () => {
-    setEditingField(prev => ({id: ''}));
-  };
+  const handleOutsideClick = useCallback(() => {
+
+    if (field.id === editingField.id) {
+      if (!isEqual(field, editingField)) {
+        updateFormField(field.id, editingField);
+      }
+      setEditingField({ id: '' });
+    }
+  }, [field, editingField, updateFormField, setEditingField]);
 
   useEffect(() => {
     registerOutsideClickHandler(handleOutsideClick);
     return () => {
       unregisterOutsideClickHandler(handleOutsideClick);
     };
-  }, []);
+  }, [handleOutsideClick]);
 
   const [{ isFieldDragging }, drag] = useDrag({
     type: field.type,
@@ -39,7 +47,6 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
 
 
   const onClickEditorHandler = (fieldId) => {
-    console.log('clicked', fieldId);
     setEditingField(fieldId)
   }
  
@@ -71,6 +78,46 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               </div>
             </div>
           )}
+          {field.type === 'address' && (
+            <div className="form-short-answer">
+              <div className='form-component-title'>
+                {field.required && <span>*</span>}
+                {field.title}
+              </div>
+              <div className='form-component-input-div short'>
+              </div>
+            </div>
+          )}
+          {field.type === 'email' && (
+            <div className="form-short-answer">
+              <div className='form-component-title'>
+                {field.required && <span>*</span>}
+                {field.title}
+              </div>
+              <div className='form-component-input-div short'>
+              </div>
+            </div>
+          )}
+          {field.type === 'phone' && (
+            <div className="form-short-answer">
+              <div className='form-component-title'>
+                {field.required && <span>*</span>}
+                {field.title}
+              </div>
+              <div className='form-component-input-div short'>
+              </div>
+            </div>
+          )}
+          {field.type === 'number' && (
+            <div className="form-short-answer">
+              <div className='form-component-title'>
+                {field.required && <span>*</span>}
+                {field.title}
+              </div>
+              <div className='form-component-input-div short'>
+              </div>
+            </div>
+          )}
           {field.type === 'name' && (
             <div className="form-component-name">
               <div className='form-component-title'>
@@ -87,11 +134,11 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               <div className="form-component-name-fields">
                 <div className='form-component-label'>
                   {field.required && <span>*</span>}
-                  {field.title}
+                  {field.labels[0]}
                 </div>
                 <div className='form-component-label'>
                   {field.required && <span>*</span>}
-                  {field.title}
+                  {field.labels[1]}
                 </div>
               </div>
             </div>

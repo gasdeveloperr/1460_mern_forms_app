@@ -4,7 +4,7 @@ import Header from './Header';
 import FormBuilderSideBar from './FormBuilderSideBar';
 import FormBuilderField from './FormBuilderField';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { accept_types_array } from './consts';
 import isEqual from 'lodash/isEqual';
 
@@ -28,6 +28,7 @@ const FormBuilder = () => {
 
   useEffect(() => {
       if (prevFormFields && !isEqual(prevFormFields, formFields)) {
+        updateForm(formId)
         console.log('formFields update goes brrrrr>.',prevFormFields, formFields )
       }
 
@@ -63,7 +64,6 @@ const FormBuilder = () => {
       const response = await axios.post('http://localhost:8000/api/forms', {
         title: formTitle,
         fields: formFields,
-        // Add other form data properties
       });
       console.log('Form saved successfully:', response.data);
       // Handle success, show a success message, redirect, etc.
@@ -88,17 +88,13 @@ const FormBuilder = () => {
         title: formTitle,
         fields: formFields
       });
-      console.log('Form updated successfully:', response.data);
+      //console.log('Form updated successfully:', response.data);
     } catch (error) {
       if (error.response) {
-        // The request was made and the server responded with a status code
         console.error('Error saving form:', error.response.data);
-        // Handle specific error cases based on the response status code
       } else if (error.request) {
-        // The request was made but no response was received
         console.error('No response received from the server');
       } else {
-        // Something happened in setting up the request
         console.error('Error:', error.message);
       }
     }
@@ -140,9 +136,11 @@ const FormBuilder = () => {
   };
 
   const updateFormField = (id, updatedField) => {
+    //console.log('update field params : ', id, updatedField)
     const updatedFormFields = formFields.map((field) =>
       field.id === id ? updatedField : field
     );
+    //console.log('updatedFormFields : ', updatedFormFields)
     setFormFields(updatedFormFields);
   };
 
@@ -167,7 +165,28 @@ const FormBuilder = () => {
       <div className='page-body'>
         <div className='form-builder-page-header'>
           <h2>{formTitle}</h2>
+          <Link 
+            className='form-builder-page-header-button'
+            to={`/forms/live/${formId}`}
+            target="_blank"
+            rel="noopener noreferrer">
+            Live form
+          </Link>
           <div className='form-builder-page-header-button' onClick={() => updateForm(formId)}>Save Form</div>
+        </div>
+        <div className="panel">
+          <div className="panel-item">
+            <span className="icon"></span>
+            <span className="text">Forms</span>
+          </div>
+          <div className="panel-item uncategorized">
+            <span className="icon"></span>
+            <span className="text">Uncategorized</span>
+          </div>
+          <div className="panel-item">
+            <span className="text">test_form</span>
+            <span className="icon"></span>
+          </div>
         </div>
         <div className="form-builder-page-content">
           <FormBuilderSideBar setIsDragging={setIsDragging} setDropAreaPositions ={setDropAreaPositions} 
@@ -192,7 +211,8 @@ const FormBuilder = () => {
                 formFields.map((field, index) => (
                     <FormBuilderField key={index} field={field} index={index}
                       isDragging={isDragging} setIsDragging={setIsDragging}
-                      handleDrop={handleDrop} removeFormField={removeFormField} 
+                      handleDrop={handleDrop} 
+                      updateFormField={updateFormField} removeFormField={removeFormField} 
                       editingField={editingField} setEditingField={setEditingField}/>
                   )
                 )
