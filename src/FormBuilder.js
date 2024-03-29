@@ -9,9 +9,13 @@ import { accept_types_array } from './consts';
 import isEqual from 'lodash/isEqual';
 
 const FormBuilder = () => {
-  const [formTitle, setFormTitle] = useState('New Form');
+  const [formTitle, setFormTitle] = useState('');
   const [formFields, setFormFields] = useState();
   const { formId } = useParams();
+
+  const backend_point = 'https://one460-forms-backend.onrender.com'
+  //'http://localhost:8000'
+  //'https://one460-forms-backend.onrender.com:10000'
 
 
   const usePrevious = (value) => {
@@ -41,12 +45,12 @@ const FormBuilder = () => {
     const getForm = async () => {
       try {
         if (formId === 'new') {
-          const response = await axios.post('http://localhost:8000/api/forms/new');
+          const response = await axios.post(`${backend_point}/api/forms/new`);
           const formData = response.data;
           setFormTitle(formData.title);
           setFormFields(formData.fields);
         } else {
-          const response = await axios.get(`http://localhost:8000/api/forms/${formId}`);
+          const response = await axios.get(`${backend_point}/api/forms/${formId}`);
           const formData = response.data;
           setFormTitle(formData.title);
           setFormFields(formData.fields);
@@ -61,7 +65,7 @@ const FormBuilder = () => {
 
   const saveForm = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/forms', {
+      const response = await axios.post(`${backend_point}/api/forms`, {
         title: formTitle,
         fields: formFields,
       });
@@ -84,7 +88,7 @@ const FormBuilder = () => {
 
   const updateForm = async (formId) => {
     try {
-      const response = await axios.put(`http://localhost:8000/api/forms/${formId}`, {
+      const response = await axios.put(`${backend_point}/api/forms/${formId}`, {
         title: formTitle,
         fields: formFields
       });
@@ -135,12 +139,15 @@ const FormBuilder = () => {
     }
   };
 
+  const updateFormTitleHandler = (e) => {
+    setFormTitle(e.target.value)
+  }
+
   const updateFormField = (id, updatedField) => {
     //console.log('update field params : ', id, updatedField)
     const updatedFormFields = formFields.map((field) =>
       field.id === id ? updatedField : field
     );
-    //console.log('updatedFormFields : ', updatedFormFields)
     setFormFields(updatedFormFields);
   };
 
@@ -164,7 +171,7 @@ const FormBuilder = () => {
       <Header />
       <div className='page-body'>
         <div className='form-builder-page-header'>
-          <h2>{formTitle}</h2>
+          <input className='form-title-input' onChange={updateFormTitleHandler} value={formTitle}/>
           <Link 
             className='form-builder-page-header-button'
             to={`/forms/live/${formId}`}

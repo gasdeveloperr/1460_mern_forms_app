@@ -2,7 +2,7 @@
 const Header = () => {
   return (
     <header className="header">
-      <div className="container">
+      <div className="header-container">
         <nav className="header-nav">
           <div className="logo">
             <a href="#">My Landing Page</a>
@@ -10,7 +10,7 @@ const Header = () => {
           <ul className="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="/forms/dashboard">Dashboard</a></li>
-            <li><a href="/forms/builder">Form builder</a></li>
+            <li><a href="/forms/builder/new">Form builder</a></li>
             {/* <li><a href="/forms/builder">Form using</a></li> */}
           </ul>
         </nav>

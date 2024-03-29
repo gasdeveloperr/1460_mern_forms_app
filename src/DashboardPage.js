@@ -6,10 +6,14 @@ import axios from 'axios';
 function DashboardPage() {
   const [forms, setForms] = useState([]);
 
+  const backend_point = 'https://one460-forms-backend.onrender.com'
+  //'http://localhost:8000'
+  //'https://one460-forms-backend.onrender.com:10000'
+
   useEffect(() => {
     const fetchForms = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/forms/all');
+        const response = await axios.get(`${backend_point}/api/forms/all`);
         setForms(response.data);
       } catch (err) {
         console.error('Error fetching forms:', err);
@@ -39,8 +43,8 @@ function DashboardPage() {
                 <a href={`/forms/builder/${form._id}`} className="edit">
                   Edit
                 </a>
-                <a href={`/forms/fill/${form._id}`} className="fill">
-                  Fill
+                <a href={`/forms/live/${form._id}`} className="fill">
+                  Use
                 </a>
               </div>
             </div>

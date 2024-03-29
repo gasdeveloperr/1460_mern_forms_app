@@ -15,8 +15,8 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
   const { formFieldRef, registerOutsideClickHandler, unregisterOutsideClickHandler } = useContext(OutsideClickContext);
 
   const handleOutsideClick = useCallback(() => {
-
     if (field.id === editingField.id) {
+      console.log('clicked outside')
       if (!isEqual(field, editingField)) {
         updateFormField(field.id, editingField);
       }
@@ -133,11 +133,9 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               </div>
               <div className="form-component-name-fields">
                 <div className='form-component-label'>
-                  {field.required && <span>*</span>}
                   {field.labels[0]}
                 </div>
                 <div className='form-component-label'>
-                  {field.required && <span>*</span>}
                   {field.labels[1]}
                 </div>
               </div>
