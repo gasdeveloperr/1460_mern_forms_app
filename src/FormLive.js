@@ -11,6 +11,8 @@ const FormLive = () => {
   const [formFields, setFormFields] = useState();
   const { formId } = useParams();
 
+  const  [isLoading, setIsLoading] = useState(false)
+
 
   const usePrevious = (value) => {
     const ref = useRef();
@@ -35,22 +37,18 @@ const FormLive = () => {
 
     const getForm = async () => {
       try {
-        if (formId === 'new') {
-          const response = await axios.post('http://localhost:8000/api/forms/new');
-          const formData = response.data;
-          setFormTitle(formData.title);
-          setFormFields(formData.fields);
-        } else {
-          const response = await axios.get(`http://localhost:8000/api/forms/${formId}`);
-          const formData = response.data;
-          setFormTitle(formData.title);
-          setFormFields(formData.fields);
-        }
+        const response = await axios.get(`http://localhost:8000/api/forms/${formId}`);
+        const formData = response.data;
+        setIsLoading(false);
+        setFormTitle(formData.title);
+        setFormFields(formData.fields);
+        
       } catch (err) {
         console.error('Error fetching form:', err);
       }
     };
 
+    setIsLoading(true);
     getForm();
   }, []);
 

@@ -7,13 +7,16 @@ import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 import { accept_types_array } from './consts';
 import isEqual from 'lodash/isEqual';
+import Spinner from './Spinner';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
   const [formFields, setFormFields] = useState();
   const { formId } = useParams();
 
-  const backend_point = 'http://localhost:8000'
+  const  [isLoading, setIsLoading] = useState(false)
+
+  const backend_point = 'https://one460-forms-backend.onrender.com'
   //'http://localhost:8000'
   //'https://one460-forms-backend.onrender.com:10000'
 
@@ -47,11 +50,13 @@ const FormBuilder = () => {
         if (formId === 'new') {
           const response = await axios.post(`${backend_point}/api/forms/new`);
           const formData = response.data;
+          setIsLoading(false);
           setFormTitle(formData.title);
           setFormFields(formData.fields);
         } else {
           const response = await axios.get(`${backend_point}/api/forms/${formId}`);
           const formData = response.data;
+          setIsLoading(false);
           setFormTitle(formData.title);
           setFormFields(formData.fields);
         }
@@ -59,6 +64,7 @@ const FormBuilder = () => {
         console.error('Error fetching form:', err);
       }
     };
+    setIsLoading(true);
 
     getForm();
   }, []);
@@ -215,6 +221,9 @@ const FormBuilder = () => {
                     Drag and drop fields from the left sidebar to this area.
                   </div>
                 </div>
+                :
+                isLoading ?
+                <Spinner/>
                 :  
                 formFields.map((field, index) => (
                     <FormBuilderField key={index} field={field} index={index}

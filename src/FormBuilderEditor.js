@@ -15,8 +15,8 @@ const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) =>
     //console.log('change editingField : ', editingField)
   }  
 
-  const [showLogic, setShowLogic] = useState(true);
-  const [showGeneral, setShowGeneral] = useState(false);
+  const [showLogic, setShowLogic] = useState(false);
+  const [showGeneral, setShowGeneral] = useState(true);
   const [showSpecific, setShowSpecific] = useState(false);
 
   const toggleSection = (section) => {
