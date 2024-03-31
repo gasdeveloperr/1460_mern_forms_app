@@ -1,9 +1,12 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { useDrag } from 'react-dnd';
 import RemoveButton from './RemoveButton';
 import { OutsideClickContext } from './OutsideClickContext';
 import FieldDropZone from './FieldDropZone';
 import isEqual from 'lodash/isEqual';
+import selector_icon from './icons/selector-icon.svg'
+import file_upload_icon from './icons/file-upload-icon.svg'
+import calendar_icon from './icons/calendar-icon.svg'
 
 const FormBuilderField = ({field, index, isDragging, setIsDragging, 
   handleDrop, 
@@ -90,7 +93,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               </div>
             </div>
           )}
-          {field.type === 'address' && (
+          {(field.type === 'email' || field.type === 'phone' || field.type === 'number' || field.type === 'address') && (
             <div className="form-short-answer">
               <div className='form-component-title'>
                 {field.required && <span className='required_sign'>*</span>}
@@ -100,33 +103,93 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               </div>
             </div>
           )}
-          {field.type === 'email' && (
+          {field.type === 'checkbox' && (
             <div className="form-short-answer">
               <div className='form-component-title'>
                 {field.required && <span className='required_sign'>*</span>}
                 {field.title}
               </div>
-              <div className='form-component-input-div short'>
+              <div className={`form-checkbox-answers-${field.layout}`}>
+                { field.checkbox &&
+                  field.checkbox.map((option, index)=> (
+                    <div key={index} className='form-checkbox-option'>
+                      <div className={`form-checkbox-option-checker${option.checked ? '-checked' : ''}`}/>
+                      <div className='form-checkbox-option-title'>
+                        {option.title}
+                      </div>
+                    </div>
+                  ))
+                }
               </div>
             </div>
           )}
-          {field.type === 'phone' && (
+          {field.type === 'radio' && (
             <div className="form-short-answer">
               <div className='form-component-title'>
                 {field.required && <span className='required_sign'>*</span>}
                 {field.title}
               </div>
-              <div className='form-component-input-div short'>
+              <div className={`form-checkbox-answers-${field.layout}`}>
+                { field.radio &&
+                  field.radio.map((option, index)=> (
+                    <div key={index} className='form-checkbox-option'>
+                      <div className={`form-checkbox-option-radio${option.checked ? '-checked' : ''}`}/>
+                      <div className='form-checkbox-option-title'>
+                        {option.title}
+                      </div>
+                    </div>
+                  ))
+                }
               </div>
             </div>
           )}
-          {field.type === 'number' && (
+          {field.type === 'date_time' && (
             <div className="form-short-answer">
               <div className='form-component-title'>
                 {field.required && <span className='required_sign'>*</span>}
                 {field.title}
               </div>
-              <div className='form-component-input-div short'>
+              <div className="form-component-form-date-time-inputs">
+                <div className="form-component-form-date-inputs">
+                  {(field.dateFormat === 'MM/DD/YYYY' || field.dateFormat === 'DD/MM/YYYY' || field.dateFormat === 'YYYY-MM-DD') && (
+                    <>
+                      <div className='form-component-date-time-input-div'>
+                        <img src={selector_icon} />
+                      </div>
+                      <div className='form-component-date-time-input-div'>
+                        <img src={selector_icon} />
+                      </div>
+                      <div className='form-component-date-time-input-div'>
+                        <img src={selector_icon} />
+                      </div>
+                    </>
+                  )}
+                </div>
+                <img src={calendar_icon} />
+                <div className="form-component-form-time-inputs">
+                  {(field.timeFormat === '12' || field.timeFormat === '24') && (
+                    <>
+                    <div className='form-component-date-time-input-div'>
+                      <img src={selector_icon} />
+                    </div>
+                    <div className='form-component-date-time-input-div'>
+                      <img src={selector_icon} />
+                    </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          {field.type === 'dropdown' && (
+            <div className="form-short-answer">
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
+                {field.title}
+              </div>
+              <div className='form-component-dropdown-div'>
+                {field.dropdown[0].title}
+                <img src={selector_icon} />
               </div>
             </div>
           )}
@@ -150,6 +213,17 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
                 <div className='form-component-label'>
                   {field.labels[1]}
                 </div>
+              </div>
+            </div>
+          )}
+          {field.type === 'file_upload' && (
+            <div className="form-short-answer">
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
+                {field.title}
+              </div>
+              <div className='form-component-file-upload'>
+                <img src={file_upload_icon}/>
               </div>
             </div>
           )}

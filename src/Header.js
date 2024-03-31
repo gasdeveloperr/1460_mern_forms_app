@@ -5,10 +5,9 @@ const Header = () => {
       <div className="header-container">
         <nav className="header-nav">
           <div className="logo">
-            <a href="#">My Landing Page</a>
+            <a href="/">Forms app</a>
           </div>
           <ul className="nav-links">
-            <li><a href="/">Home</a></li>
             <li><a href="/forms/dashboard">Dashboard</a></li>
             <li><a href="/forms/results">Form Results</a></li>
             <li><a href="/forms/builder/new">Form builder</a></li>

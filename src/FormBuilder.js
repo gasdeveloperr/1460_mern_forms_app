@@ -8,17 +8,21 @@ import { Link, useParams } from 'react-router-dom';
 import { accept_types_array } from './consts';
 import isEqual from 'lodash/isEqual';
 import Spinner from './Spinner';
+import { useNavigate } from 'react-router-dom';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
   const [formFields, setFormFields] = useState();
   const { formId } = useParams();
 
+  const navigate = useNavigate();
+
   const  [isLoading, setIsLoading] = useState(false)
+  const  [isError, setIsError] = useState('')
 
   const backend_point = 'https://one460-forms-backend.onrender.com'
   //'http://localhost:8000'
-  //'https://one460-forms-backend.onrender.com:10000'
+  //'https://one460-forms-backend.onrender.com'
 
 
   const usePrevious = (value) => {
@@ -36,7 +40,7 @@ const FormBuilder = () => {
   useEffect(() => {
       if (prevFormFields && !isEqual(prevFormFields, formFields)) {
         updateForm(formId)
-        console.log('formFields update goes brrrrr>.',prevFormFields, formFields )
+        //console.log('formFields update goes brrrrr>.',prevFormFields, formFields )
       }
 
   }, [formFields]);
@@ -50,9 +54,9 @@ const FormBuilder = () => {
         if (formId === 'new') {
           const response = await axios.post(`${backend_point}/api/forms/new`);
           const formData = response.data;
-          setIsLoading(false);
-          setFormTitle(formData.title);
-          setFormFields(formData.fields);
+
+          // Navigate to the /forms/builder/:formID route
+          navigate(`/forms/builder/${formData._id}`);
         } else {
           const response = await axios.get(`${backend_point}/api/forms/${formId}`);
           const formData = response.data;
@@ -61,36 +65,19 @@ const FormBuilder = () => {
           setFormFields(formData.fields);
         }
       } catch (err) {
+        console.log('we have error on front')
+        setIsError('Error fetching form, please refresh the page')
         console.error('Error fetching form:', err);
       }
     };
     setIsLoading(true);
 
     getForm();
+
+    return () => {
+    };
   }, []);
 
-  const saveForm = async () => {
-    try {
-      const response = await axios.post(`${backend_point}/api/forms`, {
-        title: formTitle,
-        fields: formFields,
-      });
-      console.log('Form saved successfully:', response.data);
-      // Handle success, show a success message, redirect, etc.
-    } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error('Error saving form:', error.response.data);
-        // Handle specific error cases based on the response status code
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received from the server');
-      } else {
-        // Something happened in setting up the request
-        console.error('Error:', error.message);
-      }
-    }
-  };
 
   const updateForm = async (formId) => {
     try {
@@ -131,9 +118,41 @@ const FormBuilder = () => {
         value: '',
         options: [],
         required: false,
+        read_only: false,
       };
-      if(item.type = 'name'){
+      if(item.type === 'name'){
         newField.labels = ['First name', 'Last name']
+      }
+      if(item.type === 'checkbox'){
+        newField.checkbox = [
+          {title: 'Option 1', checked: true},
+          {title: 'Option 2', checked: false},
+          {title: 'Option 3', checked: false}
+        ];
+        newField.layout = 'vertical';
+      }
+      if(item.type === 'radio'){
+        newField.radio = [
+          {title: 'Option 1', checked: true},
+          {title: 'Option 2', checked: false},
+          {title: 'Option 3', checked: false}
+        ];
+        newField.layout = 'vertical';
+      }
+      if(item.type === 'dropdown'){
+        newField.dropdown = [
+          {title: 'Option 1', selected: true},
+          {title: 'Option 2', selected: false},
+          {title: 'Option 3', selected: false}
+        ];
+      }
+      if(item.type === 'date_time'){
+        newField.dateFormat = 'MM/DD/YYYY'
+        newField.timeFormat = '12'
+        newField.value = {
+          date: '',
+          time: '',
+        }
       }
       setFormFields([...formFields.slice(0, dropIndex), newField, ...formFields.slice(dropIndex)]);
     }else{
@@ -185,9 +204,9 @@ const FormBuilder = () => {
             rel="noopener noreferrer">
             Live form
           </Link>
-          <div className='form-builder-page-header-button' onClick={() => updateForm(formId)}>Save Form</div>
+          {/* <div className='form-builder-page-header-button' onClick={() => updateForm(formId)}>Save Form</div> */}
         </div>
-        <div className="panel">
+        {/* <div className="panel">
           <div className="panel-item">
             <span className="icon"></span>
             <span className="text">Forms</span>
@@ -200,7 +219,7 @@ const FormBuilder = () => {
             <span className="text">test_form</span>
             <span className="icon"></span>
           </div>
-        </div>
+        </div> */}
         <div className="form-builder-page-content">
           <FormBuilderSideBar setIsDragging={setIsDragging} setDropAreaPositions ={setDropAreaPositions} 
           removeFormField={removeFormField}
@@ -224,7 +243,12 @@ const FormBuilder = () => {
                 :
                 isLoading ?
                 <Spinner/>
-                :  
+                :
+                isError ?
+                <div className='error-message' >
+                  {isError}
+                </div>
+                :
                 formFields.map((field, index) => (
                     <FormBuilderField key={index} field={field} index={index}
                       isDragging={isDragging} setIsDragging={setIsDragging}

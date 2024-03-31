@@ -14,6 +14,6 @@ export const titles_to_types_object = {
   'radio': 'Radio',
   'checkbox': 'Checkbox',
   'date_time': 'Date/Time',
-  'file_upload': 'File Upload',
+  'file_upload': 'File',
   'section': 'Section'
 };

@@ -93,7 +93,7 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
             )}
           </div>
   
-          <div className="section-group">
+          {/* <div className="section-group">
             <div className="section-header" onClick={() => toggleSection('layout')}>
               <span className={`toggle-icon ${showLayoutAndSections ? 'open' : 'closed'}`}>&#9660;</span>
               Layout and Sections
@@ -105,7 +105,7 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
                 onDragEnd={handleDragEnd}/>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       }
     </div>

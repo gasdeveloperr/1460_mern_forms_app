@@ -6,7 +6,7 @@ import axios from 'axios';
 function ResultsBoard() {
   const [forms, setForms] = useState([]);
 
-  const backend_point = 'http://localhost:8000'
+  const backend_point = 'https://one460-forms-backend.onrender.com'
   //'http://localhost:8000'
   //'https://one460-forms-backend.onrender.com:10000'
 
@@ -28,7 +28,7 @@ function ResultsBoard() {
       <Header />
       <div className="dashboard-page-heading">
         <div className="dashboard-page-title">
-          Welcome to Forms Results
+          Welcome to Results board
         </div>
       </div>
       <div className="dashboard-page-content">

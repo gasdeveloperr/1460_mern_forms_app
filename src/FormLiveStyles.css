@@ -29,6 +29,11 @@
   grid-column: span 1;
   margin-bottom: calc(20px);
 }
+.form-live-date-time-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
 .form-live-input{
   color: rgb(89, 93, 100);
   background-color: rgb(255, 255, 255);
@@ -97,4 +102,136 @@
   flex: 0 1 auto;
   white-space: nowrap;
   margin: 0px auto;
+}
+.form-component-dropdown{
+
+}
+.form-component-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px 40px 10px 15px;
+  font-size: 16px;
+  width: 100%;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 20px;
+}
+
+.form-component-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-component-select option {
+  background-color: #fff;
+  color: #333;
+}
+
+.form-component-checkbox-container,
+.form-component-radio-container {
+  display: block;
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}
+.vertical{
+  display: block;
+}
+.horizontal{
+  display: flex;
+  gap: 20px;
+}
+
+.form-component-checkbox-container input,
+.form-component-radio-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.form-component-checkmark {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+  border-radius: 4px;
+}
+.form-component-radiomark {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+  border-radius: 12px;
+}
+.form-component-checkbox-container:hover input ~ .form-component-checkmark,
+.form-component-radio-container:hover input ~ .form-component-radiomark {
+  background-color: #ccc;
+}
+
+.form-component-checkbox-container input:checked ~ .form-component-checkmark,
+.form-component-radio-container input:checked~ .form-component-radiomark  {
+  background-color: #2196F3;
+}
+
+.form-component-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.form-component-checkbox-container input:checked ~ .form-component-checkmark:after,
+.form-component-radio-container input:checked ~ .form-component-radiomark:after {
+  display: block;
+}
+
+.form-component-checkbox-container .form-component-checkmark:after
+.form-component-radio-container .form-component-radiomark:after {
+  left: 7px;
+  top: 4px;
+  width: 3px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+.form-component-checkbox-container .form-component-checkmark:after,
+.form-component-radio-container .form-component-radiomark:after {
+  left: 7px;
+  top: 4px;
+  width: 3px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+.form-file-label {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: fit-content;
+  font-size: 14px;
+}
+
+.form-file-label:hover {
+  background-color: #e0e0e0;
 }
