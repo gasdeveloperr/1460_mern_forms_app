@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
 
-function DashboardPage() {
+function ResultsBoard() {
   const [forms, setForms] = useState([]);
 
   const backend_point = 'http://localhost:8000'
@@ -28,12 +28,9 @@ function DashboardPage() {
       <Header />
       <div className="dashboard-page-heading">
         <div className="dashboard-page-title">
-          Welcome to Forms Dashboard
+          Welcome to Forms Results
         </div>
-        <Link to="/forms/builder" className="new-form-btn">
-          Create Form
-        </Link>
-        </div>
+      </div>
       <div className="dashboard-page-content">
         <div className="dashboard-form-list">
           {forms.map((form) => (
@@ -55,4 +52,4 @@ function DashboardPage() {
   );
 }
 
-export default DashboardPage;
+export default ResultsBoard;

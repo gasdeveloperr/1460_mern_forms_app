@@ -2,7 +2,7 @@ import { useState } from "react";
 import DraggableComponent from "./DraggableComponent";
 import FieldBuilderEditor from "./FormBuilderEditor";
 
-const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, editingField, setEditingField}) => {
+const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormField, editingField, setEditingField}) => {
 
   const handleDragStart = () => {
     setIsDragging(true);
@@ -32,13 +32,13 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, editingField, 
     <div className='left-bar'>
       {
         editingField && editingField.id !== '' ? 
-        <FieldBuilderEditor editingField={editingField} setEditingField={setEditingField}/>
+        <FieldBuilderEditor removeFormField={removeFormField} editingField={editingField} setEditingField={setEditingField}/>
         :
         <div className="form-builder-components">
           <div className="section-group">
             <div className="section-header" onClick={() => toggleSection('basic')}>
               <span className={`toggle-icon ${showBasicFields ? 'open' : 'closed'}`}>&#9660;</span>
-              <h3>Basic Fields</h3>
+              Basic Fields
             </div>
             {showBasicFields && (
               <div className="section-content">
@@ -63,9 +63,15 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, editingField, 
                 <DraggableComponent type="number" title="Number" 
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd} />
-                {/* <DraggableComponent type="dropdown" title="Dropdown List" />
-                <DraggableComponent type="radio" title="Radio Button" />
-                <DraggableComponent type="checkbox" title="Checkbox" /> */}
+                <DraggableComponent type="dropdown" title="Dropdown List" 
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd} />
+                <DraggableComponent type="radio" title="Radio Button" 
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd} />
+                <DraggableComponent type="checkbox" title="Checkbox" 
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd} />
               </div>
             )}
           </div>
@@ -73,7 +79,7 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, editingField, 
           <div className="section-group">
             <div className="section-header" onClick={() => toggleSection('advanced')}>
               <span className={`toggle-icon ${showAdvancedFields ? 'open' : 'closed'}`}>&#9660;</span>
-              <h3>Advanced Fields</h3>
+              Advanced Fields
             </div>
             {showAdvancedFields && (
               <div className="section-content">
@@ -90,7 +96,7 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, editingField, 
           <div className="section-group">
             <div className="section-header" onClick={() => toggleSection('layout')}>
               <span className={`toggle-icon ${showLayoutAndSections ? 'open' : 'closed'}`}>&#9660;</span>
-              <h3>Layout and Sections</h3>
+              Layout and Sections
             </div>
             {showLayoutAndSections && (
               <div className="section-content">

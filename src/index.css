@@ -396,6 +396,7 @@ body {
   overflow: hidden;
   user-select: none;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .toggle-icon {
@@ -410,6 +411,12 @@ body {
   transform: rotate(-90deg);
 }
 
+.option-content {
+  display: grid;
+  grid-template-columns: 1fr ;
+  gap: 12px;
+  padding: 10px;
+}
 .section-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -535,9 +542,14 @@ body {
 }
 
 .form-field:hover .remove-button {
-  opacity: 1; /* Show the remove button on hover */
+  opacity: 1 !important; /* Show the remove button on hover */
 }
-
+.required_sign{
+  font-size: 20px;
+  line-height: 12px;
+  margin-right: 2px;
+  margin-left: -6px;
+}
 .remove-icon {
   width: 22px;
   height: 22px;

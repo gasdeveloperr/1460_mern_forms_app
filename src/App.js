@@ -7,6 +7,7 @@ import DashboardPage from './DashboardPage';
 import FormUsingPage from './FormUsingPage';
 import { OutsideClickProvider } from './OutsideClickContext';
 import FormLive from './FormLive';
+import ResultsBoard from './ResultsBoard';
 
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
               
               <Route path="/forms/builder/:formId?" element={<FormBuilder />} />
               <Route path="/forms/dashboard" element={<DashboardPage />} />
+              <Route path="/forms/results" element={<ResultsBoard />} />
               <Route path="/forms/live/:formId?" element={<FormLive />} />
               <Route path="/forms/:formId" element={<FormUsingPage />} />
             </Routes >

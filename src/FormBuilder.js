@@ -13,7 +13,7 @@ const FormBuilder = () => {
   const [formFields, setFormFields] = useState();
   const { formId } = useParams();
 
-  const backend_point = 'https://one460-forms-backend.onrender.com'
+  const backend_point = 'http://localhost:8000'
   //'http://localhost:8000'
   //'https://one460-forms-backend.onrender.com:10000'
 
@@ -197,6 +197,7 @@ const FormBuilder = () => {
         </div>
         <div className="form-builder-page-content">
           <FormBuilderSideBar setIsDragging={setIsDragging} setDropAreaPositions ={setDropAreaPositions} 
+          removeFormField={removeFormField}
           editingField={editingField} setEditingField={setEditingField}/>
           <div className='form-builder-part'>
            {formFields && 

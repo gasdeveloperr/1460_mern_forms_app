@@ -10,6 +10,7 @@ const Header = () => {
           <ul className="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="/forms/dashboard">Dashboard</a></li>
+            <li><a href="/forms/results">Form Results</a></li>
             <li><a href="/forms/builder/new">Form builder</a></li>
             {/* <li><a href="/forms/builder">Form using</a></li> */}
           </ul>
