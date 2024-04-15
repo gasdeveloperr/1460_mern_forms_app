@@ -6,14 +6,14 @@ import axios from 'axios';
 function ResultsBoard() {
   const [forms, setForms] = useState([]);
 
-  const backend_point = 'https://one460-forms-backend.onrender.com'
+  const backend_point = 'http://localhost:8000'
   //'http://localhost:8000'
   //'https://one460-forms-backend.onrender.com:10000'
 
   useEffect(() => {
     const fetchForms = async () => {
       try {
-        const response = await axios.get(`${backend_point}/api/forms/all`);
+        const response = await axios.get(`${backend_point}/api/subm_forms/all`);
         setForms(response.data);
       } catch (err) {
         console.error('Error fetching forms:', err);
@@ -38,10 +38,7 @@ function ResultsBoard() {
               {form.title}
               <div className="form-actions">
                 <a href={`/forms/builder/${form._id}`} className="edit">
-                  Edit
-                </a>
-                <a href={`/forms/live/${form._id}`} className="fill">
-                  Use
+                  See the results
                 </a>
               </div>
             </div>

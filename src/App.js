@@ -8,6 +8,10 @@ import FormUsingPage from './FormUsingPage';
 import { OutsideClickProvider } from './OutsideClickContext';
 import FormLive from './FormLive';
 import ResultsBoard from './ResultsBoard';
+import Login from './Login';
+import ProtectedRoute from './ProtectedRoute';
+import NotFoundPage from './NotFoundPage';
+import Register from './Register';
 
 
 const App = () => {
@@ -18,15 +22,17 @@ const App = () => {
         <div className='content'>
           <OutsideClickProvider>
             <Routes >
-              <Route path='/' element={<HomePage />}/>
-              {/* <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} /> */}
-              
-              <Route path="/forms/builder/:formId?" element={<FormBuilder />} />
-              <Route path="/forms/dashboard" element={<DashboardPage />} />
-              <Route path="/forms/results" element={<ResultsBoard />} />
-              <Route path="/forms/live/:formId?" element={<FormLive />} />
-              <Route path="/forms/:formId" element={<FormUsingPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path='/' element={<HomePage />}/>
+                <Route path="/forms/builder/:formId?" element={<FormBuilder />} />
+                <Route path="/forms/dashboard" element={<DashboardPage />} />
+                <Route path="/forms/results" element={<ResultsBoard />} />
+                <Route path="/forms/live/:formId?" element={<FormLive />} />
+                <Route path="/forms/:formId" element={<FormUsingPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
             </Routes >
           </OutsideClickProvider>
         </div>

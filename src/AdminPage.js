@@ -5,7 +5,7 @@ import axios from 'axios';
 import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
 
-function DashboardPage() {
+function AdminPage() {
   const [forms, setForms] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState('')
@@ -104,4 +104,4 @@ function DashboardPage() {
   );
 }
 
-export default DashboardPage;
+export default AdminPage;

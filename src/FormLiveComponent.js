@@ -40,8 +40,11 @@ const FormLiveComponent = ({field, index}) => {
                   <span>{errorMessage}</span>
                 </div>
               )}
-              <input className='form-live-input' id={field.id} name={field.title} onChange={handleInputChange} 
-              required={field.required} disabled={field.read_only}/>
+              <input className='form-live-input' id={field.id} 
+                fieldtype={field.type}
+                name={field.title} onChange={handleInputChange} 
+                required={field.required} 
+                disabled={field.read_only}/>
             </div>
           </label>
         )}
@@ -52,8 +55,11 @@ const FormLiveComponent = ({field, index}) => {
                 {field.required && <span>*</span>}
                 {field.title}
               </div>
-              <textarea className='long-answer-input' id={field.id} name={field.title} onChange={handleInputChange} 
-              required={field.required} disabled={field.read_only}/>
+              <textarea className='long-answer-input' id={field.id} 
+                fieldtype={field.type}
+                name={field.title} onChange={handleInputChange} 
+                required={field.required} 
+                disabled={field.read_only}/>
             </div>
           </label>
         )}
@@ -70,9 +76,12 @@ const FormLiveComponent = ({field, index}) => {
                   <span>{errorMessage}</span>
                 </div>
               )}
-              <input className='form-live-input' id={field.id} name={field.title}
-              onChange={e => handleInputChange(e, field.type)} type={field.type} 
-              required={field.required} disabled={field.read_only}/>
+              <input className='form-live-input' id={field.id} 
+                fieldtype={field.type}
+                name={field.title}
+                onChange={e => handleInputChange(e, field.type)} 
+                required={field.required} 
+                disabled={field.read_only}/>
             </div>
           </label>
         )}
@@ -83,8 +92,12 @@ const FormLiveComponent = ({field, index}) => {
                 {field.required && <span>*</span>}
                 {field.title}
               </div>
-              <input className='form-live-input' id={field.id} name={field.title}
-                onChange={handleInputChange} required={field.required} disabled={field.read_only}/>
+              <input className='form-live-input' id={field.id} 
+                fieldtype={field.type}
+                name={field.title}
+                onChange={handleInputChange} 
+                required={field.required} 
+                disabled={field.read_only}/>
             </div>
           </label>
         )}
@@ -95,8 +108,12 @@ const FormLiveComponent = ({field, index}) => {
                 {field.required && <span>*</span>}
                 {field.title}
               </div>
-              <input className='form-live-input' id={field.id} name={field.title}
-              onChange={handleInputChange} required={field.required} disabled={field.read_only}/>
+              <input className='form-live-input' id={field.id} 
+                fieldtype={field.type}
+                name={field.title}
+                onChange={handleInputChange} 
+                required={field.required} 
+                disabled={field.read_only}/>
             </div>
           </label>
         )}
@@ -108,15 +125,21 @@ const FormLiveComponent = ({field, index}) => {
             </div>
             <div className="form-component-name-fields">
               <label key={field._id+'0'} className="form-live-component-container">
-                <input className='form-live-input' id={field.id+'_first_name'} name={field.title+'_'+field.labels[0]} 
-                required={field.required} disabled={field.read_only}/>
+                <input className='form-live-input' id={field.id} 
+                  fieldtype={field.type} customtype='first_name' 
+                  name={field.title+'_'+field.labels[0]} 
+                  required={field.required} 
+                  disabled={field.read_only}/>
                 <div className='form-component-label'>
                   {field.labels[0]}
                 </div>
               </label>
               <label key={field._id+'1'} className="form-live-component-container">
-                <input className='form-live-input' id={field.id+'_last_name'} name={field.title+'_'+field.labels[1]} 
-                required={field.required} disabled={field.read_only}/>
+                <input className='form-live-input' id={field.id} 
+                  fieldtype={field.type} customtype='last_name' 
+                  name={field.title+'_'+field.labels[1]} 
+                  required={field.required} 
+                  disabled={field.read_only}/>
                 <div className='form-component-label'>
                   {field.labels[1]}
                 </div>
@@ -133,7 +156,10 @@ const FormLiveComponent = ({field, index}) => {
               { field.checkbox.map((option, index)=> (
                 <label key={index} className={`form-component-checkbox-container ${field.layout}`}>
                   <input type="checkbox" 
-                  id={field.id} name={option.title} disabled={field.read_only}/>
+                    fieldtype={field.type}
+                    id={field.id} 
+                    name={option.title} 
+                    disabled={field.read_only}/>
                   <span className="form-component-checkmark"></span>
                   {option.title}
                 </label>
@@ -152,6 +178,7 @@ const FormLiveComponent = ({field, index}) => {
                 <label key={index} className='form-component-radio-container'>
                   <input
                     type="radio"
+                    fieldtype={field.type}
                     id={field.id}
                     name={field.id}
                     value={option.title}
@@ -169,7 +196,7 @@ const FormLiveComponent = ({field, index}) => {
           <label key={field.id} htmlFor={field.id} className="form-live-component-container">
             <div className="form-component-dropdown">
               {field.title}
-              <select id={field.id} className="form-component-select">
+              <select id={field.id} name={field.title} className="form-component-select">
                 { field.dropdown.map((option, index)=> (
                   <option key={index} value={option.title}>{option.title}</option>
                   ))
@@ -188,14 +215,14 @@ const FormLiveComponent = ({field, index}) => {
               
               <label key={field._id} className="form-live-component-container">
                 <div className="form-date-time-answer">
-                  <input className='form-live-input' id={field.id} name={field.title} placeholder={field.dateFormat}
+                  <input className='form-live-input' id={field.id} fieldtype={field.type} customtype='date' name={field.title+'_date'} placeholder={field.dateFormat}
                   onChange={handleInputChange} required={field.required} disabled={field.read_only}/>
                   <img src={calendar_icon}/>
                 </div>
               </label>
               <label key={field._id} className="form-live-component-container">
                 <div className="form-date-time-answer">
-                  <input className='form-live-input' id={field.id} name={field.title} placeholder='hh:mm'
+                  <input className='form-live-input' id={field.id} fieldtype={field.type} customtype='time' name={field.title+'_time'} placeholder='hh:mm'
                   onChange={handleInputChange} required={field.required} disabled={field.read_only}/>
                   <img src={time_icon}/>
                 </div>

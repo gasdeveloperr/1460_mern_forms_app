@@ -1,3 +1,4 @@
+import LogoutButton from "./LogoutButton";
 
 const Header = () => {
   return (
@@ -11,7 +12,8 @@ const Header = () => {
             <li><a href="/forms/dashboard">Dashboard</a></li>
             <li><a href="/forms/results">Form Results</a></li>
             <li><a href="/forms/builder/new">Form builder</a></li>
-            {/* <li><a href="/forms/builder">Form using</a></li> */}
+            <li><a href="/adminpage">User control</a></li>
+            {/* <li><LogoutButton /></li> */}
           </ul>
         </nav>
       </div>

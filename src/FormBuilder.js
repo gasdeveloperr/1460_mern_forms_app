@@ -20,7 +20,7 @@ const FormBuilder = () => {
   const  [isLoading, setIsLoading] = useState(false)
   const  [isError, setIsError] = useState('')
 
-  const backend_point = 'https://one460-forms-backend.onrender.com'
+  const backend_point = 'http://localhost:8000'
   //'http://localhost:8000'
   //'https://one460-forms-backend.onrender.com'
 

@@ -522,7 +522,7 @@ body {
 }
 .form-component-date-time-input-div{
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   -moz-box-align: center;
   align-items: center;
   width: 100px;

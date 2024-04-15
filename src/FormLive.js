@@ -15,7 +15,7 @@ const FormLive = () => {
   const  [isLoading, setIsLoading] = useState(false)
   const  [isError, setIsError] = useState('')
 
-  const backend_point = 'https://one460-forms-backend.onrender.com'
+  const backend_point = 'http://localhost:8000'
   //'http://localhost:8000'
   //'https://one460-forms-backend.onrender.com'
 
@@ -115,27 +115,74 @@ const FormLive = () => {
     // Create an object to store the form data
     const formData = {};
 
+    console.log('formFields : ', formFields)
+
     // Loop through all the form elements and collect their values
     const formElements = event.target.elements;
-    console.log('from the submit : ',formElements);
+    console.log('form elements  : ',formElements);
     for (let i = 0; i < formElements.length; i++) {
       const element = formElements[i];
-      if (element.id) {
-        formData[element.id] = {name: '', value:''}
-        if (element.type === 'checkbox' || element.type === 'radio') {
-          if (element.checked) {
-            formData[element.id].name = element.name
-            formData[element.id].value = element.value;
+      const customType = element.getAttribute('customtype'); 
+      const fieldType = element.getAttribute('fieldtype'); 
+      for(let j = 0; j < formFields.length; j++){
+        const elementBack = formFields[j];
+        if (element.id == elementBack.id ) {
+          if (!formData[element.id]) {
+            switch(fieldType){
+              case 'checkbox':
+                formData[element.id] = {name: elementBack.title, value:[]}
+                break;
+              case 'name': 
+                formData[element.id] = {name: elementBack.title, value:{}}
+                break;
+              case 'date_time':  
+                formData[element.id] = {name: elementBack.title, value:{}}
+                break;
+              default:
+                formData[element.id] = {name: elementBack.title, value:''};
+                break;
+            }
           }
-        } else {
-          formData[element.id].name = element.name
-          formData[element.id].value = element.value;
+
+          console.log('elem custom type: ', customType)
+          console.log('elem  type: ', element.type)
+          switch(fieldType){
+            case 'checkbox':
+              if (element.checked) {
+                formData[element.id].value.push(element.name);
+              };
+              break;
+            case 'radio': 
+              if (element.checked) {
+                formData[element.id].value = element.value;
+              }
+              break;
+            case 'name': 
+              if (customType === 'first_name') {
+                formData[element.id].value.first_name = element.value;
+              }
+              if (customType === 'last_name') {
+                formData[element.id].value.last_name = element.value;
+              }
+              break;
+            case 'date_time':  
+              if (customType === 'date') {
+                formData[element.id].value.date = element.value;
+              }
+              if (customType === 'time') {
+                formData[element.id].value.time = element.value;
+              }
+              break;
+            default:
+              formData[element.id].value = element.value;
+              break;
+          }
         }
       }
     }
 
     // Log the form data for demonstration purposes
-    console.log('from the submit : ',formData);
+    console.log('data from the submit : ',formData);
 
     // TODO: Perform further actions with the form data (e.g., send to server, update state, etc.)
   };
