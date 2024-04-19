@@ -4,16 +4,12 @@ import Header from './Header';
 import axios from 'axios';
 import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
+import { backend_point } from './consts';
 
 function AdminPage() {
   const [forms, setForms] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState('')
-
-  const backend_point = 'http://localhost:8000'
-  //'http://localhost:8000'
-  //'https://one460-forms-backend.onrender.com'
-
   
   const fetchForms = async () => {
 

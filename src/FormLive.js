@@ -6,6 +6,7 @@ import isEqual from 'lodash/isEqual';
 import FormLiveComponent from './FormLiveComponent';
 import './FormLiveStyles.css';
 import Spinner from './Spinner';
+import { backend_point } from './consts';
 
 const FormLive = () => {
   const [formTitle, setFormTitle] = useState('New Form');
@@ -14,10 +15,6 @@ const FormLive = () => {
 
   const  [isLoading, setIsLoading] = useState(false)
   const  [isError, setIsError] = useState('')
-
-  const backend_point = 'http://localhost:8000'
-  //'http://localhost:8000'
-  //'https://one460-forms-backend.onrender.com'
 
 
   const usePrevious = (value) => {

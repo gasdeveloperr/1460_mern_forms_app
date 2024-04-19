@@ -5,7 +5,7 @@ import FormBuilderSideBar from './FormBuilderSideBar';
 import FormBuilderField from './FormBuilderField';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
-import { accept_types_array } from './consts';
+import { accept_types_array, backend_point } from './consts';
 import isEqual from 'lodash/isEqual';
 import Spinner from './Spinner';
 import { useNavigate } from 'react-router-dom';
@@ -19,10 +19,6 @@ const FormBuilder = () => {
 
   const  [isLoading, setIsLoading] = useState(false)
   const  [isError, setIsError] = useState('')
-
-  const backend_point = 'http://localhost:8000'
-  //'http://localhost:8000'
-  //'https://one460-forms-backend.onrender.com'
 
 
   const usePrevious = (value) => {
@@ -47,44 +43,51 @@ const FormBuilder = () => {
 
   const [editingField, setEditingField] = useState({id:''})
 
+ 
+  const fetchForm = async () => {
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.get(`${backend_point}/api/forms/${formId}`, config);
+      const formData = response.data;
+      setIsLoading(false);
+      setFormTitle(formData.title);
+      setFormFields(formData.fields);
+    } catch (err) {
+      console.log('we have error on front');
+      setIsError('Error fetching form, please refresh the page');
+      console.error('Error fetching form:', err);
+    }
+  };
+
   useEffect(() => {
-
-    const getForm = async () => {
-      try {
-        if (formId === 'new') {
-          const response = await axios.post(`${backend_point}/api/forms/new`);
-          const formData = response.data;
-
-          // Navigate to the /forms/builder/:formID route
-          navigate(`/forms/builder/${formData._id}`);
-        } else {
-          const response = await axios.get(`${backend_point}/api/forms/${formId}`);
-          const formData = response.data;
-          setIsLoading(false);
-          setFormTitle(formData.title);
-          setFormFields(formData.fields);
-        }
-      } catch (err) {
-        console.log('we have error on front')
-        setIsError('Error fetching form, please refresh the page')
-        console.error('Error fetching form:', err);
-      }
-    };
+    const timeLog = new Date()
+    console.log('load new form page : ', timeLog)
     setIsLoading(true);
-
-    getForm();
-
-    return () => {
-    };
+    fetchForm();
   }, []);
 
+//formId
 
   const updateForm = async (formId) => {
+
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+    
     try {
       const response = await axios.put(`${backend_point}/api/forms/${formId}`, {
         title: formTitle,
         fields: formFields
-      });
+      }, config);
       //console.log('Form updated successfully:', response.data);
     } catch (error) {
       if (error.response) {

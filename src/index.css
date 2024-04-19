@@ -243,6 +243,7 @@ body {
   transition-duration: 200ms;
   transition-property: color, background-color;
   transition-timing-function: ease-in-out;
+  cursor: pointer;
 }
 
 .new-form-btn:hover {

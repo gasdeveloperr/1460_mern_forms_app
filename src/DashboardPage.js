@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
 import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
+import { backend_point } from './consts';
 
 function DashboardPage() {
+
+  const navigate = useNavigate();
+
   const [forms, setForms] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState('')
-
-  const backend_point = 'http://localhost:8000'
-  //'http://localhost:8000'
-  //'https://one460-forms-backend.onrender.com'
 
   
   const fetchForms = async () => {
@@ -34,6 +34,10 @@ function DashboardPage() {
     } catch (err) {
       setIsError('Error fetching form, please refresh the page')
       console.error('Error fetching forms:', err);
+      if(err.response.status === 401){
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
     }
   };
 
@@ -42,9 +46,42 @@ function DashboardPage() {
     fetchForms();
   }, []);
 
-  const deleteFormHandler = async (formId) => {
+  const createFormHandler = async () => {
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+
     try {
-      const response = await axios.delete(`${backend_point}/api/forms/${formId}`);
+      const newForm = {
+        title: 'New form',
+        fields: [],
+      };
+      const response = await axios.post(`${backend_point}/api/forms/new`, newForm, config);
+      const formData = response.data;
+      // Navigate to the newly created form route
+      navigate(`/forms/builder/${formData._id}`);
+
+    } catch (err) {
+      console.log('we have error on front');
+      setIsError('Error creating form, please try again');
+      console.error('Error creating form:', err);
+    }
+  };
+
+  const deleteFormHandler = async (formId) => {
+
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.delete(`${backend_point}/api/forms/${formId}`, config);
       
       if (response.status === 200) {
         // Delete request was successful
@@ -66,9 +103,9 @@ function DashboardPage() {
         <div className="dashboard-page-title">
           Welcome to Dashboard
         </div>
-        <Link to="/forms/builder/new" className="new-form-btn">
+        <div className="new-form-btn" onClick={() => createFormHandler()}>
           Create new Form
-        </Link>
+        </div>
         </div>
       <div className="dashboard-page-content">
         <div className="dashboard-form-list">

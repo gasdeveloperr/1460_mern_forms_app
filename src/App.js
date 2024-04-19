@@ -12,6 +12,8 @@ import Login from './Login';
 import ProtectedRoute from './ProtectedRoute';
 import NotFoundPage from './NotFoundPage';
 import Register from './Register';
+import AdminPage from './AdminPage';
+import UserSettingsPage from './UserSettingsPage';
 
 
 const App = () => {
@@ -31,6 +33,8 @@ const App = () => {
                 <Route path="/forms/results" element={<ResultsBoard />} />
                 <Route path="/forms/live/:formId?" element={<FormLive />} />
                 <Route path="/forms/:formId" element={<FormUsingPage />} />
+                <Route path="/account/settings" element={<UserSettingsPage />} />
+                <Route path="/administration" element={<AdminPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes >

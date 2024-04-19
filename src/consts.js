@@ -17,3 +17,7 @@ export const titles_to_types_object = {
   'file_upload': 'File',
   'section': 'Section'
 };
+
+export const backend_point = 'http://localhost:8000'
+//'http://localhost:8000'
+//'https://one460-forms-backend.onrender.com'

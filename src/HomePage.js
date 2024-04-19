@@ -41,7 +41,7 @@ const HomePage = () => {
       </main>
     
       <footer className="footer">
-          &copy; 2023 Form Builder
+          &copy; 2024 Form Builder
       </footer>
     </div>
   );

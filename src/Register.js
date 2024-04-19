@@ -1,12 +1,10 @@
 import axios from 'axios';
 import { useState } from 'react';
+import './Login.css';
+import { backend_point } from './consts';
 
 
 const Register= () => {
-
-  const backend_point = 'http://localhost:8000'
-  //'http://localhost:8000'
-  //'https://one460-forms-backend.onrender.com'
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,37 +33,41 @@ const Register= () => {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Role:</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        <button type="submit">Register</button>
-      </form>
+    <div className="login-container">
+      <div className="login-form">
+        <h2 className="login-title">Register to Form Builder!</h2>
+        {error && <p>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">Email:</label>
+            <input
+              type="email"
+              className="form-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Password:</label>
+            <input
+              type="password"
+              className="form-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Role:</label>
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button type="submit" className="login-button">Register</button>
+        </form>
+      </div>
     </div>
   );
 };

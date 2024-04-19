@@ -2,14 +2,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 import './Login.css';
+import { backend_point } from './consts';
 
 
 const Login = () => {
 
-
-  const backend_point = 'http://localhost:8000'
-  //'http://localhost:8000'
-  //'https://one460-forms-backend.onrender.com'
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

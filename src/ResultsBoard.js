@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
+import { backend_point } from './consts';
 
 function ResultsBoard() {
   const [forms, setForms] = useState([]);
 
-  const backend_point = 'http://localhost:8000'
-  //'http://localhost:8000'
-  //'https://one460-forms-backend.onrender.com:10000'
 
   useEffect(() => {
     const fetchForms = async () => {
