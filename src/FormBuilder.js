@@ -9,6 +9,7 @@ import { accept_types_array, backend_point } from './consts';
 import isEqual from 'lodash/isEqual';
 import Spinner from './Spinner';
 import { useNavigate } from 'react-router-dom';
+import { getAuthToken } from './utils';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
@@ -45,7 +46,7 @@ const FormBuilder = () => {
 
  
   const fetchForm = async () => {
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
     const config = {
       headers: {
         'Authorization': `${token}`,
@@ -76,7 +77,7 @@ const FormBuilder = () => {
 
   const updateForm = async (formId) => {
 
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
     const config = {
       headers: {
         'Authorization': `${token}`,

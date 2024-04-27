@@ -1,19 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
 import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
 import { backend_point } from './consts';
+import './AdminPageStyles.css'
+import { getAuthToken, getUserRole } from './utils';
+import CreateBusinessForm from './CreateBusinessForm';
 
 function AdminPage() {
-  const [forms, setForms] = useState([]);
+  const navigate = useNavigate();
+  
+  const role = getUserRole();
+
+  const [users, setUsers] = useState([]);
+  const [businesses, setBusinesses] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState('')
-  
-  const fetchForms = async () => {
 
-    const token = localStorage.getItem('token');
+  const [openBusinessModal, setOpenBusinessModal] = useState(false)
+  const [openUserModal, setOpenUserModal] = useState(false)
+
+  useEffect(() => {
+    console.log('users: ',users)
+  }, [users])
+  useEffect(() => {
+    console.log('businesses: ',businesses)
+  }, [businesses])
+  
+  const fetchBusiness = async () => {
+
+    const token = getAuthToken();
+
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.get(`${backend_point}/api/business/all`, config);
+      setIsLoading(false);
+      setBusinesses(response.data);
+    } catch (err) {
+      setIsError('Error fetching business, please refresh the page')
+      console.error('Error fetching business:', err);
+      if(err.response.status === 401){
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    }
+  };
+  const fetchUsers = async () => {
+
+    const token = getAuthToken();
 
     // Include the token in the headers
     const config = {
@@ -24,78 +65,106 @@ function AdminPage() {
 
 
     try {
-      const response = await axios.get(`${backend_point}/api/forms/all`, config);
+      const response = await axios.get(`${backend_point}/api/users/all`, config);
       setIsLoading(false);
-      setForms(response.data);
+      setUsers(response.data);
     } catch (err) {
-      setIsError('Error fetching form, please refresh the page')
-      console.error('Error fetching forms:', err);
+      setIsError('Error fetching user, please refresh the page')
+      console.error('Error fetching users:', err);
+      if(err.response.status === 401){
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
     }
   };
+  
 
   useEffect(() => {
     setIsLoading(true);
-    fetchForms();
+    fetchBusiness();
+    fetchUsers();
   }, []);
 
-  const deleteFormHandler = async (formId) => {
-    try {
-      const response = await axios.delete(`${backend_point}/api/forms/${formId}`);
-      
-      if (response.status === 200) {
-        // Delete request was successful
-        fetchForms();
-      } else {
-        // Handle other response statuses if needed
-        setIsError('Error deleting a form, please refresh the page');
-      }
-    } catch (err) {
-      setIsError('Error deleting a form, please refresh the page');
-      console.error('Error deleting forms:', err);
-    }
-  };
+  const [adminPageState, setAdminPageState] = useState('Business board')
 
   return (
     <div>
       <Header />
-      <div className="dashboard-page-heading">
-        <div className="dashboard-page-title">
-          Welcome to Dashboard
+      <div className="admin-page-content">
+        <div className="admin-page-side-bar">
+          <div className={`admin-page-side-bar-option ${adminPageState === 'Business board' ? 'chosen' :''}`} 
+            onClick={() => setAdminPageState('Business board')}>
+            Business
+          </div>
+          <div className="admin-page-side-bar-separator"/>
+          <div className={`admin-page-side-bar-option ${adminPageState === 'Users board' ? 'chosen' :''}`} 
+            onClick={() => setAdminPageState('Users board')}>
+            Users
+          </div>
         </div>
-        <Link to="/forms/builder/new" className="new-form-btn">
-          Create new Form
-        </Link>
-        </div>
-      <div className="dashboard-page-content">
-        <div className="dashboard-form-list">
-          {
-            isLoading ?
-              <Spinner/>
-            :  
-            isError ?
-            <div className='error-message' >
-              {isError}
-            </div>
-            :
-            forms.map((form) => (
-              <div className="form-list-item" key={form._id}>
-                {form.title}
-                <div className="form-actions">
-                  <a href={`/forms/builder/${form._id}`} className="edit">
-                    Edit
-                  </a>
-                  <a href={`/forms/live/${form._id}`} className="fill">
-                    Use
-                  </a>
-                  <div className="delete" onClick={() => deleteFormHandler(form._id)}>
-                    <img src={trash_icon} className="remove-icon"/>
-                  </div>
-                </div>
+        <div className="admin-page-body">
+          <div className="admin-page-body-title">
+            {adminPageState}
+            {
+              adminPageState === 'Business board' &&
+              <div className="admin-page-create-button" onClick={() => setOpenBusinessModal(true)}>
+                Create new business
               </div>
-            ))
-          }
+            }
+            {
+              adminPageState === 'Users board' &&
+              <div className="admin-page-create-button" onClick={() => setOpenUserModal(true)}>
+                Create new user
+              </div>
+            }
+          </div>
+          <div className="admin-page-body-content">
+            {adminPageState === 'Business board' ?
+              <>
+                {businesses.length !==0  && (
+                  <table className="business-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Address</th>
+                      <th>Zip</th>
+                      <th>Phone</th>
+                      <th>Primary Contact</th>
+                      <th>Contact Email</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {businesses.map((business, index) => (
+                      <tr key={index}>
+                        <td>{business.name}</td>
+                        <td>{business.address}</td>
+                        <td>{business.zip}</td>
+                        <td>{business.phone}</td>
+                        <td>{business.primary_contact}</td>
+                        <td>{business.contact_email}</td>
+                        <td>{business.description}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                )}
+              </>
+            :
+            adminPageState === 'Users board' ?
+              <>
+                {users.length !==0 && users.map((user, index) => (
+                  <div key={index}>{user.email}</div>
+                ))}
+              </>
+            :
+            <></>
+            }
+          </div>
         </div>
       </div>
+      <CreateBusinessForm isModalOpen={openBusinessModal} setIsModalOpen={setOpenBusinessModal} setBusinesses={setBusinesses}
+      setIsLoading={setIsLoading} setIsError={setIsError}/>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import './Login.css';
 import { backend_point } from './consts';
+import simmonssafe_logo_login from './icons/simmonssafe-logo-login.png'
 
 
 const Login = () => {
@@ -17,10 +18,11 @@ const Login = () => {
 
     try {
       const response = await axios.post(`${backend_point}/api/auth/login`, { email, password });
-      const { token } = response.data;
+      const { token, role } = response.data;
 
       // Store the token in local storage or cookies
       localStorage.setItem('token', token);
+      localStorage.setItem('userRole', role);
 
       // Redirect the user to the dashboard or homepage
       window.location.href = '/';
@@ -32,6 +34,9 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-form">
+        <div className="login-logo-container">
+          <img src={simmonssafe_logo_login} alt="" />
+        </div>
         <h2 className="login-title">Welcome to Form Builder!</h2>
         {error && <p className="login-error">{error}</p>}
         <form onSubmit={handleSubmit}>

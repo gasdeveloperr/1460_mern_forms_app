@@ -62,6 +62,8 @@ const Register= () => {
             <label className="form-label">Role:</label>
             <select value={role} onChange={(e) => setRole(e.target.value)}>
               <option value="user">User</option>
+              <option value="admin">Editor</option>
+              <option value="admin">Contibutor</option>
               <option value="admin">Admin</option>
             </select>
           </div>

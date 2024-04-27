@@ -5,6 +5,7 @@ import axios from 'axios';
 import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
 import { backend_point } from './consts';
+import { getAuthToken } from './utils';
 
 function DashboardPage() {
 
@@ -17,7 +18,7 @@ function DashboardPage() {
   
   const fetchForms = async () => {
 
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
 
     // Include the token in the headers
     const config = {
@@ -47,7 +48,7 @@ function DashboardPage() {
   }, []);
 
   const createFormHandler = async () => {
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
     const config = {
       headers: {
         'Authorization': `${token}`,
@@ -73,7 +74,7 @@ function DashboardPage() {
 
   const deleteFormHandler = async (formId) => {
 
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
     const config = {
       headers: {
         'Authorization': `${token}`,
@@ -99,6 +100,7 @@ function DashboardPage() {
   return (
     <div>
       <Header />
+      <div className="dashboard-body">
       <div className="dashboard-page-heading">
         <div className="dashboard-page-title">
           Welcome to Dashboard
@@ -106,7 +108,7 @@ function DashboardPage() {
         <div className="new-form-btn" onClick={() => createFormHandler()}>
           Create new Form
         </div>
-        </div>
+      </div>
       <div className="dashboard-page-content">
         <div className="dashboard-form-list">
           {
@@ -136,6 +138,7 @@ function DashboardPage() {
             ))
           }
         </div>
+      </div>
       </div>
     </div>
   );

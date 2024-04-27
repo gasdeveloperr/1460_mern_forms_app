@@ -15,6 +15,9 @@ import Register from './Register';
 import AdminPage from './AdminPage';
 import UserSettingsPage from './UserSettingsPage';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const App = () => {
   return (
@@ -22,6 +25,7 @@ const App = () => {
       <DndProvider backend={HTML5Backend}>
       <div className="App">
         <div className='content'>
+          <ToastContainer />
           <OutsideClickProvider>
             <Routes >
               <Route path="/login" element={<Login />} />
