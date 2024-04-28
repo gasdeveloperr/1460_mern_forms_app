@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { getAuthToken } from './utils';
 import { backend_point } from './consts';
@@ -6,22 +6,31 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const CreateUserForm = ({isModalOpen, setIsModalOpen, setUsers, setIsLoading, setIsError}) => {
+const CreateUserForm = ({isModalOpen, setIsModalOpen, 
+  chosenBusiness, setUsers, 
+  setIsLoading, setIsError}) => {
 
   const navigate = useNavigate();
 
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
-  const [userRole, setUserRole] = useState('');
+  const [userRole, setUserRole] = useState('User');
+  const [selectedBusiness, setSelectedBusiness] = useState('');
+  const [userPassword, setUserPassword] = useState('');
+
+  const [businessForUser, setBusinessForUser] = useState([])
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
-  const createNewUser = async(userData) => {
+  useEffect(() => {
+    fetchBusiness();
+  },[isModalOpen])
+
+  const fetchBusiness = async () => {
 
     const token = getAuthToken();
-    
     const config = {
       headers: {
         'Authorization': `${token}`,
@@ -29,9 +38,30 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen, setUsers, setIsLoading, se
     };
 
     try {
-      const response = await axios.post(`${backend_point}/api/user/new`, userData, config);
+      const response = await axios.get(`${backend_point}/api/business/all`, config);
+      setBusinessForUser(response.data);
+    } catch (err) {
+      setIsError('Error fetching business, please refresh the page')
+      console.error('Error fetching business:', err);
+      if(err.response.status === 401){
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    }
+  };
+
+  const createNewUser = async(userData) => {
+    setIsLoading(true);
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+
+    try {
+      await axios.post(`${backend_point}/api/users/new`, userData, config);
       setIsLoading(false);
-      setUsers(response.data);
     } catch (err) {
       setIsError('Error fetching user, please refresh the page')
       console.error('Error fetching user:', err);
@@ -40,7 +70,6 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen, setUsers, setIsLoading, se
         navigate('/login');
       }
     }
-
   }
 
   const handleSubmit = (e) => {
@@ -52,22 +81,32 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen, setUsers, setIsLoading, se
       toast.error('Please enter a valid email address.');
       return;
     }
-    // Perform form submission logic here
-    console.log('User email:', userEmail);
-    console.log('User Name:', userName);
+
+    let businessId = '';
+
+    if(chosenBusiness.id){
+      businessId = chosenBusiness.id
+    }else{
+      businessId = selectedBusiness;
+    }
+    const formatted_role = userRole.charAt(0).toLowerCase() + userRole.slice(1);
 
     const userData = {
       email: userEmail,
       name: userName,
-      role: userRole,
+      password: userPassword,
+      role: formatted_role,
+      business: businessId,
     }
 
-    createNewUser(userData)
-    
+    createNewUser(userData);
     
     // Reset form fields
+    setUserEmail('');
     setUserName('');
-    setDescription('');
+    setUserPassword('');
+    setUserRole('User');
+    setSelectedBusiness('');
     closeModal();
   };
 
@@ -89,17 +128,7 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen, setUsers, setIsLoading, se
           <div className="modal-body">
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="contactEmail">User Email:</label>
-                <input
-                  type="email"
-                  id="contactEmail"
-                  value={userEmail}
-                  onChange={(e) => setUserEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="userName">User Name:</label>
+                <label htmlFor="userName">Name:</label>
                 <input
                   type="text"
                   id="userName"
@@ -108,6 +137,60 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen, setUsers, setIsLoading, se
                   required
                 />
               </div>
+              <div className="form-group">
+                <label htmlFor="userEmail">Email:</label>
+                <input
+                  type="email"
+                  id="userEmail"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="userName">Initial Password:</label>
+                <input
+                  type="text"
+                  id="userPassword"
+                  value={userPassword}
+                  onChange={(e) => setUserPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="userRole">Role:</label>
+                <select
+                  id="userRole"
+                  value={userRole}
+                  onChange={(e) => setUserRole(e.target.value)}
+                  required
+                  className="form-select"
+                >
+                  <option value="User">User</option>
+                  <option value="Editor">Editor</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
+              { 
+              !chosenBusiness.id &&
+                <div className="form-group">
+                  <label htmlFor="selectedBusiness">Business:</label>
+                  <select
+                    id="selectedBusiness"
+                    value={selectedBusiness}
+                    onChange={(e) => setSelectedBusiness(e.target.value)}
+                    required
+                    className="form-select"
+                  >
+                    <option value="">Select a business</option>
+                    {businessForUser.map((business) => (
+                      <option key={business._id} value={business._id}>
+                        {business.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              }
               <div className="modal-footer">
                 <button type="submit">Create</button>
                 <button type="button" onClick={closeModal}>

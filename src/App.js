@@ -17,6 +17,7 @@ import UserSettingsPage from './UserSettingsPage';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ActivatePage from './ActivatePage';
 
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
           <OutsideClickProvider>
             <Routes >
               <Route path="/login" element={<Login />} />
+              <Route path="/activate/:token" element={<ActivatePage />} />
               <Route path="/register" element={<Register />} />
               <Route element={<ProtectedRoute />}>
                 <Route path='/' element={<HomePage />}/>

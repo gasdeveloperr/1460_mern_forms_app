@@ -7,6 +7,7 @@ import FormLiveComponent from './FormLiveComponent';
 import './FormLiveStyles.css';
 import Spinner from './Spinner';
 import { backend_point } from './consts';
+import { getAuthToken } from './utils';
 
 const FormLive = () => {
   const [formTitle, setFormTitle] = useState('New Form');
@@ -38,9 +39,17 @@ const FormLive = () => {
 
   useEffect(() => {
 
+    const token = getAuthToken();
+
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+
     const getForm = async () => {
       try {
-        const response = await axios.get(`${backend_point}/api/forms/${formId}`);
+        const response = await axios.get(`${backend_point}/api/forms/${formId}`, config);
         const formData = response.data;
         setIsLoading(false);
         setFormTitle(formData.title);
@@ -74,24 +83,6 @@ const FormLive = () => {
         console.error('No response received from the server');
       } else {
         // Something happened in setting up the request
-        console.error('Error:', error.message);
-      }
-    }
-  };
-
-  const updateForm = async (formId) => {
-    try {
-      const response = await axios.put(`http://localhost:8000/api/forms/${formId}`, {
-        title: formTitle,
-        fields: formFields
-      });
-      console.log('Form updated successfully:', response.data);
-    } catch (error) {
-      if (error.response) {
-        console.error('Error saving form:', error.response.data);
-      } else if (error.request) {
-        console.error('No response received from the server');
-      } else {
         console.error('Error:', error.message);
       }
     }

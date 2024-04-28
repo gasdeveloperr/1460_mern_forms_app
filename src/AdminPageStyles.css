@@ -74,6 +74,9 @@
   font-weight: bold;
   color: #333;
 }
+.business-table tbody tr{
+  cursor: pointer;
+}
 
 .business-table tr:nth-child(even) {
   background-color: #f9f9f9;
@@ -91,7 +94,17 @@
 .business-table td:first-child {
   font-weight: bold;
 }
-
-.business-table td:last-child {
-  text-align: center;
+.send-user-invite-button{
+  transition: opacity 0.3s ease;
+  color: #0c414a;
+  background-color: #f8ffb9;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: 1px solid #d8d8d8;
+  width: fit-content;
+  cursor: pointer;
+}
+.send-user-invite-button:hover{
+  opacity: 0.8;
 }

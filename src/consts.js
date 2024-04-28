@@ -18,6 +18,6 @@ export const titles_to_types_object = {
   'section': 'Section'
 };
 
-export const backend_point = 'http://localhost:8000'
+export const backend_point = 'https://one460-forms-backend.onrender.com'
 //'http://localhost:8000'
 //'https://one460-forms-backend.onrender.com'
