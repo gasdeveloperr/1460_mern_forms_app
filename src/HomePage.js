@@ -1,6 +1,44 @@
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
+import { useEffect } from 'react';
+import { getAuthToken, getUserId } from './utils';
+import axios from 'axios';
+import { backend_point } from './consts';
+import { toast } from 'react-toastify';
 
 const HomePage = () => {
+
+  const navigate = useNavigate();
+  const userId = getUserId();
+
+  useEffect(() => {
+
+    const token = getAuthToken();
+
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+
+    const getUser = async () => {
+      try {
+        const response = await axios.get(`${backend_point}/api/users/${userId}`, config);
+        const userData = response.data;
+
+      } catch (err) {
+        if(err.response.status === 401){
+          localStorage.removeItem('token');
+          navigate('/login');
+        }else{
+          toast.error('Error fetching user, please refresh the page.');
+          console.error('Error fetching user:', err);
+        }
+      }
+    };
+    getUser();
+  }, []);
+
   return (
     <div className='home-page-container'>
       <Header />

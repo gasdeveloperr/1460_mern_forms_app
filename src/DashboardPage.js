@@ -33,11 +33,12 @@ function DashboardPage() {
       setIsLoading(false);
       setForms(response.data);
     } catch (err) {
-      setIsError('Error fetching form, please refresh the page')
-      console.error('Error fetching forms:', err);
       if(err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
+      }else{
+        setIsError('Error fetching form, please refresh the page')
+        console.error('Error fetching forms:', err);
       }
     }
   };

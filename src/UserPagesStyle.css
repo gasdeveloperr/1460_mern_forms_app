@@ -29,6 +29,11 @@
 .user-properties-block{
   min-height: 1px;
 }
+.user-requirements-container{
+  font-size: 13px;
+  color: #8a8a8a;
+  padding: 8px 18px;
+}
 .user-title-container{
   height: 100%;
   display: flex;
@@ -157,7 +162,7 @@
 }
 
 .user-settings__input {
-  padding: 6px;
+  padding: 8px 10px;
   font-size: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -181,8 +186,28 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  width: 44%;
+  margin: 12px auto;
 }
 
 .user-settings__button:hover {
   background-color: #0056b3;
+}
+
+
+/*logout style */
+.logout-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #dc3545;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 44%;
+  margin: 12px auto;
+}
+
+.logout-button:hover {
+  background-color: #c82333;
 }

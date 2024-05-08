@@ -18,11 +18,12 @@ const Login = () => {
 
     try {
       const response = await axios.post(`${backend_point}/api/auth/login`, { email, password });
-      const { token, role } = response.data;
+      const { token, role, id } = response.data;
 
       // Store the token in local storage or cookies
       localStorage.setItem('token', token);
       localStorage.setItem('userRole', role);
+      localStorage.setItem('userId', id);
 
       // Redirect the user to the dashboard or homepage
       window.location.href = '/';

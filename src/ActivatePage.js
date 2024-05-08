@@ -19,7 +19,8 @@ const ActivatePage = () => {
       try {
         const response = await axios.post(`${backend_point}/api/activate/${token}`);
         if(response.status){
-          setIsActivated(true)
+          setIsActivated(true);
+          setIsLoading(false);
           navigate('/login');
         }
 
@@ -32,6 +33,14 @@ const ActivatePage = () => {
     setIsLoading(true);
     activateUser();
   }, []);
+
+  useEffect(()=>{
+    if(isActivated){
+      navigate('/login')
+    }else{
+      navigate('/error')
+    }
+  },[isActivated])
 
   return (
     <div className="form-live-page">

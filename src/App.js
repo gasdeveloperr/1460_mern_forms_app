@@ -18,6 +18,7 @@ import UserSettingsPage from './UserSettingsPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ActivatePage from './ActivatePage';
+import ErrorPage from './ErrorPage';
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
           <OutsideClickProvider>
             <Routes >
               <Route path="/login" element={<Login />} />
+              <Route path="/error" element={<ErrorPage />} />
               <Route path="/activate/:token" element={<ActivatePage />} />
               <Route path="/register" element={<Register />} />
               <Route element={<ProtectedRoute />}>

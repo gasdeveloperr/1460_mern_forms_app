@@ -6,7 +6,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const CreateBusinessForm = ({isModalOpen, setIsModalOpen, setBusinesses, setIsLoading, setIsError}) => {
+const CreateBusinessForm = ({isModalOpen, setIsModalOpen, setIsLoading, setIsError}) => {
 
   const navigate = useNavigate();
 
@@ -31,17 +31,18 @@ const CreateBusinessForm = ({isModalOpen, setIsModalOpen, setBusinesses, setIsLo
         'Authorization': `${token}`,
       },
     };
+    setIsLoading(true);
 
     try {
       const response = await axios.post(`${backend_point}/api/business/new`, businessData, config);
       setIsLoading(false);
-      setBusinesses(response.data);
     } catch (err) {
-      setIsError('Error fetching business, please refresh the page')
-      console.error('Error fetching business:', err);
       if(err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
+      }else{
+        setIsError('Error fetching business, please refresh the page')
+        console.error('Error fetching business:', err);
       }
     }
 

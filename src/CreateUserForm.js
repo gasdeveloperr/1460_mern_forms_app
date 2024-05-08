@@ -41,11 +41,12 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen,
       const response = await axios.get(`${backend_point}/api/business/all`, config);
       setBusinessForUser(response.data);
     } catch (err) {
-      setIsError('Error fetching business, please refresh the page')
-      console.error('Error fetching business:', err);
       if(err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
+      }else{
+        setIsError('Error fetching business, please refresh the page')
+        console.error('Error fetching business:', err);
       }
     }
   };
@@ -63,11 +64,12 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen,
       await axios.post(`${backend_point}/api/users/new`, userData, config);
       setIsLoading(false);
     } catch (err) {
-      setIsError('Error fetching user, please refresh the page')
-      console.error('Error fetching user:', err);
       if(err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
+      }else{
+        setIsError('Error fetching business, please refresh the page')
+        console.error('Error fetching business:', err);
       }
     }
   }
