@@ -171,15 +171,6 @@ function AdminPage() {
     }
   }
 
-  const [businessOption, setBusinessOption] = useState('')
-
-  const businessOptionsOnClickHandler = (businessData) => {
-    if(businessOption !== businessData._id){
-      setBusinessOption(businessData._id);
-    }else{
-      setBusinessOption('')
-    }
-  }
 
   const deleteUserHandler = async (userId) => {
     const token = getAuthToken();

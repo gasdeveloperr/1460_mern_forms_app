@@ -164,8 +164,9 @@ body {
 .dashboard-body{
   background: #FFF;
   border-radius: 18px;
-  margin: 40px 180px;
+  margin: 40px auto;
   border: 1px solid #d8d8d8;
+  max-width: 1300px;
 }
 
 .dashboard-page-heading{
@@ -844,4 +845,65 @@ body {
 .modal-footer button[type='button'] {
   background-color: #f0f0f0;
   color: #333333;
+}
+
+.activate-page{
+
+}
+.activate-page-container{
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  background-color: var(--gm3-sys-color-background, #fff);
+  border-radius: 8px;
+  border: 1px solid var(--gm3-sys-color-surface-variant, #e1e3e1);
+  box-sizing: border-box;
+  overflow: hidden;
+  max-width: 500px;
+  margin: 40px auto;
+}
+
+.activate-page-input-container{
+  display: grid;
+  padding: 12px 0px;
+  align-items: center;
+  grid-template-columns: 1fr 1fr 40px;
+  margin: 0px 18px;
+}
+.activate-page-requirements-container{
+  font-size: 13px;
+  color: #8a8a8a;
+  padding: 8px 22px;
+}
+
+.activated-success-block{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  color: #155724;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 200px auto;
+  padding: 20px 15px;
+  text-align: center;
+  animation: fadeOut 3s ease-in-out forwards;
+  width: 360px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  color: #fff;
+  text-decoration: none;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.login-button:hover {
+  background-color: #0056b3;
 }

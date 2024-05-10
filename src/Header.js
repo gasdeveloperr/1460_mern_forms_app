@@ -3,7 +3,7 @@ import { getUserRole } from './utils';
 
 const Header = () => {
 
-  const role = getUserRole()
+  const userRole = getUserRole()
 
   return (
     <header className="header">
@@ -18,7 +18,7 @@ const Header = () => {
             <li><a href="/forms/dashboard">Dashboard</a></li>
             <li><a href="/forms/results">Form Results</a></li>
             {
-              (role === 'admin' || role ==='editor') && 
+              (userRole === 'admin' || userRole ==='editor') && 
               <li><a href="/administration">Admin panel</a></li>
             }
           </ul>

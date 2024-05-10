@@ -5,7 +5,7 @@ import axios from 'axios';
 import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
 import { backend_point } from './consts';
-import { getAuthToken } from './utils';
+import { getAuthToken, getUserRole } from './utils';
 
 function DashboardPage() {
 
@@ -14,6 +14,8 @@ function DashboardPage() {
   const [forms, setForms] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState('')
+
+  const userRole = getUserRole();
 
   
   const fetchForms = async () => {
@@ -106,9 +108,12 @@ function DashboardPage() {
         <div className="dashboard-page-title">
           Welcome to Dashboard
         </div>
-        <div className="new-form-btn" onClick={() => createFormHandler()}>
-          Create new Form
-        </div>
+        {
+          (userRole === 'admin' || userRole ==='editor') && 
+          <div className="new-form-btn" onClick={() => createFormHandler()}>
+            Create new Form
+          </div>
+        }
       </div>
       <div className="dashboard-page-content">
         <div className="dashboard-form-list">
@@ -125,15 +130,19 @@ function DashboardPage() {
               <div className="form-list-item" key={form._id}>
                 {form.title}
                 <div className="form-actions">
-                  <a href={`/forms/builder/${form._id}`} className="edit">
-                    Edit
-                  </a>
+                  {(userRole === 'editor' || userRole ==='admin') &&
+                    <a href={`/forms/builder/${form._id}`} className="edit">
+                      Edit
+                    </a>
+                  }
                   <a href={`/forms/live/${form._id}`} className="fill">
                     Use
                   </a>
-                  <div className="delete" onClick={() => deleteFormHandler(form._id)}>
-                    <img src={trash_icon} className="remove-icon"/>
-                  </div>
+                  {(userRole === 'editor' || userRole ==='admin') &&
+                    <div className="delete" onClick={() => deleteFormHandler(form._id)}>
+                      <img src={trash_icon} className="remove-icon"/>
+                    </div>
+                  }
                 </div>
               </div>
             ))

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Header from './Header';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
 import FormLiveComponent from './FormLiveComponent';
 import './FormLiveStyles.css';
@@ -10,12 +10,17 @@ import { backend_point } from './consts';
 import { getAuthToken } from './utils';
 
 const FormLive = () => {
+
+  const navigate = useNavigate();
+
   const [formTitle, setFormTitle] = useState('New Form');
   const [formFields, setFormFields] = useState();
   const { formId } = useParams();
 
   const  [isLoading, setIsLoading] = useState(false)
   const  [isError, setIsError] = useState('')
+
+  const [isSubmited, setIsSubmited] = useState(false)
 
 
   const usePrevious = (value) => {
@@ -56,37 +61,19 @@ const FormLive = () => {
         setFormFields(formData.fields);
 
       } catch (err) {
-        setIsError('Error fetching form, please refresh the page')
-        console.error('Error fetching form:', err);
+        if(err.response.status === 401){
+          localStorage.removeItem('token');
+          navigate('/login');
+        }else{
+          setIsError('Error fetching form, please refresh the page')
+          console.error('Error fetching forms:', err);
+        }
       }
     };
 
     setIsLoading(true);
     getForm();
   }, []);
-
-  const saveForm = async () => {
-    try {
-      const response = await axios.post(`${backend_point}/api/subm_forms/${formId}`, {
-        title: formTitle,
-        fields: formFields,
-      });
-      console.log('Form saved successfully:', response.data);
-      // Handle success, show a success message, redirect, etc.
-    } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error('Error saving form:', error.response.data);
-        // Handle specific error cases based on the response status code
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received from the server');
-      } else {
-        // Something happened in setting up the request
-        console.error('Error:', error.message);
-      }
-    }
-  };
 
   const submitButtonComponent = {
     id: 'submit_button',
@@ -97,10 +84,10 @@ const FormLive = () => {
     required: false,
   };
 
-  const submitHandler = (event) => {
+  const submitHandler = async(event) => {
     event.preventDefault(); // Prevent the default form submission behavior
+    setIsLoading(true);
 
-    // Create an object to store the form data
     const formData = {};
 
     console.log('formFields : ', formFields)
@@ -169,8 +156,37 @@ const FormLive = () => {
       }
     }
 
-    // Log the form data for demonstration purposes
-    console.log('data from the submit : ',formData);
+    const submittedTime = Date.now();
+    const formSubmsn = {
+      formData: formData,
+      submittedAt: submittedTime
+    }
+    console.log('data from the submit : ',formSubmsn);
+
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.post(`${backend_point}/api/subm_forms/${formId}`, formSubmsn, config);
+      console.log('Form updated successfully:', response.data);
+      setIsLoading(false);
+      setIsSubmited(true)
+      //if(response.)
+    } catch (error) {
+      if (error.response) {
+        console.error('Error saving form:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received from the server');
+      } else {
+        console.error('Error:', error.message);
+      }
+      setIsLoading(false);
+    }
+    
 
     // TODO: Perform further actions with the form data (e.g., send to server, update state, etc.)
   };
@@ -179,6 +195,7 @@ const FormLive = () => {
 
   return (
     <div className="form-live-page">
+      <Header/>
       {
         isLoading ?
           <Spinner/>
@@ -187,6 +204,12 @@ const FormLive = () => {
           <div className='error-message' >
             {isError}
           </div>
+        :
+        isSubmited ?
+        <div className="form-live-submitted-block">
+          <p>Form successfully submitted!</p>
+          <p>You can go back to the dashboard to submit other forms.</p>
+        </div>
         :
         formFields ?
         <form className="form-live-content" onSubmit={submitHandler}>
