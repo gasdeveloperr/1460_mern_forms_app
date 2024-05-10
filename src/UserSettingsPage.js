@@ -88,12 +88,6 @@ const UserSettingsPage = () => {
       return;
     }
   
-    // Check if password contains only letters and numbers
-    if (!/^[a-zA-Z0-9]+$/.test(newPassword)) {
-      toast.error('Password must contain only letters and numbers.');
-      return;
-    }
-  
     // Check if password contains any spaces
     if (/\s/.test(newPassword)) {
       toast.error('Password must not contain any spaces.');
@@ -293,7 +287,6 @@ const UserSettingsPage = () => {
                     <li>Must be at least 8 characters long.</li>
                     <li>Must contain at least one letter.</li>
                     <li>Must contain at least one number.</li>
-                    <li>Must contain only letters and numbers.</li>
                     <li>Must not contain any spaces.</li>
                   </ul>
                 </div>

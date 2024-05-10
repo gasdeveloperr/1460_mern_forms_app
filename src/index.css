@@ -63,6 +63,10 @@ body {
   transition: color 0.3s ease;
   font-size: 18px;
 }
+.nav-links li a.active,
+.header-button li a.active {
+  font-weight: bold;
+}
 
 .nav-links a:hover {
   color: #a9a9a9;
@@ -193,6 +197,30 @@ body {
   width: 70%;
   list-style-type: none;
   padding: 0;
+}
+.results-dashboard-list{
+  display: grid;
+  justify-content: space-between;
+  width: 80%;
+  list-style-type: none;
+  padding: 0;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
+.results-list-item {
+  background-color: #f4f4f4;
+  padding: 12px 18px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+}
+.results-list-item-title{
+  font-size: 20px;
 }
 
 .form-list-item {

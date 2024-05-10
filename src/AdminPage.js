@@ -32,7 +32,7 @@ function AdminPage() {
   const [openBusinessModal, setOpenBusinessModal] = useState(false)
   const [openUserModal, setOpenUserModal] = useState(false)
   
-  const [adminPageState, setAdminPageState] = useState('Business board')
+  const [adminPageState, setAdminPageState] = useState('Businesses board')
   const [businessChosen, setBusinessChosen] = useState('')
 
   useEffect(() => {
@@ -143,6 +143,7 @@ function AdminPage() {
       const emailData = {
         invitation_link: `${frontend_point}/activate/${inviteLink}`,
         user_name: userName, 
+        user_email: userEmail, 
       }
       
       toast.promise( () => 
@@ -230,9 +231,9 @@ function AdminPage() {
       <Header />
       <div className="admin-page-content">
         <div className="admin-page-side-bar">
-          <div className={`admin-page-side-bar-option ${adminPageState === 'Business board' ? 'chosen' :''}`} 
-            onClick={() => {setBusinessChosen(''); setAdminPageState('Business board')}}>
-            Business
+          <div className={`admin-page-side-bar-option ${adminPageState === 'Businesses board' ? 'chosen' :''}`} 
+            onClick={() => {setBusinessChosen(''); setAdminPageState('Businesses board')}}>
+            Businesses
           </div>
           <div className="admin-page-side-bar-separator"/>
           <div className={`admin-page-side-bar-option ${adminPageState === 'Users board' ? 'chosen' :''}`} 
@@ -252,7 +253,7 @@ function AdminPage() {
                 <>
                   {adminPageState}
                   {
-                    adminPageState === 'Business board' &&
+                    adminPageState === 'Businesses board' &&
                     <div className="admin-page-create-button" onClick={() => setOpenBusinessModal(true)}>
                       Create new business
                     </div>
@@ -325,7 +326,7 @@ function AdminPage() {
                 </>
                 :
                 <>
-                  {adminPageState === 'Business board' ?
+                  {adminPageState === 'Businesses board' ?
                     <>
                       {businesses.length !==0  ? (
                         <table className="business-table">
@@ -389,9 +390,21 @@ function AdminPage() {
                                 <td>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
                                 <td>{user.business ? businesses.find((b) => b._id === user.business).name : '-'}</td>
                                 <td className='options_td'>
-                                  <div className='send-user-invite-button' onClick={() => sendInvitationEmail(user.email, user.name)}>
-                                    Send invitation email
-                                  </div>
+                                  {
+                                    !user.invitationLink ?
+                                    <div className='send-user-invite-button' onClick={() => sendInvitationEmail(user.email, user.name)}>
+                                      Send invitation email
+                                    </div>
+                                    :
+                                    user.invitationLink && user.status ==='inactive'
+                                    ?
+                                    <div style={{display:'flex', justifyContent:'flex-start'}}>Invitation sent</div>
+                                    :
+                                    user.status ==='activated'?
+                                    <div>Activated</div>
+                                    :
+                                    <></>
+                                  }
                                 </td>
                                 <td className='options_td'>
                                   <div className="delete_container" onClick={() => deleteUserHandler(user._id)}>
