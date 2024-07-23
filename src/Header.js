@@ -12,41 +12,53 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
-      <div className="header-container">
-      <nav className="header-nav">
-        <div className="logo">
-          <a href="/">
-            <img src={simmonssafe_logo_login} alt="" />
-          </a>
-        </div>
-        <ul className="nav-links">
-          <li>
-            <a href="/forms/dashboard" className={isActive('/forms/dashboard') ? 'active' : ''}>
-              Dashboard
-            </a>
-          </li>
-          <li>
-            <a href="/forms/results" className={isActive('/forms/results') ? 'active' : ''}>
-              Form Results
-            </a>
-          </li>
-          {(userRole === 'admin' || userRole === 'editor') && (
-            <li>
-              <a href="/administration" className={isActive('/administration') ? 'active' : ''}>
-                Admin panel
+    <div className="header-component">
+      <header className="header">
+        <div className="header-container">
+          <nav className="header-nav">
+            <div className="logo">
+              <a href="/">
+                <img src={simmonssafe_logo_login} alt="" />
               </a>
-            </li>
-          )}
-        </ul>
-        <div className="header-button">
-          <a href="/account/settings" className={isActive('/account/settings') ? 'active' : ''}>
-            User settings
-          </a>
+            </div>
+            <ul className="nav-links">
+              <li>
+                <a href="/clients" className={isActive('/clients') ? 'active' : ''}>
+                  Clients
+                </a>
+              </li>
+              <li>
+                <a href="/people" className={isActive('/people') ? 'active' : ''}>
+                  People
+                </a>
+              </li>
+              <li>
+                <a href="/forms/dashboard" className={isActive('/forms/dashboard') ? 'active' : ''}>
+                  Documents
+                </a>
+              </li>
+              <li>
+                <a href="/forms/results" className={isActive('/forms/results') ? 'active' : ''}>
+                  Form Results
+                </a>
+              </li>
+              {(userRole === 'admin' || userRole === 'editor') && (
+                <li>
+                  <a href="/administration" className={isActive('/administration') ? 'active' : ''}>
+                    Admin panel
+                  </a>
+                </li>
+              )}
+            </ul>
+            <div className="header-button">
+              <a href="/account/settings" className={isActive('/account/settings') ? 'active' : ''}>
+                User settings
+              </a>
+            </div>
+          </nav>
         </div>
-      </nav>
+      </header>
     </div>
-    </header>
   );
 };
 

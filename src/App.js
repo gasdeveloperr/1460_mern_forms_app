@@ -19,7 +19,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ActivatePage from './ActivatePage';
 import ErrorPage from './ErrorPage';
+import ClientsPage from './ClientsPage';
 
+import './index.css';
 
 const App = () => {
   return (
@@ -36,6 +38,7 @@ const App = () => {
               <Route path="/register" element={<Register />} />
               <Route element={<ProtectedRoute />}>
                 <Route path='/' element={<HomePage />}/>
+                <Route path='/clients' element={<ClientsPage />}/>
                 <Route path="/forms/builder/:formId?" element={<FormBuilder />} />
                 <Route path="/forms/dashboard" element={<DashboardPage />} />
                 <Route path="/forms/results" element={<ResultsBoard />} />

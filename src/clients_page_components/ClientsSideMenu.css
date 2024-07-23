@@ -1,0 +1,132 @@
+.side-menu-container {
+  width: 250px;
+  background: linear-gradient(135deg, #a2cf9c 0%, #8ab884 50%, #739f6d 100%);;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+}
+.side-menu-backside {
+  width: 250px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.side-menu-container-collapsed{
+  width: 60px;
+  background: linear-gradient(135deg, #a2cf9c 0%, #8ab884 50%, #739f6d 100%);;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+}
+.side-menu-backside-collapsed {
+  width: 60px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-menu-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.side-menu-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 26px 24px;
+  position: relative;
+}
+.side-menu-collapse-button{
+  display: flex;
+  justify-content: center;
+  border-radius: 8px;
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: 34px;
+  cursor: pointer;
+}
+.side-menu-collapse-button img{
+  width: 36px;
+  height: 36px;
+  -webkit-transition: -webkit-transform 0.3s ease-out;
+  -moz-transition:    -moz-transform 0.3s ease-out;
+  -o-transition:      -o-transform 0.3s ease-out;
+  -ms-transition:     -ms-transform 0.3s ease-out;
+  transition:         transform 0.3s ease-out;
+}
+.side-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style-type: none;
+  margin: 0;
+}
+
+.side-menu-list-header{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 8px;
+  font-size: 22px;
+  font-weight: 600;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+}
+.side-menu-separator{
+  width: 110%;
+  height: 2px;
+  background-color: #b8b8b8;
+  border-bottom: 1px solid #8ab884;
+  margin-left: -10px;
+}
+
+/* .side-menu-list-header:hover, */
+.menu-item:hover,
+.side-menu-collapse-button:hover{
+  background-color: #739f6d;
+}
+.menu-item a,
+.side-menu-list-header{
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ffffff;
+}
+.side-menu-list-header-icon{
+  width: 36px;
+  height: 36px;
+  margin-right: 6px;
+}
+.menu-item-icon{
+  margin: 0px 6px;
+  width: 24px;
+  height: 24px;
+
+}
+
+.menu-item-active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.menu-item-inactive:hover {
+  background-color: #c8e6c9;
+}
+
+.menu-item-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
