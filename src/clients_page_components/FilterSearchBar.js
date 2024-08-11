@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './FilterSearchBar.css';
+import '../css_of_components/FilterSearchBar.css';
 
 const FilterSearchBar = ({ onFilterChange, onSearchChange }) => {
   const [statusFilter, setStatusFilter] = useState('');

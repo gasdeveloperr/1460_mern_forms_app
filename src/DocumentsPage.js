@@ -9,7 +9,7 @@ import { getAuthToken, getUserRole } from './utils';
 import DashboardSideMenu from './dashboard_page_components/DashboardSideMenu';
 import DashboardTable from './dashboard_page_components/DashboardTable';
 
-function DashboardPage() {
+function DocumentsPage() {
 
   const navigate = useNavigate();
 
@@ -112,7 +112,7 @@ function DashboardPage() {
         <div className="table-page-body">
           <div className="table-page-heading">
             <div className="dashboard-page-title">
-              Assessments
+              Documents
             </div>
             {/* <FilterSearchBar
               onFilterChange={handleFilterChange} 
@@ -205,4 +205,4 @@ function DashboardPage() {
   );
 }
 
-export default DashboardPage;
+export default DocumentsPage;

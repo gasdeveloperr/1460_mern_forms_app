@@ -51,7 +51,7 @@ const UserSettingsPage = () => {
         setIsLoading(false);
 
       } catch (err) {
-        if(err.response.status === 401){
+        if(err.response && err.response.status === 401){
           localStorage.removeItem('token');
           navigate('/login');
         }else{
@@ -113,7 +113,7 @@ const UserSettingsPage = () => {
       setConfirmPassword('');
       toast.success('Password changed successfully!');
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{
@@ -149,7 +149,7 @@ const UserSettingsPage = () => {
       setCurrentName(updatedUser.name);
       setNewName('');
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{

@@ -9,6 +9,7 @@ import { getAuthToken, getUserRole } from './utils';
 import ClientsSideMenu from './clients_page_components/ClientsSideMenu';
 import ClientsTable from './clients_page_components/ClientsTable';
 import FilterSearchBar from './clients_page_components/FilterSearchBar';
+import ClientAddingWindow from './clients_page_components/ClientAddingWindow';
 
 function ClientsPage() {
 
@@ -20,6 +21,42 @@ function ClientsPage() {
   const [activeOption, setActiveOption] = useState('clients')
 
   const userRole = getUserRole();
+
+
+  const [clients, setClients] = useState();
+  const [filteredClients, setFilteredClients] = useState();
+  const [isAddingWindowOpen, setIsAddingWindowOpen] = useState(false);
+  
+  const fetchClients = async () => {
+
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.get(`${backend_point}/api/clients/all`, config);
+      setIsLoading(false);
+      setClients(response.data);
+      setFilteredClients(response.data)
+    } catch (err) {
+      if(err.response && err.response.status === 401){
+        localStorage.removeItem('token');
+        navigate('/login');
+      }else{
+        setIsError('Error fetching clients, please refresh the page')
+        console.error('Error fetching clients:', err);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchClients();
+  }, []);
+
 
 
   const initialClients = [
@@ -64,8 +101,6 @@ function ClientsPage() {
       ]
     }
   ];
-  const [clients, setClients] = useState(initialClients);
-  const [filteredClients, setFilteredClients] = useState(initialClients);
 
   const handleFilterChange = (status) => {
     if (status === '') {
@@ -88,11 +123,43 @@ function ClientsPage() {
     setFilteredClients(searched);
   };
 
+  const handleAddingClient = () => {
+    setIsAddingWindowOpen(true);
+  };
+
+  const handleAddClient = async(newClient) => {
+
+    console.log('handleAddClient : ', newClient)
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(`${backend_point}/api/clients/new`, newClient, config);
+      setIsLoading(false);
+      setClients(response.data);
+      setClients([...response.data, newClient]);
+      setFilteredClients([...response.data, newClient]);
+    } catch (err) {
+      if(err.response && err.response.status === 401){
+        localStorage.removeItem('token');
+        navigate('/login');
+      }else{
+        setIsError('Error fetching client, please refresh the page')
+        console.error('Error fetching client:', err);
+      }
+    }
+  };
+
   return (
     <div >
       <Header />
       <div className='page-container'>
-        <ClientsSideMenu activeOption={activeOption}/>
+        <ClientsSideMenu activeOption={activeOption} handleAddingClient={handleAddingClient}/>
         <div className="table-page-body">
           <div className="table-page-heading">
             <div className="dashboard-page-title">
@@ -104,8 +171,20 @@ function ClientsPage() {
             />
           </div>
           <div className="table-page-content">
-            <ClientsTable clients={filteredClients}/>
-            
+            {
+              isLoading ?
+                <Spinner/>
+              :  
+              isError ?
+              <div className='error-message' >
+                {isError}
+              </div>
+              :
+              <ClientsTable clients={filteredClients}/>
+            }
+            <ClientAddingWindow  isOpen={isAddingWindowOpen} onClose={() => setIsAddingWindowOpen(false)}
+              onAddClient={handleAddClient}
+            />
           </div>
         </div>
       </div>

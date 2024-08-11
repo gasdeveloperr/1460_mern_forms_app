@@ -41,7 +41,7 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen,
       const response = await axios.get(`${backend_point}/api/business/all`, config);
       setBusinessForUser(response.data);
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{
@@ -64,7 +64,7 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen,
       await axios.post(`${backend_point}/api/users/new`, userData, config);
       setIsLoading(false);
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{

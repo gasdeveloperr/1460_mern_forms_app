@@ -8,12 +8,12 @@ import configuration_icon from '../icons/configuration-icon.svg'
 import arrow_menu_icon from '../icons/arrow-side-menu-icon.svg'
 import position_case_icon from '../icons/positions-case-icon.svg'
 import data_sheet_icon from '../icons/data-sheet-icon.svg'
-import './ClientsSideMenu.css';
+import '../clients_page_components/ClientsSideMenu.css';
 
 
 
 
-const ClientsSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => {
+const DashboardSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -92,4 +92,4 @@ const ClientsSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => {
   );
 };
 
-export default ClientsSideMenu;
+export default DashboardSideMenu;

@@ -64,7 +64,7 @@ function AdminPage() {
       setIsLoading(false);
       setBusinesses(response.data);
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{
@@ -90,7 +90,7 @@ function AdminPage() {
       setIsLoading(false);
       setUsers(response.data);
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{
@@ -156,7 +156,7 @@ function AdminPage() {
       )
       setIsLoading(false);
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{
@@ -187,7 +187,7 @@ function AdminPage() {
       
       setIsLoading(false);
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{
@@ -211,7 +211,7 @@ function AdminPage() {
       
       setIsLoading(false);
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{

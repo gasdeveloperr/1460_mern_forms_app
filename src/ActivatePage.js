@@ -33,7 +33,7 @@ const ActivatePage = () => {
         setIsLoading(false);
       }
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{
@@ -91,7 +91,7 @@ const ActivatePage = () => {
       setIsLoading(false);
       setIsActivated(true);
     } catch (err) {
-      if(err.response.status === 401){
+      if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{

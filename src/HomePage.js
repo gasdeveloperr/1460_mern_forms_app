@@ -27,7 +27,7 @@ const HomePage = () => {
         const userData = response.data;
 
       } catch (err) {
-        if(err.response.status === 401){
+        if(err.response && err.response.status === 401){
           localStorage.removeItem('token');
           navigate('/login');
         }else{

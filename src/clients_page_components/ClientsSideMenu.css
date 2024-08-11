@@ -1,5 +1,5 @@
 .side-menu-container {
-  width: 250px;
+  width: 264px;
   background: linear-gradient(135deg, #a2cf9c 0%, #8ab884 50%, #739f6d 100%);;
   height: 100vh;
   display: flex;
@@ -7,7 +7,7 @@
   position: fixed;
 }
 .side-menu-backside {
-  width: 250px;
+  width: 264px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -37,7 +37,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 26px 24px;
+  padding: 26px 16px;
   position: relative;
 }
 .side-menu-collapse-button{
@@ -74,6 +74,7 @@
   border-radius: 8px;
   font-size: 22px;
   font-weight: 600;
+  margin-bottom: 8px;
 }
 .menu-item {
   display: flex;
@@ -82,13 +83,16 @@
   transition: background-color 0.2s;
   border-radius: 8px;
   color: #ffffff;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
+  padding: 0px 6px;
+  gap: 6px;
+  white-space: nowrap;
 }
 .side-menu-separator{
   width: 110%;
   height: 2px;
-  background-color: #b8b8b8;
+  background-color: #b3b3b3;;
   border-bottom: 1px solid #8ab884;
   margin-left: -10px;
 }
@@ -111,7 +115,6 @@
   margin-right: 6px;
 }
 .menu-item-icon{
-  margin: 0px 6px;
   width: 24px;
   height: 24px;
 

@@ -33,15 +33,20 @@ const Header = () => {
                 </a>
               </li>
               <li>
-                <a href="/forms/dashboard" className={isActive('/forms/dashboard') ? 'active' : ''}>
+                <a href="/documents" className={isActive('/documents') ? 'active' : ''}>
                   Documents
                 </a>
               </li>
               <li>
+                <a href="/forms/dashboard" className={isActive('/forms/dashboard') ? 'active' : ''}>
+                  Assessments
+                </a>
+              </li>
+              {/* <li>
                 <a href="/forms/results" className={isActive('/forms/results') ? 'active' : ''}>
                   Form Results
                 </a>
-              </li>
+              </li> */}
               {(userRole === 'admin' || userRole === 'editor') && (
                 <li>
                   <a href="/administration" className={isActive('/administration') ? 'active' : ''}>
