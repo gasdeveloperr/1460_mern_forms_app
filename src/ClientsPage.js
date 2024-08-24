@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
 import Spinner from './Spinner';
@@ -10,6 +10,7 @@ import ClientsSideMenu from './clients_page_components/ClientsSideMenu';
 import ClientsTable from './clients_page_components/ClientsTable';
 import FilterSearchBar from './clients_page_components/FilterSearchBar';
 import ClientAddingWindow from './clients_page_components/ClientAddingWindow';
+import FacilityAddingWindow from './clients_page_components/FacilityAddingWindow';
 
 function ClientsPage() {
 
@@ -24,8 +25,10 @@ function ClientsPage() {
 
 
   const [clients, setClients] = useState();
+  const [selectedClient, setSelectedClient] = useState(null);
   const [filteredClients, setFilteredClients] = useState();
   const [isAddingWindowOpen, setIsAddingWindowOpen] = useState(false);
+  const [isAddingFacilityWindowOpen, setIsAddingFacilityWindowOpen] = useState(false);
   
   const fetchClients = async () => {
 
@@ -56,51 +59,6 @@ function ClientsPage() {
     setIsLoading(true);
     fetchClients();
   }, []);
-
-
-
-  const initialClients = [
-    {
-      name: "Simmons Safe",
-      status: "active",
-      locations: [
-        {
-          facility: "Connecticut Locations",
-          address: "404 Siena Lane, Glen Allen, VA, USA, 23059",
-          primary_contact: "Angela Simmons",
-          phone: "910-322-5282",
-          contact_email: "angela@simmonssafe.com"
-        },
-        {
-          facility: "Massachusetts Locations",
-          address: "123 Main St, Boston, MA, USA, 02108",
-          primary_contact: "John Doe",
-          phone: "617-555-1234",
-          contact_email: "john@simmonssafe.com"
-        }
-      ]
-    },
-    {
-      name: "ABC Dental Center",
-      status: "pending",
-      locations: [
-        {
-          facility: "Main Office",
-          address: "789 Maple Street, Springfield, IL, USA, 62701",
-          primary_contact: "Dr. John Smith",
-          phone: "217-555-1234",
-          contact_email: "jsmith@abcdental.com"
-        },
-        {
-          facility: "Branch Office",
-          address: "456 Oak Ave, Chicago, IL, USA, 60601",
-          primary_contact: "Dr. Jane Doe",
-          phone: "312-555-5678",
-          contact_email: "jdoe@abcdental.com"
-        }
-      ]
-    }
-  ];
 
   const handleFilterChange = (status) => {
     if (status === '') {
@@ -154,12 +112,50 @@ function ClientsPage() {
       }
     }
   };
+  
+  const handleAddingFacility = () => {
+    setIsAddingFacilityWindowOpen(true);
+  };
+
+  const handleAddFacility = async(newFacility) => {
+
+
+    console.log('handleAddClient update : ', newFacility)
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+    setIsLoading(true);
+
+    try {
+      await axios.put(`${backend_point}/api/clients/addNewLocation/${selectedClient._id}`, newFacility, config);
+      setIsLoading(false);
+      setSelectedClient(prev => ({...prev, locations: [...prev.locations, newFacility]}));
+    } catch (err) {
+      if(err.response && err.response.status === 401){
+        localStorage.removeItem('token');
+        navigate('/login');
+      }else{
+        setIsError('Error fetching client, please refresh the page')
+        console.error('Error fetching client:', err);
+      }
+    }
+  };
+
+  const toMainTableHandler = () => {
+    setSelectedClient(null)
+    fetchClients()
+  }
 
   return (
     <div >
       <Header />
       <div className='page-container'>
-        <ClientsSideMenu activeOption={activeOption} handleAddingClient={handleAddingClient}/>
+        <ClientsSideMenu activeOption={activeOption} 
+        handleAddingClient={handleAddingClient} handleAddingFacility={handleAddingFacility}
+        selectedClient={selectedClient} />
         <div className="table-page-body">
           <div className="table-page-heading">
             <div className="dashboard-page-title">
@@ -180,11 +176,13 @@ function ClientsPage() {
                 {isError}
               </div>
               :
-              <ClientsTable clients={filteredClients}/>
+              <ClientsTable clients={filteredClients} 
+              selectedClient={selectedClient} setSelectedClient={setSelectedClient} goBack={toMainTableHandler}/>
             }
-            <ClientAddingWindow  isOpen={isAddingWindowOpen} onClose={() => setIsAddingWindowOpen(false)}
-              onAddClient={handleAddClient}
-            />
+            <ClientAddingWindow isOpen={isAddingWindowOpen} onClose={() => setIsAddingWindowOpen(false)}
+              onAddClient={handleAddClient}/>
+            <FacilityAddingWindow isOpen={isAddingFacilityWindowOpen} onClose={() => setIsAddingFacilityWindowOpen(false)}
+              onAddFacility={handleAddFacility} selectedClient={selectedClient} />
           </div>
         </div>
       </div>

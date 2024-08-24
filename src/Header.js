@@ -7,8 +7,11 @@ const Header = () => {
   const userRole = getUserRole()
   const location = useLocation();
 
+  // const isActive = (path) => {
+  //   return location.pathname === path;
+  // };
   const isActive = (path) => {
-    return location.pathname === path;
+    return location.pathname.startsWith(path);
   };
 
   return (
@@ -38,7 +41,7 @@ const Header = () => {
                 </a>
               </li>
               <li>
-                <a href="/forms/dashboard" className={isActive('/forms/dashboard') ? 'active' : ''}>
+                <a href="/forms/dashboard" className={isActive('/forms') ? 'active' : ''}>
                   Assessments
                 </a>
               </li>
@@ -57,7 +60,7 @@ const Header = () => {
             </ul>
             <div className="header-button">
               <a href="/account/settings" className={isActive('/account/settings') ? 'active' : ''}>
-                User settings
+                Account settings
               </a>
             </div>
           </nav>

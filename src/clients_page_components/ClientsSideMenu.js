@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import client_icon from '../icons/client-icon.svg'
 import clients_icon from '../icons/clients-icon.svg'
 import client_add_icon from '../icons/client-add-icon.svg'
+import location_add_icon from '../icons/location-add-icon.svg'
 import home_page_icon from '../icons/home-page-icon.svg'
 import configuration_icon from '../icons/configuration-icon.svg'
 import arrow_menu_icon from '../icons/arrow-side-menu-icon.svg'
@@ -11,9 +12,7 @@ import data_sheet_icon from '../icons/data-sheet-icon.svg'
 import './ClientsSideMenu.css';
 
 
-
-
-const ClientsSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => {
+const ClientsSideMenu = ({ activeOption, handleAddingClient, handleAddingFacility, selectedClient, onItemClick}) => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -52,13 +51,20 @@ const ClientsSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => {
                 <img src={clients_icon} className="menu-item-icon"/>
                 <span className="menu-item__label">Clients </span>
               </div>
-              <div
-                className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
-                onClick={() => handleAddingClient()}
-              >
-                <img src={client_add_icon} className="menu-item-icon"/>
-                <span className="menu-item__label">Add client </span>
-              </div>
+              {
+                selectedClient? 
+                <div className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
+                  onClick={() => handleAddingFacility()}>
+                  <img src={location_add_icon} className="menu-item-icon"/>
+                  <span className="menu-item__label">Add facility </span>
+                </div>
+                :
+                <div className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
+                  onClick={() => handleAddingClient()}>
+                  <img src={client_add_icon} className="menu-item-icon"/>
+                  <span className="menu-item__label">Add client </span>
+                </div>
+              }
               
             </div>
             <div className="side-menu-separator"/>

@@ -1,0 +1,15 @@
+.forms-action a{
+  cursor: pointer;
+}
+.forms-action a img:hover{
+  opacity: 0.7;
+}
+.forms-action-open-img{
+  width: 32px;
+  height: 32px;
+}
+.forms-action-edit-img{
+  width: 28px;
+  height: 28px;
+
+}

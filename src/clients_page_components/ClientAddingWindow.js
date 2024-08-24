@@ -48,8 +48,8 @@ const ClientAddingWindow = ({ isOpen, onClose, onAddClient }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="client-adding-overlay">
-      <div className="client-adding-window">
+    <div className="window-overlay">
+      <div className="window-content">
         <h2>Add New Client</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">

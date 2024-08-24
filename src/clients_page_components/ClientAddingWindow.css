@@ -1,4 +1,4 @@
-.client-adding-overlay {
+.window-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -8,9 +8,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 200;
 }
 
-.client-adding-window {
+.window-content {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -20,7 +21,7 @@
   overflow-y: auto;
 }
 
-.client-adding-window h2 {
+.window-content h2 {
   margin-top: 0;
 }
 

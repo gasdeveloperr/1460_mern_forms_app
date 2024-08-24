@@ -198,7 +198,7 @@ const FormBuilder = () => {
   return (
     <div className='page-content'>
       <Header />
-      <div className='page-body'>
+      <div className='editor-page-body'>
         <div className='form-builder-page-header'>
           <input className='form-title-input' onChange={updateFormTitleHandler} value={formTitle}/>
           <Link 

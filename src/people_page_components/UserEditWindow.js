@@ -1,68 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import '../clients_page_components/ClientAddingWindow.css';
-import { getAuthToken } from '../utils';
-import { backend_point } from '../consts';
 
-const UserAddingWindow = ({ isOpen, onClose, onAddUser }) => {
+const UserEditWindow = ({ onClose, chosenUser, editUserHandler, changeStatusHandler }) => {
+  // State for the form fields
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('user');
   const [organization, setOrganization] = useState('');
   const [position, setPosition] = useState('');
   const [workFunctions, setWorkFunctions] = useState('');
-  const [role, setRole] = useState('user');
+  const [password, setPassword] = useState('');
   const [details, setDetails] = useState('');
-  const [clients, setClients] = useState([]);
 
-  const [isError, setIsError] = useState('')
-
-  const fetchClients = async () => {
-
-    const token = getAuthToken();
-    const config = {
-      headers: {
-        'Authorization': `${token}`,
-      },
-    };
-
-    try {
-      const response = await axios.get(`${backend_point}/api/clients/all`, config);
-      setClients(response.data);
-    } catch (err) {
-      setIsError('Error fetching clients, please refresh the page')
-      console.error('Error fetching clients:', err);
-    }
-  };
-
-  // Fetch clients for the organization dropdown
+  // Pre-populate the form fields when the chosenUser changes
   useEffect(() => {
-    fetchClients();
-  }, []);
+    if (chosenUser) {
+      setEmail(chosenUser.email || '');
+      setName(chosenUser.name || '');
+      setRole(chosenUser.role || 'user');
+      setOrganization(chosenUser.organization || '');
+      setPosition(chosenUser.position || '');
+      setWorkFunctions(chosenUser.work_functions || '');
+      setPassword(''); // Set password empty initially for security
+      setDetails(chosenUser.details || '');
+    }
+  }, [chosenUser]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newUser = {
+
+    const updatedUser = {
       email,
       name,
       role,
       organization,
       position,
       work_functions: workFunctions,
-      password,
+      password: password || undefined, // Only send password if it’s updated
       details,
-      status: 'inactive'
+      status: 'inactive', // Assuming status update is handled elsewhere
     };
-    onAddUser(newUser);
+
+    editUserHandler(updatedUser);
     onClose();
   };
 
-  if (!isOpen) return null;
+  if (!chosenUser) return null;
 
   return (
     <div className="window-overlay">
       <div className="window-content">
-        <h2>Add New User</h2>
+        <h2>Edit User</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email:</label>
@@ -91,22 +79,8 @@ const UserAddingWindow = ({ isOpen, onClose, onAddUser }) => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              placeholder="Leave blank to keep unchanged"
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="organization">Organization:</label>
-            <select
-              id="organization"
-              value={organization}
-              onChange={(e) => setOrganization(e.target.value)}
-              required
-            >
-              <option value="" disabled>Select organization</option>
-              {clients.map(client => (
-                <option key={client._id} value={client._id}>{client.name}</option>
-              ))}
-            </select>
           </div>
           <div className="form-group">
             <label htmlFor="position">Position:</label>
@@ -148,7 +122,14 @@ const UserAddingWindow = ({ isOpen, onClose, onAddUser }) => {
             />
           </div>
           <div className="form-actions">
-            <button type="submit">Add User</button>
+            <button type="submit">Save User</button>
+            {
+            chosenUser.status == 'inactive' ? 
+              <button type="button" onClick={() => changeStatusHandler('active')}>Activate User</button>
+            : 
+              <button type="button" onClick={() => changeStatusHandler('inactive')}>Inactivate User</button>
+            }
+           
             <button type="button" onClick={onClose}>Cancel</button>
           </div>
         </form>
@@ -157,4 +138,4 @@ const UserAddingWindow = ({ isOpen, onClose, onAddUser }) => {
   );
 };
 
-export default UserAddingWindow;
+export default UserEditWindow;

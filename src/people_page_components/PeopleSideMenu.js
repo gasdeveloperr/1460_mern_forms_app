@@ -14,7 +14,7 @@ import '../clients_page_components/ClientsSideMenu.css';
 
 
 
-const PeopleSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => {
+const PeopleSideMenu = ({ activeOption, handleAddingUser, onItemClick}) => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -55,14 +55,14 @@ const PeopleSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => {
               </div>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
-                onClick={() => handleAddingClient()}
+                onClick={() => handleAddingUser()}
               >
                 <img src={client_add_icon} className="menu-item-icon"/>
                 <span className="menu-item__label">Add user </span>
               </div>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
-                onClick={() => handleAddingClient()}
+                onClick={() => handleAddingUser()}
               >
                 <img src={client_add_icon} className="menu-item-icon"/>
                 <span className="menu-item__label">Batch import </span>

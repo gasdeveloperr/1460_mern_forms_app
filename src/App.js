@@ -41,6 +41,7 @@ const App = () => {
               <Route element={<ProtectedRoute />}>
                 <Route path='/' element={<HomePage />}/>
                 <Route path='/clients' element={<ClientsPage />}/>
+                <Route path='/clients/:clientId?' element={<ClientsPage />}/>
                 <Route path='/people' element={<PeoplePage />}/>
                 <Route path='/documents' element={<DocumentsPage />}/>
                 <Route path="/forms/builder/:formId?" element={<FormBuilder />} />

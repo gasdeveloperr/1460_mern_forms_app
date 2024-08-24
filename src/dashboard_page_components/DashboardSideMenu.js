@@ -13,7 +13,7 @@ import '../clients_page_components/ClientsSideMenu.css';
 
 
 
-const DashboardSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => {
+const DashboardSideMenu = ({ activeOption, handleAddingForm, onItemClick}) => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -43,45 +43,25 @@ const DashboardSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => 
             <div className="side-menu-list">
               <a className='side-menu-list-header'  href="/clients">
                 <img src={client_icon} className="side-menu-list-header-icon"/>
-                  Clients
+                  Forms
               </a>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                 onClick={onItemClick}
               >
                 <img src={clients_icon} className="menu-item-icon"/>
-                <span className="menu-item__label">Clients </span>
+                <span className="menu-item__label">Forms </span>
               </div>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
-                onClick={() => handleAddingClient()}
+                onClick={() => handleAddingForm()}
               >
                 <img src={client_add_icon} className="menu-item-icon"/>
-                <span className="menu-item__label">Add client </span>
+                <span className="menu-item__label">Create form </span>
               </div>
               
             </div>
             <div className="side-menu-separator"/>
-            <div className="side-menu-list">
-              <a className='side-menu-list-header'  href="/configuration">
-                <img src={configuration_icon} className="side-menu-list-header-icon"/>
-                Configuration
-              </a>
-              <div
-                className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
-                onClick={onItemClick}
-              >
-                <img src={position_case_icon} className="menu-item-icon"/>
-                <span className="menu-item__label">Positions </span>
-              </div>
-              <div
-                className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
-                onClick={onItemClick}
-              >
-                <img src={data_sheet_icon} className="menu-item-icon"/>
-                <span className="menu-item__label">Safety Data Sheets </span>
-              </div>
-            </div>
             </>
           }
           

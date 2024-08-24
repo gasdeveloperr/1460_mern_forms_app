@@ -31,19 +31,24 @@
 .client-name{
   vertical-align: top;
   padding-right: 66px !important;
+  color: #0066cc;
+  text-decoration: none;
+}
+.client-name:hover {
+  text-decoration: underline;
+}
+.user-name{
+  color: #0066cc;
+  text-decoration: none;
+}
+.user-name:hover {
+  text-decoration: underline;
 }
 .client-status{
   vertical-align: top;
   text-align: center !important;
 }
-.client-name a {
-  color: #0066cc;
-  text-decoration: none;
-}
 
-.client-name a:hover {
-  text-decoration: underline;
-}
 
 .status-indicator {
   display: inline-block;
@@ -63,4 +68,25 @@
 
 .status-indicator.pending {
   background-color: #FFC107;
+}
+
+.client-table-title{
+  display: flex;
+  gap: 18px;
+  padding: 12px 0px;
+}
+
+.client-table-go-back{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
+  border-radius: 18px;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+}
+.client-table-go-back img{
+  width: 32px;
+  height: 32px;
 }

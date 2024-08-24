@@ -5,7 +5,7 @@ import axios from 'axios';
 import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
 import { backend_point } from './consts';
-import { getAuthToken, getUserRole } from './utils';
+import { getAuthToken, getCurrentOrganization, getUserId, getUserRole } from './utils';
 import DashboardSideMenu from './dashboard_page_components/DashboardSideMenu';
 import DashboardTable from './dashboard_page_components/DashboardTable';
 
@@ -18,6 +18,7 @@ function DashboardPage() {
   const [isError, setIsError] = useState('')
 
   const userRole = getUserRole();
+  const currentOrganization = getCurrentOrganization();
 
   const [activeOption, setActiveOption] = useState('clients')
 
@@ -52,7 +53,9 @@ function DashboardPage() {
   useEffect(() => {
     setIsLoading(true);
     fetchForms();
+    
   }, []);
+
 
   const createFormHandler = async () => {
     const token = getAuthToken();
@@ -66,6 +69,7 @@ function DashboardPage() {
       const newForm = {
         title: 'New form',
         fields: [],
+        organizations: [currentOrganization],
       };
       const response = await axios.post(`${backend_point}/api/forms/new`, newForm, config);
       const formData = response.data;
@@ -108,7 +112,7 @@ function DashboardPage() {
     <div>
       <Header />
       <div className='page-container'>
-        <DashboardSideMenu activeOption={activeOption} handleAddingClient={()=>{}}/>
+        <DashboardSideMenu activeOption={activeOption} handleAddingForm={() => createFormHandler()}/>
         <div className="table-page-body">
           <div className="table-page-heading">
             <div className="dashboard-page-title">
@@ -129,7 +133,7 @@ function DashboardPage() {
                 {isError}
               </div>
               :
-              <DashboardTable forms={forms}/>
+              <DashboardTable forms={forms} deleteFormHandler={deleteFormHandler}/>
               // forms.map((form) => (
               //   <div className="form-list-item" key={form._id}>
               //     {form.title}

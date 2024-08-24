@@ -1,7 +1,17 @@
 import React from 'react';
 import '../clients_page_components/ClientsTable.css';
+import './DashboardPage.css';
+import { formatDate, getUserRole } from '../utils';
+import trash_icon from '../icons/trash-can-white.svg'
+import open_icon from '../icons/open-form-icon.svg'
+import edit_icon from '../icons/edit-form-icon.svg'
 
-const DashboardTable = ({ forms }) => {
+const DashboardTable = ({ forms, deleteFormHandler }) => {
+  const userRole = getUserRole();
+
+  
+
+
   return (
     <div className="clients-table-container">
       <table className="clients-table">
@@ -9,7 +19,10 @@ const DashboardTable = ({ forms }) => {
           <tr>
             <th></th>
             <th>Title</th>
-            <th>Status</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Last changed</th>
             {/* <th>Facility</th>
             <th>Address</th>
             <th>Contact</th>
@@ -26,12 +39,28 @@ const DashboardTable = ({ forms }) => {
                 <td className="client-name" >
                   <a href={`/forms/builder/${form._id}`}>{form.title}</a>
                 </td>
-                <td className="client-status" align="center">
-                  {/* <span className={`status-indicator ${form.status.toLowerCase()}`}></span> */}
-                  {/* {form.status} */}
+                <td className='forms-action' align="center">
+                  {(userRole === 'editor' || userRole ==='admin') &&
+                    <a href={`/forms/builder/${form._id}`}>
+                      <img src={edit_icon}  className="forms-action-edit-img"/>
+                    </a>
+                  }
                 </td>
-                <td></td>
-                <td></td>
+                <td className='forms-action' align="center">
+                  <a href={`/forms/live/${form._id}`}>
+                    <img src={open_icon} className="forms-action-open-img"/>
+                  </a>
+                </td>
+                <td className='forms-action' align="center"> 
+                  {(userRole === 'editor' || userRole ==='admin') &&
+                    <div className="delete" onClick={() => deleteFormHandler(form._id)}>
+                      <img src={trash_icon} className="remove-icon"/>
+                    </div>
+                  }
+                </td>
+                <td className="client-index">
+                  {formatDate(form.last_changed)}
+                </td>
               </tr>
           ))}
         </tbody>
