@@ -25,10 +25,12 @@ const Login = () => {
       localStorage.setItem('userRole', role);
       localStorage.setItem('userOrganisation', organization);
       localStorage.setItem('userId', id);
+      localStorage.setItem('userEmail', email);
 
       // Redirect the user to the dashboard or homepage
       window.location.href = '/';
     } catch (error) {
+      console.log(error)
       setError('Invalid email or password');
     }
   };

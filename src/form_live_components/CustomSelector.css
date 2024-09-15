@@ -1,0 +1,50 @@
+.custom-select-container {
+  direction: ltr;
+  position: relative;
+  transition-property: padding, box-shadow, background-color, margin-left, margin-right;
+  transition-duration: 0s;
+  transition-timing-function: ease-in-out;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  grid-column: span 1;
+  margin-bottom: calc(20px);
+}
+
+.custom-select-display {
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.custom-select-display img{
+  width: 20px;
+  height: 20px;
+}
+
+
+.custom-select-options {
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 50px;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.custom-select-option {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.custom-select-option:hover {
+  opacity: 0.7;
+}

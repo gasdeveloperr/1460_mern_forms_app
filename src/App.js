@@ -4,7 +4,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import HomePage from './HomePage';
 import FormBuilder from './FormBuilder';
 import DashboardPage from './DashboardPage';
-import FormUsingPage from './FormUsingPage';
 import { OutsideClickProvider } from './OutsideClickContext';
 import FormLive from './FormLive';
 import ResultsBoard from './ResultsBoard';
@@ -24,6 +23,7 @@ import ClientsPage from './ClientsPage';
 import './index.css';
 import PeoplePage from './PeoplePage';
 import DocumentsPage from './DocumentsPage';
+import InDevelopmentPage from './InDevelopmentPage';
 
 const App = () => {
   return (
@@ -47,10 +47,12 @@ const App = () => {
                 <Route path="/forms/builder/:formId?" element={<FormBuilder />} />
                 <Route path="/forms/dashboard" element={<DashboardPage />} />
                 <Route path="/forms/results" element={<ResultsBoard />} />
+                <Route path="/forms/results/:formId?" element={<ResultsBoard />} />
                 <Route path="/forms/live/:formId?" element={<FormLive />} />
-                <Route path="/forms/:formId" element={<FormUsingPage />} />
                 <Route path="/account/settings" element={<UserSettingsPage />} />
                 <Route path="/administration" element={<AdminPage />} />
+                <Route path="/incidents" element={<InDevelopmentPage />} />
+                <Route path="/actions" element={<InDevelopmentPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes >

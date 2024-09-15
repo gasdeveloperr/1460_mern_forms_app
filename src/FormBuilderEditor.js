@@ -3,6 +3,7 @@ import './FormBuilderEditor.css';
 import { OutsideClickContext } from './OutsideClickContext';
 import { titles_to_types_object } from './consts';
 import trash_icon from './icons/trash-can.svg'
+import { HexColorPicker } from "react-colorful";
 
 const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) => {
 
@@ -87,6 +88,24 @@ const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) =>
     })
     setEditingField({...editingField, dropdown: newOptions})
   } 
+  // State to manage which color picker is visible
+  const [colorPickerVisible, setColorPickerVisible] = useState(null);
+
+  // Toggle visibility of the color picker
+  const toggleColorPicker = (index) => {
+    setColorPickerVisible(colorPickerVisible === index ? null : index);
+  };
+
+  // Handler for changing the color of the option
+  const changeOptionColorHandler = (color, index) => {
+    const newOptions = editingField.dropdown.map((option, opt_index) => {
+      if(opt_index === index){
+        option.color = color; // Update the color property
+      }
+      return option;
+    });
+    setEditingField({...editingField, dropdown: newOptions});
+  };
 
   const changeDateFormatHandler = (selectedFormat) => {
     setEditingField({...editingField, dateFormat: selectedFormat})
@@ -295,6 +314,22 @@ const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) =>
                   {editingField.dropdown.map((option, index)=> (
                     <div key={index} className="option-input">
                       <input type="text" onChange={(e) => changeFieldListOptionHandler(e, index)} value={option.title}/>
+                       {/* Toggle color picker visibility */}
+                      <div className="color-picker-container">
+                        <div 
+                          className="color-preview" 
+                          onClick={() => toggleColorPicker(index)}
+                          style={{ backgroundColor: option.color || '#000000' }}
+                        />
+                        <div className="color-preview-container" >
+                          {colorPickerVisible === index && (
+                            <HexColorPicker 
+                              color={option.color || '#000000'} 
+                              onChange={(color) => changeOptionColorHandler(color, index)}
+                            />
+                          )}
+                        </div>
+                      </div>
                       <div className="option-buttons">
                         <button className="field-editor-add-button" onClick={() => addFieldListOptionHandler(index)}>+</button>
                         <button className="field-editor-remove-button" onClick={() => deleteFieldListOptionHandler(index)}>-</button>

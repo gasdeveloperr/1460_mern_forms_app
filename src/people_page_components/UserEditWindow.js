@@ -107,10 +107,11 @@ const UserEditWindow = ({ onClose, chosenUser, editUserHandler, changeStatusHand
               value={role}
               onChange={(e) => setRole(e.target.value)}
             >
-              <option value="user">User</option>
               <option value="admin">Admin</option>
+              <option value="manager">Manager</option>
               <option value="editor">Editor</option>
               <option value="contributor">Contributor</option>
+              <option value="user">User</option>
             </select>
           </div>
           <div className="form-group">
@@ -122,15 +123,15 @@ const UserEditWindow = ({ onClose, chosenUser, editUserHandler, changeStatusHand
             />
           </div>
           <div className="form-actions">
-            <button type="submit">Save User</button>
+            <button className='modal-button' type="submit">Save User</button>
             {
             chosenUser.status == 'inactive' ? 
-              <button type="button" onClick={() => changeStatusHandler('active')}>Activate User</button>
+              <button type="usual" onClick={() => changeStatusHandler('active')}>Activate User</button>
             : 
-              <button type="button" onClick={() => changeStatusHandler('inactive')}>Inactivate User</button>
+              <button type="usual" onClick={() => changeStatusHandler('inactive')}>Inactivate User</button>
             }
            
-            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="cancel" onClick={onClose}>Cancel</button>
           </div>
         </form>
       </div>

@@ -9,9 +9,6 @@ import edit_icon from '../icons/edit-form-icon.svg'
 const DashboardTable = ({ forms, deleteFormHandler }) => {
   const userRole = getUserRole();
 
-  
-
-
   return (
     <div className="clients-table-container">
       <table className="clients-table">
@@ -19,10 +16,11 @@ const DashboardTable = ({ forms, deleteFormHandler }) => {
           <tr>
             <th></th>
             <th>Title</th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>Edit</th>
+            <th>Fill</th>
+            <th>Results</th>
             <th>Last changed</th>
+            <th></th>
             {/* <th>Facility</th>
             <th>Address</th>
             <th>Contact</th>
@@ -33,10 +31,10 @@ const DashboardTable = ({ forms, deleteFormHandler }) => {
         <tbody>
           {forms.map((form, formIndex) => (
               <tr key={`${form._id}`}>
-                <td className="client-index">
+                <td className="form-index">
                   {formIndex+1}.
                 </td>
-                <td className="client-name" >
+                <td className="form-name" >
                   <a href={`/forms/builder/${form._id}`}>{form.title}</a>
                 </td>
                 <td className='forms-action' align="center">
@@ -51,15 +49,18 @@ const DashboardTable = ({ forms, deleteFormHandler }) => {
                     <img src={open_icon} className="forms-action-open-img"/>
                   </a>
                 </td>
+                <td className="form-name" >
+                  <a href={`/forms/results/${form._id}`}>See results</a>
+                </td>
+                <td className="client-index">
+                  {formatDate(form.last_changed)}
+                </td>
                 <td className='forms-action' align="center"> 
                   {(userRole === 'editor' || userRole ==='admin') &&
                     <div className="delete" onClick={() => deleteFormHandler(form._id)}>
                       <img src={trash_icon} className="remove-icon"/>
                     </div>
                   }
-                </td>
-                <td className="client-index">
-                  {formatDate(form.last_changed)}
                 </td>
               </tr>
           ))}

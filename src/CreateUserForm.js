@@ -168,9 +168,11 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen,
                   required
                   className="form-select"
                 >
-                  <option value="User">User</option>
-                  <option value="Editor">Editor</option>
                   <option value="Admin">Admin</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Editor">Editor</option>
+                  <option value="Contributor">Contributor</option>
+                  <option value="User">User</option>
                 </select>
               </div>
               { 
@@ -194,8 +196,8 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen,
                 </div>
               }
               <div className="modal-footer">
-                <button type="submit">Create</button>
-                <button type="button" onClick={closeModal}>
+                <button className='modal-button' type="submit">Create</button>
+                <button type="cancel" onClick={closeModal}>
                   Cancel
                 </button>
               </div>

@@ -6,8 +6,9 @@ import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
 import { backend_point } from './consts';
 import { getAuthToken, getUserRole } from './utils';
-import DashboardSideMenu from './dashboard_page_components/DashboardSideMenu';
 import DashboardTable from './dashboard_page_components/DashboardTable';
+import DocumentsSideMenu from './documents_page_components/DocumentsSideMenu';
+import DocumentsManagement from './documents_page_components/DocumentsManagement';
 
 function DocumentsPage() {
 
@@ -108,7 +109,7 @@ function DocumentsPage() {
     <div>
       <Header />
       <div className='page-container'>
-        <DashboardSideMenu activeOption={activeOption} handleAddingClient={()=>{}}/>
+        <DocumentsSideMenu activeOption={activeOption} handleAddingClient={()=>{}}/>
         <div className="table-page-body">
           <div className="table-page-heading">
             <div className="dashboard-page-title">
@@ -119,7 +120,7 @@ function DocumentsPage() {
               onSearchChange={handleSearchChange}
             /> */}
           </div>
-          <div className="table-page-content">
+          <div className="folders-page-content">
             {
               isLoading ?
                 <Spinner/>
@@ -129,7 +130,7 @@ function DocumentsPage() {
                 {isError}
               </div>
               :
-              <DashboardTable forms={forms}/>
+              <DocumentsManagement/>
               // forms.map((form) => (
               //   <div className="form-list-item" key={form._id}>
               //     {form.title}

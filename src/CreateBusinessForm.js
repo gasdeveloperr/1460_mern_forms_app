@@ -176,8 +176,8 @@ const CreateBusinessForm = ({isModalOpen, setIsModalOpen, setIsLoading, setIsErr
                 ></textarea>
               </div>
               <div className="modal-footer">
-                <button type="submit">Create</button>
-                <button type="button" onClick={closeModal}>
+                <button className='modal-button' type="submit">Create</button>
+                <button type="cancel" onClick={closeModal}>
                   Cancel
                 </button>
               </div>

@@ -1,4 +1,9 @@
+.forms-action{
+  padding: 4px !important;
+}
 .forms-action a{
+  display: flex;
+  width: fit-content;
   cursor: pointer;
 }
 .forms-action a img:hover{
@@ -11,5 +16,14 @@
 .forms-action-edit-img{
   width: 28px;
   height: 28px;
-
+}
+.form-index{
+  font-size: 14px; 
+  max-width: 8px;
+}
+.form-name{
+  padding-right: 66px !important;
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 14px;
 }

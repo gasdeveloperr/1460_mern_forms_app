@@ -59,7 +59,9 @@ const FilterSearchBar = ({ onFilterChange, onSearchChange }) => {
           >
             <option value="default">Role</option>
             <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
             <option value="Editor">Editor</option>
+            <option value="Contributor">Contributor</option>
             <option value="User">User</option>
           </select>
           <select

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import file_upload_icon from './icons/file-upload-icon.svg'
-import './FormLiveStyles.css';
 import calendar_icon from './icons/calendar-icon.svg'
 import time_icon from './icons/time-icon.svg' 
+import CustomSelector from './form_live_components/CustomSelector';
 
 
 
@@ -22,7 +22,25 @@ const FormLiveComponent = ({field, index}) => {
     //   }
     // }
     setInputValue(value);
+    if(field.type == 'dropdown'){
+      const selectedOption = field.dropdown.find(
+        (option) => option.title === e.target.value
+      );
+      setSelectBgColor(selectedOption ? selectedOption.color : '');
+    }
   };
+
+  const [selectBgColor, setSelectBgColor] = useState('');
+
+  useEffect(() => {
+    if(field.type == 'dropdown'){
+      // Find the initial selected option and set its color as the background
+      const initialSelectedOption = field.dropdown.find(option => option.title === field.value);
+      if (initialSelectedOption) {
+        setSelectBgColor(initialSelectedOption.color || '');
+      }
+    }
+  }, [field]); 
 
 
     return (
@@ -40,11 +58,13 @@ const FormLiveComponent = ({field, index}) => {
                   <span>{errorMessage}</span>
                 </div>
               )}
-              <input className='form-live-input' id={field.id} 
-                fieldtype={field.type}
-                name={field.title} onChange={handleInputChange} 
-                required={field.required} 
-                disabled={field.read_only}/>
+              {!field.read_only &&
+                <input className='form-live-input' id={field.id} 
+                  fieldtype={field.type}
+                  name={field.title} onChange={handleInputChange} 
+                  required={field.required} 
+                  disabled={field.read_only}/>
+                }
             </div>
           </label>
         )}
@@ -165,7 +185,7 @@ const FormLiveComponent = ({field, index}) => {
                 </label>
                 ))
               }
-              </div>
+            </div>
           </label>
         )}
         {field.type === 'radio' && (
@@ -192,19 +212,23 @@ const FormLiveComponent = ({field, index}) => {
             </div>
           </label>
         )}
-        {field.type === 'dropdown' && (
+        {field.type === 'dropdown' && <CustomSelector field={field}/>}
+        {/* {field.type === 'dropdown' && (
           <label key={field.id} htmlFor={field.id} className="form-live-component-container">
             <div className="form-component-dropdown">
               {field.title}
               <select id={field.id} name={field.title} className="form-component-select">
                 { field.dropdown.map((option, index)=> (
-                  <option key={index} value={option.title}>{option.title}</option>
+                  <option key={index} value={option.title} 
+                  className="form-component-select-option" style={{backgroundColor: option.color ? option.color : ''}}>
+                    {option.title}
+                  </option>
                   ))
                 }
               </select>
             </div>
           </label>
-        )}
+        )} */}
         {field.type === 'date_time' && (
           <div className="form-live-component-container">
             <div className='form-component-title'>

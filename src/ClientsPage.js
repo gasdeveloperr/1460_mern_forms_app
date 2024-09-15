@@ -118,8 +118,6 @@ function ClientsPage() {
   };
 
   const handleAddFacility = async(newFacility) => {
-
-
     console.log('handleAddClient update : ', newFacility)
     const token = getAuthToken();
     const config = {
@@ -143,6 +141,33 @@ function ClientsPage() {
       }
     }
   };
+
+  const editClientHandler = async(editedClient) => {
+    console.log('editClientHandler update : ', editedClient)
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+    setIsLoading(true);
+
+    try {
+      await axios.put(`${backend_point}/api/clients/update/${selectedClient._id}`, editedClient, config);
+      setSelectedClient(editedClient);
+      fetchClients();
+    } catch (err) {
+      if(err.response && err.response.status === 401){
+        localStorage.removeItem('token');
+        navigate('/login');
+      }else{
+        setIsError('Error fetching client, please refresh the page')
+        console.error('Error fetching client:', err);
+      }
+    }
+  };
+
+  
 
   const toMainTableHandler = () => {
     setSelectedClient(null)
@@ -177,7 +202,8 @@ function ClientsPage() {
               </div>
               :
               <ClientsTable clients={filteredClients} 
-              selectedClient={selectedClient} setSelectedClient={setSelectedClient} goBack={toMainTableHandler}/>
+              selectedClient={selectedClient} setSelectedClient={setSelectedClient} 
+              editClientHandler={editClientHandler} goBack={toMainTableHandler}/>
             }
             <ClientAddingWindow isOpen={isAddingWindowOpen} onClose={() => setIsAddingWindowOpen(false)}
               onAddClient={handleAddClient}/>

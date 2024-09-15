@@ -91,14 +91,14 @@ const ClientAddingWindow = ({ isOpen, onClose, onAddClient }) => {
                 </div>
               ))}
               {locations.length > 1 && (
-                <button type="button" onClick={() => removeLocation(index)}>Remove Location</button>
+                <button type="cancel" onClick={() => removeLocation(index)}>Remove Location</button>
               )}
             </div>
           ))}
-          <button type="button" onClick={addLocation}>Add Location</button>
+          <button type="cancel" onClick={addLocation}>Add Location</button>
           <div className="form-actions">
-            <button type="submit">Add Client</button>
-            <button type="button" onClick={onClose}>Cancel</button>
+            <button className='modal-button' type="submit">Add Client</button>
+            <button type="cancel" onClick={onClose}>Cancel</button>
           </div>
         </form>
       </div>

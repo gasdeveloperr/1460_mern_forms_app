@@ -187,7 +187,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
                 {field.required && <span className='required_sign'>*</span>}
                 {field.title}
               </div>
-              <div className='form-component-dropdown-div'>
+              <div className='form-component-dropdown-div' style={{backgroundColor: field.dropdown[0].color ? field.dropdown[0].color : ''}}>
                 {field.dropdown[0].title}
                 <img src={selector_icon} />
               </div>

@@ -77,7 +77,7 @@ const FacilityAddingWindow = ({ isOpen, onClose, onAddFacility  }) => {
           </div>
           <div className="form-actions">
             <button type="submit">Add New Facility</button>
-            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="cancel" onClick={onClose}>Cancel</button>
           </div>
         </form>
       </div>

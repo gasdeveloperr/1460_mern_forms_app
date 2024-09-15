@@ -133,10 +133,11 @@ const UserAddingWindow = ({ isOpen, onClose, onAddUser }) => {
               value={role}
               onChange={(e) => setRole(e.target.value)}
             >
-              <option value="user">User</option>
               <option value="admin">Admin</option>
+              <option value="manager">Manager</option>
               <option value="editor">Editor</option>
               <option value="contributor">Contributor</option>
+              <option value="user">User</option>
             </select>
           </div>
           <div className="form-group">
@@ -148,7 +149,7 @@ const UserAddingWindow = ({ isOpen, onClose, onAddUser }) => {
             />
           </div>
           <div className="form-actions">
-            <button type="submit">Add User</button>
+            <button className='modal-button' type="submit">Add User</button>
             <button type="button" onClick={onClose}>Cancel</button>
           </div>
         </form>

@@ -90,3 +90,68 @@
   width: 32px;
   height: 32px;
 }
+.submit-client-changes,
+.discard-client-changes,
+.edit-client-button{
+  height: fit-content;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.edit-client-button {
+  background-color: #28a745; /* Green for editing */
+}
+.submit-client-changes {
+  background-color: #007bff; /* Blue for saving */
+}
+
+.discard-client-changes {
+  background-color: #dc3545; /* Red for discarding */
+}
+
+.edit-client-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.submit-client-changes:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.discard-client-changes:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+.client-name-input{
+  padding: 4px 2px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 20px;
+  transition: border-bottom-color 0.3s ease;
+  font-weight: 500;
+
+}
+.clients-table input {
+  width: 100%;
+  padding: 4px 2px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 13px;
+  transition: border-bottom-color 0.3s ease;
+}
+
+.client-name-input:focus,
+.clients-table input:focus {
+  border-bottom-color: #007bff;
+  outline: none;
+}
+
+.clients-table input::placeholder {
+  color: #aaa;
+  font-style: italic;
+}

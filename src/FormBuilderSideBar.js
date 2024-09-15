@@ -2,7 +2,8 @@ import { useState } from "react";
 import DraggableComponent from "./DraggableComponent";
 import FieldBuilderEditor from "./FormBuilderEditor";
 
-const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormField, editingField, setEditingField}) => {
+const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormField,
+    updateFormTypeHandler, formType, editingField, setEditingField}) => {
 
   const handleDragStart = () => {
     setIsDragging(true);
@@ -13,19 +14,18 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
     setDropAreaPositions([]);
   };
 
-  
-  const [showBasicFields, setShowBasicFields] = useState(true);
-  const [showAdvancedFields, setShowAdvancedFields] = useState(false);
-  const [showLayoutAndSections, setShowLayoutAndSections] = useState(false);
+  const [sections, setSections] = useState({
+    basic: true,
+    advanced: false,
+    layout: false,
+    formSettings: false,
+  });
 
   const toggleSection = (section) => {
-    if (section === 'basic') {
-      setShowBasicFields(!showBasicFields);
-    } else if (section === 'advanced') {
-      setShowAdvancedFields(!showAdvancedFields);
-    } else if (section === 'layout') {
-      setShowLayoutAndSections(!showLayoutAndSections);
-    }
+    setSections((prevSections) => ({
+      ...prevSections,
+      [section]: !prevSections[section],
+    }));
   };
 
   return (
@@ -37,10 +37,10 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
         <div className="form-builder-components">
           <div className="section-group">
             <div className="section-header" onClick={() => toggleSection('basic')}>
-              <span className={`toggle-icon ${showBasicFields ? 'open' : 'closed'}`}>&#9660;</span>
+              <span className={`toggle-icon ${sections.basic ? 'open' : 'closed'}`}>&#9660;</span>
               Basic Fields
             </div>
-            {showBasicFields && (
+            {sections.basic && (
               <div className="section-content">
                 <DraggableComponent type="short_answer" title="Short Answer"
                 onDragStart={handleDragStart}
@@ -78,10 +78,10 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
   
           <div className="section-group">
             <div className="section-header" onClick={() => toggleSection('advanced')}>
-              <span className={`toggle-icon ${showAdvancedFields ? 'open' : 'closed'}`}>&#9660;</span>
+              <span className={`toggle-icon ${sections.advanced ? 'open' : 'closed'}`}>&#9660;</span>
               Advanced Fields
             </div>
-            {showAdvancedFields && (
+            {sections.advanced && (
               <div className="section-content">
                 <DraggableComponent type="date_time" title="Date/Time" 
                 onDragStart={handleDragStart}
@@ -89,6 +89,33 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
                 <DraggableComponent type="file_upload" title="File Upload" 
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd} />
+              </div>
+            )}
+          </div>
+          <div className="section-group">
+            <div className="section-header" onClick={() => toggleSection('formSettings')}>
+              <span className={`toggle-icon ${sections.formSettings ? 'open' : 'closed'}`}>&#9660;</span>
+              Form Settings
+            </div>
+            {sections.formSettings && (
+              <div className="section-chooser-container">
+                <div className="section-chooser-title">
+                  Choose Form Type
+                </div>
+                <div className="section-chooser-options">
+                  <div
+                    className={`section-chooser-option ${formType === 'blank' ? 'selected' : ''}`}
+                    onClick={() => updateFormTypeHandler('blank')}
+                  >
+                    Blank Form
+                  </div>
+                  <div
+                    className={`section-chooser-option ${formType === 'scored' ? 'selected' : ''}`}
+                    onClick={() => updateFormTypeHandler('scored')}
+                  >
+                    Scored Form
+                  </div>
+                </div>
               </div>
             )}
           </div>

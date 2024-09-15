@@ -13,6 +13,7 @@ import { getAuthToken } from './utils';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
+  const [formType, setFormType] = useState('blank');
   const [formFields, setFormFields] = useState();
   const { formId } = useParams();
 
@@ -35,11 +36,10 @@ const FormBuilder = () => {
   const prevFormFields = usePrevious(formFields);
 
   useEffect(() => {
-      if (prevFormFields && !isEqual(prevFormFields, formFields)) {
-        updateForm(formId)
-        //console.log('formFields update goes brrrrr>.',prevFormFields, formFields )
-      }
-
+    if (prevFormFields && !isEqual(prevFormFields, formFields)) {
+      updateForm(formId)
+      console.log('formFields update goes brrrrr>.',prevFormFields, formFields, formType )
+    }
   }, [formFields]);
 
   const [editingField, setEditingField] = useState({id:''})
@@ -58,6 +58,7 @@ const FormBuilder = () => {
       const formData = response.data;
       setIsLoading(false);
       setFormTitle(formData.title);
+      setFormType(formData.formType);
       setFormFields(formData.fields);
     } catch (err) {
       console.log('we have error on front');
@@ -85,8 +86,9 @@ const FormBuilder = () => {
     };
     
     try {
-      const response = await axios.put(`${backend_point}/api/forms/${formId}`, {
+      await axios.put(`${backend_point}/api/forms/${formId}`, {
         title: formTitle,
+        formType: formType,
         fields: formFields
       }, config);
       //console.log('Form updated successfully:', response.data);
@@ -171,6 +173,9 @@ const FormBuilder = () => {
   const updateFormTitleHandler = (e) => {
     setFormTitle(e.target.value)
   }
+  const updateFormTypeHandler = (value) => {
+    setFormType(value)
+  }
 
   const updateFormField = (id, updatedField) => {
     //console.log('update field params : ', id, updatedField)
@@ -226,7 +231,8 @@ const FormBuilder = () => {
         </div> */}
         <div className="form-builder-page-content">
           <FormBuilderSideBar setIsDragging={setIsDragging} setDropAreaPositions ={setDropAreaPositions} 
-          removeFormField={removeFormField}
+          removeFormField={removeFormField} 
+          updateFormTypeHandler={updateFormTypeHandler} formType={formType}
           editingField={editingField} setEditingField={setEditingField}/>
           <div className='form-builder-part'>
            {formFields && 

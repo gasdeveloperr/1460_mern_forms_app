@@ -154,6 +154,7 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  cursor: pointer;
 }
 
 .option-group select:focus {
@@ -174,6 +175,32 @@
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+.color-picker-container {
+  position: relative;
+}
+
+.color-preview {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 10px;
+}
+.color-preview-container{
+  position: absolute;
+  z-index: 100;
+  right: -60px;
+  top: -210px;
+}
+.option-input {
+  display: flex;
+  align-items: center;
+}
+
+.option-buttons {
+  margin-left: 10px;
 }
 .option-buttons {
   display: flex;

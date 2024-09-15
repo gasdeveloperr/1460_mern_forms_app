@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import simmonssafe_logo_login from './icons/simmonssafe-logo-login.png'
+import profile_icon from './icons/profile-icon.svg'
 import { getUserRole } from './utils';
 
 const Header = () => {
@@ -45,22 +46,32 @@ const Header = () => {
                   Assessments
                 </a>
               </li>
+              <li>
+                <a href="/incidents" className={isActive('/incidents') ? 'active' : ''}>
+                  Incidents
+                </a>
+              </li>
+              <li>
+                <a href="/actions" className={isActive('/actions') ? 'active' : ''}>
+                  Corrective Action
+                </a>
+              </li>
               {/* <li>
                 <a href="/forms/results" className={isActive('/forms/results') ? 'active' : ''}>
                   Form Results
                 </a>
               </li> */}
-              {(userRole === 'admin' || userRole === 'editor') && (
+              {/* {(userRole === 'admin' || userRole === 'editor') && (
                 <li>
                   <a href="/administration" className={isActive('/administration') ? 'active' : ''}>
                     Admin panel
                   </a>
                 </li>
-              )}
+              )} */}
             </ul>
-            <div className="header-button">
+            <div className="header-button-profile">
               <a href="/account/settings" className={isActive('/account/settings') ? 'active' : ''}>
-                Account settings
+                <img src={profile_icon} />
               </a>
             </div>
           </nav>

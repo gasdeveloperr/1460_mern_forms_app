@@ -20,10 +20,12 @@ const Register= () => {
         password,
         role,
       });
-      const { token } = response.data;
+      const { token, role, id, email, } = response.data;
 
-      // Store the token in local storage or cookies
       localStorage.setItem('token', token);
+      localStorage.setItem('userRole', role);
+      localStorage.setItem('userId', id);
+      localStorage.setItem('userEmail', email);
 
       // Redirect the user to the dashboard or homepage
       window.location.href = '/';
@@ -61,10 +63,11 @@ const Register= () => {
           <div className="form-group">
             <label className="form-label">Role:</label>
             <select value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="user">User</option>
-              <option value="admin">Editor</option>
-              <option value="admin">Contibutor</option>
               <option value="admin">Admin</option>
+              <option value="manager">Manager</option>
+              <option value="editor">Editor</option>
+              <option value="contibutor">Contibutor</option>
+              <option value="user">User</option>
             </select>
           </div>
           <button type="submit" className="login-button">Register</button>

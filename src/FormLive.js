@@ -1,21 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Header from './Header';
 import axios from 'axios';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
 import FormLiveComponent from './FormLiveComponent';
 import './FormLiveStyles.css';
 import Spinner from './Spinner';
 import { backend_point } from './consts';
-import { getAuthToken } from './utils';
+import { getAuthToken, getUserEmail, getUserId } from './utils';
 
 const FormLive = () => {
 
   const navigate = useNavigate();
 
   const [formTitle, setFormTitle] = useState('New Form');
+  const [formType, setFormType] = useState('blank');
   const [formFields, setFormFields] = useState();
   const { formId } = useParams();
+
+  const userId = getUserId();
+  const userEmail = getUserEmail();
 
   const  [isLoading, setIsLoading] = useState(false)
   const  [isError, setIsError] = useState('')
@@ -58,6 +62,7 @@ const FormLive = () => {
         const formData = response.data;
         setIsLoading(false);
         setFormTitle(formData.title);
+        setFormType(formData.formType);
         setFormFields(formData.fields);
 
       } catch (err) {
@@ -118,6 +123,8 @@ const FormLive = () => {
                 break;
             }
           }
+          //setting element type for subm data field
+          formData[element.id].type = fieldType;
 
           console.log('elem custom type: ', customType)
           console.log('elem  type: ', element.type)
@@ -159,6 +166,10 @@ const FormLive = () => {
     const submittedTime = Date.now();
     const formSubmsn = {
       formData: formData,
+      formTitle: formTitle,
+      formType: formType,
+      fields: formFields,
+      userData: {id: userId, email: userEmail},
       submittedAt: submittedTime
     }
     console.log('data from the submit : ',formSubmsn);
@@ -212,19 +223,24 @@ const FormLive = () => {
         </div>
         :
         formFields ?
-        <form className="form-live-content" onSubmit={submitHandler}>
-          {formFields.map((field, index) => (
-            <FormLiveComponent field={field} index={index}/>
-            )
-          )}
-          <div className='form-live-footer'>
-            <div className='form-live-submit-button-container'>
-              <button type="submit" className='form-live-submit-button'>
-                Submit form
-              </button>
+        <div className="form-live-container">
+          <form className="form-live-content" onSubmit={submitHandler}>
+            <div className="form-live-title">
+              {formTitle}
             </div>
-          </div>
-        </form>
+            {formFields.map((field, index) => (
+              <FormLiveComponent field={field} index={index}/>
+              )
+            )}
+            <div className='form-live-footer'>
+              <div className='form-live-submit-button-container'>
+                <button type="submit" className='form-live-submit-button'>
+                  Submit form
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
         :
         <></>
       }
