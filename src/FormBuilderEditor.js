@@ -3,14 +3,20 @@ import './FormBuilderEditor.css';
 import { OutsideClickContext } from './OutsideClickContext';
 import { titles_to_types_object } from './consts';
 import trash_icon from './icons/trash-can.svg'
-import { HexColorPicker } from "react-colorful";
+import duplicate_icon from './icons/duplicate-icon.svg'
+import { RgbaColorPicker } from "react-colorful";
 
-const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) => {
+const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setEditingField, handleDuplicateClick}) => {
 
   const changeFieldTitleHandler = (e) => {
     setEditingField({...editingField, title: e.target.value})
     //console.log('change editingField : ', editingField)
   }
+  const changeFieldLabelHandler = (e, index) => {
+    const updatedLabels = [...editingField.labels];
+    updatedLabels[index] = e.target.value;
+    setEditingField({ ...editingField, labels: updatedLabels });
+  };
   const changeFieldRequiredHandler = (e) => {
     setEditingField({...editingField, required: !editingField.required})
     //console.log('change editingField : ', editingField)
@@ -90,6 +96,7 @@ const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) =>
   } 
   // State to manage which color picker is visible
   const [colorPickerVisible, setColorPickerVisible] = useState(null);
+  const [color, setColor] = useState({ r: 200, g: 150, b: 35, a: 0.5 });
 
   // Toggle visibility of the color picker
   const toggleColorPicker = (index) => {
@@ -98,9 +105,10 @@ const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) =>
 
   // Handler for changing the color of the option
   const changeOptionColorHandler = (color, index) => {
+    setColor(color);
     const newOptions = editingField.dropdown.map((option, opt_index) => {
       if(opt_index === index){
-        option.color = color; // Update the color property
+        option.color = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`; // Update the color property
       }
       return option;
     });
@@ -154,8 +162,13 @@ const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) =>
         <div className="field-editor__header">
           {titles_to_types_object[editingField.type]}
           <div className="field-editor__actions">
-            <button className="field-editor-remove-field" onClick={() => handleRemoveClick(editingField.id)}>
+            <button className="field-editor-remove-field" id="remove_icon" help-title="remove" 
+            onClick={() => handleRemoveClick(editingField.id)}>
               <img src={trash_icon} className="remove-icon"/>
+            </button>
+            <button className="field-editor-remove-field" id="duplicate_icon" help-title="duplicate" 
+            onClick={() => duplicateField(editingField.id)}>
+              <img src={duplicate_icon} className="remove-icon"/>
             </button>
           </div>
         </div>
@@ -180,6 +193,35 @@ const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) =>
                 <label className="field-editor__label">FIELD LABEL</label>
                 <input type="text" value={editingField.title} onChange={e => changeFieldTitleHandler(e)} className="field-editor__input" />
               </div>
+              {
+                editingField.type == 'double_section' ?
+                <>
+                  <div className="field-editor__field">
+                    <label className="field-editor__label">First label</label>
+                    <input type="text" value={editingField.labels[0]} onChange={e => changeFieldLabelHandler(e, 0)} className="field-editor__input" />
+                  </div>
+                  <div className="field-editor__field">
+                    <label className="field-editor__label">Second label</label>
+                    <input type="text" value={editingField.labels[1]} onChange={e => changeFieldLabelHandler(e, 1)} className="field-editor__input" />
+                  </div>
+                </>
+                : editingField.type == 'triple_section' ?
+                <>
+                  <div className="field-editor__field">
+                    <label className="field-editor__label">First label</label>
+                    <input type="text" value={editingField.labels[0]} onChange={e => changeFieldLabelHandler(e, 0)} className="field-editor__input" />
+                  </div>
+                  <div className="field-editor__field">
+                    <label className="field-editor__label">Second label</label>
+                    <input type="text" value={editingField.labels[1]} onChange={e => changeFieldLabelHandler(e, 1)} className="field-editor__input" />
+                  </div>
+                  <div className="field-editor__field">
+                    <label className="field-editor__label">Third label</label>
+                    <input type="text" value={editingField.labels[2]} onChange={e => changeFieldLabelHandler(e, 2)} className="field-editor__input" />
+                  </div>
+                </>
+                : <></>
+              }
               <div className="field-editor_checkbox-group">
                 <div className='field-editor_checkbox_container'>
                   <label htmlFor="required" className="field-editor-label">
@@ -319,12 +361,12 @@ const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) =>
                         <div 
                           className="color-preview" 
                           onClick={() => toggleColorPicker(index)}
-                          style={{ backgroundColor: option.color || '#000000' }}
+                          style={{ backgroundColor: option.color || color }}
                         />
                         <div className="color-preview-container" >
                           {colorPickerVisible === index && (
-                            <HexColorPicker 
-                              color={option.color || '#000000'} 
+                            <RgbaColorPicker 
+                              color={color} 
                               onChange={(color) => changeOptionColorHandler(color, index)}
                             />
                           )}
@@ -339,6 +381,40 @@ const FieldBuilderEditor = ({removeFormField, editingField, setEditingField}) =>
               </div>
             </div>
           }
+          {
+            editingField.type == 'double_section' ?
+            <div className="option-content">
+              <div className="option-group">
+                <label>OPTIONS for first dropdown</label>
+                  {editingField.value[0].options.map((option, index)=> (
+                    <div key={index} className="option-input">
+                      <input type="text" onChange={(e) => changeFieldListOptionHandler(e, index)} value={option.title}/>
+                       {/* Toggle color picker visibility */}
+                      <div className="color-picker-container">
+                        <div 
+                          className="color-preview" 
+                          onClick={() => toggleColorPicker(index)}
+                          style={{ backgroundColor: option.color || color }}
+                        />
+                        <div className="color-preview-container" >
+                          {colorPickerVisible === index && (
+                            <RgbaColorPicker 
+                              color={color} 
+                              onChange={(color) => changeOptionColorHandler(color, index)}
+                            />
+                          )}
+                        </div>
+                      </div>
+                      <div className="option-buttons">
+                        <button className="field-editor-add-button" onClick={() => addFieldListOptionHandler(index)}>+</button>
+                        <button className="field-editor-remove-button" onClick={() => deleteFieldListOptionHandler(index)}>-</button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+                : <></>
+              }
           </>
           :
           <></>

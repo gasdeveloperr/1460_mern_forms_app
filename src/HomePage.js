@@ -45,17 +45,17 @@ const HomePage = () => {
       <main className="main-content">
         <section className="hero-section">
           <div className="container">
-            <h1 className="main-heading">Welcome to Form Builder!</h1>
+            <h1 className="main-heading">Welcome to the Form Builder!</h1>
             <p className="hero-text">
               This powerful application allows you to create custom forms tailored to your specific needs. Whether you need to collect data, gather feedback, or conduct surveys, Form Builder has got you covered.
             </p>
             <p className="hero-text">
-              Getting started is easy! Navigate to the Dashboard to view all the forms you've created. From there, you can create a new form by clicking the "New Form" button. 
+              Getting started is easy! Navigate to the Assessments Page to view all the forms you've created. From there, you can create a new form by clicking the "Create form" button on the side menu. 
             </p>
             <p className="hero-text">
               The intuitive form builder interface enables you to add various field types, such as text inputs, dropdowns, checkboxes, and more. Customize the form fields, rearrange their order, and even set validation rules to ensure accurate data collection.
             </p>
-            <a href="/forms/dashboard" className="cta-btn">Go to the dashboard</a>
+            <a href="/forms/dashboard" className="cta-btn">Go to the Assessments Page</a>
           </div>
         </section>
     
@@ -67,15 +67,14 @@ const HomePage = () => {
             </p>
           </div>
         </section>
-    
-        {/* <section className="about-section">
+        <section className="about-section">
           <div className="container">
-            <h2 className="section-heading">Future plans</h2>
+            <h2 className="section-heading">Scoring and Viewing Results</h2>
             <p className="about-text">
-              In the future, we plan to introduce user management features, enabling you to grant access and permissions to team members or collaborators. Additionally, we'll implement form result tracking, providing you with comprehensive analytics and insights into the data collected through your forms. This will allow you to make data-driven decisions and gain valuable insights from your form submissions.
+              After your form has been filled out, you can easily access and analyze the results. For scored forms, the system automatically calculates scores based on predefined criteria, providing instant feedback. Each submission is stored and can be reviewed in detail, allowing you to assess individual responses or get an overview of all submissions. To view the results, simply navigate to the "Form Results" page from your dashboard. This feature offers insights through data visualization, making it easier to track performance or trends over time.
             </p>
           </div>
-        </section> */}
+        </section>
       </main>
     
       <footer className="footer">

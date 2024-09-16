@@ -2,7 +2,7 @@ import { useState } from "react";
 import DraggableComponent from "./DraggableComponent";
 import FieldBuilderEditor from "./FormBuilderEditor";
 
-const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormField,
+const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormField, duplicateField,
     updateFormTypeHandler, formType, editingField, setEditingField}) => {
 
   const handleDragStart = () => {
@@ -17,7 +17,7 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
   const [sections, setSections] = useState({
     basic: true,
     advanced: false,
-    layout: false,
+    layout: true,
     formSettings: false,
   });
 
@@ -32,7 +32,8 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
     <div className='left-bar'>
       {
         editingField && editingField.id !== '' ? 
-        <FieldBuilderEditor removeFormField={removeFormField} editingField={editingField} setEditingField={setEditingField}/>
+        <FieldBuilderEditor removeFormField={removeFormField} duplicateField={duplicateField}
+        editingField={editingField} setEditingField={setEditingField}/>
         :
         <div className="form-builder-components">
           <div className="section-group">
@@ -119,20 +120,25 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
               </div>
             )}
           </div>
-  
-          {/* <div className="section-group">
+          <div className="section-group">
             <div className="section-header" onClick={() => toggleSection('layout')}>
-              <span className={`toggle-icon ${showLayoutAndSections ? 'open' : 'closed'}`}>&#9660;</span>
+              <span className={`toggle-icon ${sections.layout ? 'open' : 'closed'}`}>&#9660;</span>
               Layout and Sections
             </div>
-            {showLayoutAndSections && (
+            {sections.layout && (
               <div className="section-content">
-                <DraggableComponent type="section" title="Section" 
+                <DraggableComponent type="double_section" title="2 Columns Section" 
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/>
+                <DraggableComponent type="triple_section" title="3 Columns Section" 
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/>
+                <DraggableComponent type="five_section" title="5 Columns Section" 
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}/>
               </div>
             )}
-          </div> */}
+          </div>
         </div>
       }
     </div>

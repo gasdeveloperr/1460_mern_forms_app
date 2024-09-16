@@ -160,6 +160,50 @@ const FormBuilder = () => {
           time: '',
         }
       }
+      if(item.type === 'double_section'){
+        newField.labels = ['section 1', 'section 2']
+        newField.value = [
+          {options:[
+            {title: 'Option 1', selected: true},
+            {title: 'Option 2', selected: false},
+            {title: 'Option 3', selected: false}
+          ]}, 
+          {options:[
+            {title: 'Option 1', selected: true},
+            {title: 'Option 2', selected: false},
+            {title: 'Option 3', selected: false}
+          ]} 
+        ];
+        newField.sectionsType = 'default';
+      }
+      if(item.type === 'triple_section'){
+        newField.labels = ['section 1', 'section 2', 'section 3' ];
+        newField.value = [
+          {
+            options: [
+              { title: 'Option 1', selected: true },
+              { title: 'Option 2', selected: false },
+              { title: 'Option 3', selected: false }
+            ]
+          }, 
+          {
+            options: [
+              { title: 'Option 1', selected: true },
+              { title: 'Option 2', selected: false },
+              { title: 'Option 3', selected: false }
+            ]
+          }, 
+          {
+            options: [
+              { title: 'Option 1', selected: true },
+              { title: 'Option 2', selected: false },
+              { title: 'Option 3', selected: false }
+            ]
+          }
+        ];
+        newField.sectionsType = 'default';
+      }
+      console.log('new field :', newField)
       setFormFields([...formFields.slice(0, dropIndex), newField, ...formFields.slice(dropIndex)]);
     }else{
       const itemIndex = formFields.findIndex(field => field.id === item.id)
@@ -192,6 +236,18 @@ const FormBuilder = () => {
     }
     setFormFields(updatedFormFields);
   };
+  const handleDuplicateClick = (id) => {
+    const fieldToDuplicate = formFields.find((field) => field.id === id);
+  
+    if (fieldToDuplicate) {
+      const duplicatedField = { ...fieldToDuplicate };
+      
+      // Generate a new unique ID (e.g., using current timestamp)
+      duplicatedField.id = new Date().getTime();
+  
+      setFormFields([...formFields, duplicatedField]);
+    }
+  }
   const [, drop] = useDrop({
     accept: accept_types_array,
     drop: handleDrop,
@@ -231,7 +287,7 @@ const FormBuilder = () => {
         </div> */}
         <div className="form-builder-page-content">
           <FormBuilderSideBar setIsDragging={setIsDragging} setDropAreaPositions ={setDropAreaPositions} 
-          removeFormField={removeFormField} 
+          removeFormField={removeFormField} duplicateField={handleDuplicateClick}
           updateFormTypeHandler={updateFormTypeHandler} formType={formType}
           editingField={editingField} setEditingField={setEditingField}/>
           <div className='form-builder-part'>

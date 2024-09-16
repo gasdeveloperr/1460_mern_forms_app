@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './CustomSelector.css';
 import dropdown_icon from '../icons/dropdown-icon.svg'
 
-const CustomSelector = ({ field }) => {
+const CustomSelector = ({ field, setSelectorValue}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const selectRef = useRef(null);
@@ -21,6 +21,7 @@ const CustomSelector = ({ field }) => {
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
+    setSelectorValue(option.title)
     setIsOpen(false);
   };
 

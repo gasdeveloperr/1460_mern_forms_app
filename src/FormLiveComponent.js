@@ -11,6 +11,8 @@ const FormLiveComponent = ({field, index}) => {
   const [inputValue, setInputValue] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const [selectorValue, setSelectorValue] = useState(null);
+
   const handleInputChange = (e, type) => {
     const value = e.target.value;
 
@@ -212,7 +214,22 @@ const FormLiveComponent = ({field, index}) => {
             </div>
           </label>
         )}
-        {field.type === 'dropdown' && <CustomSelector field={field}/>}
+        {field.type === 'dropdown' && (
+          <label key={field.id} htmlFor={field.id} className="form-live-component-container">
+            <div className="form-component-dropdown">
+              {field.required && <span>*</span>}
+              {field.title}
+              <CustomSelector field={field} setSelectorValue={setSelectorValue}/>
+              <input 
+                fieldtype={field.type}
+                id={field.id}
+                name={field.id}
+                disabled={field.read_only}
+                value={selectorValue}
+                hidden/>
+            </div>
+          </label>
+        )}
         {/* {field.type === 'dropdown' && (
           <label key={field.id} htmlFor={field.id} className="form-live-component-container">
             <div className="form-component-dropdown">
@@ -260,7 +277,7 @@ const FormLiveComponent = ({field, index}) => {
               required={field.required} disabled={field.read_only} hidden/>
               <label htmlFor={field.id} className="form-file-label">
                 {field.required && <span>*</span>}
-                Chose File
+                {field.title}
               </label>
           </label>
         )}

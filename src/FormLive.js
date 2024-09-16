@@ -219,7 +219,8 @@ const FormLive = () => {
         isSubmited ?
         <div className="form-live-submitted-block">
           <p>Form successfully submitted!</p>
-          <p>You can go back to the dashboard to submit other forms.</p>
+          <p>You can go back to the <a href="/forms/dashboard">Assessments</a> to submit other forms.</p>
+          <p>You can <a href={`/forms/live/${formId}`}>fill this form again</a>.</p>
         </div>
         :
         formFields ?

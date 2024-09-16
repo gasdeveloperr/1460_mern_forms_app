@@ -24,5 +24,5 @@ export const getAuthToken = () => {
 }
 
 export const formatDate = (date) => {
-  return moment(date).format('YYYY-MM-DD HH:mm:ss'); // Example: 2024-08-20 15:09:35
+  return moment(date).format('HH:mm:ss DD/MM/YYYY'); // Example: 08/02/2023 15:09:35
 };

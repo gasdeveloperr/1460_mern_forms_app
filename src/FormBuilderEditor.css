@@ -36,11 +36,47 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-
+  margin: 0 !important;
+  padding: 0 !important;
+}
+[help-title] {
+  position: relative;
 }
 
-.field-editor__actions {
+[help-title]:after {
+  content: attr(help-title); /* Display the content of the custom attribute */
+  background-color: #332F2E;
+  width: max-content;
+  max-width: 300px;
+  color: #fff;
+  font-size: 12px;
+  position: absolute;
+  padding: 1px 5px 2px 5px;
+  right: 2px;
+  top: 26px;
+  white-space: nowrap;
+  box-shadow: 1px 1px 3px #222222;
+  opacity: 0;
+  border-radius: .3rem;
+  z-index: 12000;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+[help-title]:hover:after {
+  opacity: 0.8;
+  visibility: visible;
+}
+
+#remove_icon:hover,
+#duplicate_icon:hover{
+  content: attr(help-title);
+}
+
+.field-editor__actions{
   display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .field-editor__action-btn {

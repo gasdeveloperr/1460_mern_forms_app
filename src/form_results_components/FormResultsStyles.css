@@ -19,3 +19,14 @@
   transition-timing-function: ease-in-out;
   width: 100%;
 }
+.form-results-component-title{
+  align-items: center;
+  flex-wrap: wrap;
+  display: flex;
+  min-height: 5px;
+  margin-top: -5px;
+  margin-bottom: 5px;
+  color: rgb(69, 85, 96);
+  font-weight: 600;
+  font-size: 16px;
+}

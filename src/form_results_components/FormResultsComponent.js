@@ -1,4 +1,3 @@
-import React from 'react';
 import './FormResultsStyles.css';
 import '../FormLiveStyles.css';
 
@@ -10,18 +9,20 @@ const FormResultsComponent = ({ field, data }) => {
     <>
       {field.type === 'short_answer' && (
         <div className="form-live-component-container">
-          <div className='form-component-title'>
+          <div className='form-results-component-title'>
             {field.title}:
           </div>
-          <div className="form-live-component-value">
-            {fieldData ? fieldData.value : 'No response'}
-          </div>
+          {!field.read_only &&
+            <div className="form-live-component-value">
+              {fieldData ? fieldData.value : 'No response'}
+            </div>
+          }
         </div>
       )}
 
       {field.type === 'long_answer' && (
         <div className="form-live-component-container">
-          <div className='form-component-title'>
+          <div className='form-results-component-title'>
             {field.title}:
           </div>
           <div className="form-live-component-value">
@@ -32,7 +33,7 @@ const FormResultsComponent = ({ field, data }) => {
 
       {field.type === 'radio' && (
         <div className="form-live-component-container">
-          <div className='form-component-title'>
+          <div className='form-results-component-title'>
             {field.title}:
           </div>
           <div className="form-live-component-value">
@@ -43,7 +44,7 @@ const FormResultsComponent = ({ field, data }) => {
 
       {field.type === 'checkbox' && (
         <div className="form-live-component-container">
-          <div className='form-component-title'>
+          <div className='form-results-component-title'>
             {field.title}:
           </div>
             <div className={`form-component-container ${field.layout}`}>
@@ -68,7 +69,7 @@ const FormResultsComponent = ({ field, data }) => {
 
       {field.type === 'name' && fieldData && (
         <div className="form-live-component-container">
-          <div className='form-component-title'>
+          <div className='form-results-component-title'>
             {field.title}:
           </div>
           <div className="form-live-component-value">
@@ -79,7 +80,7 @@ const FormResultsComponent = ({ field, data }) => {
 
       {field.type === 'date_time' && fieldData && (
         <div className="form-live-component-container">
-          <div className='form-component-title'>
+          <div className='form-results-component-title'>
             {field.title}:
           </div>
           <div className="form-live-component-value">
@@ -88,9 +89,35 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
 
+      {field.type === 'dropdown' && (
+        <div className="form-live-component-container">
+          <div className="form-results-component-title">
+            {field.title}:
+          </div>
+          <div className="form-live-component-dropdown-value">
+            {/* Show the selected dropdown option and color */}
+            {fieldData ? (
+              <div
+                className="form-live-component-selected-option"
+                style={{
+                  backgroundColor: field.dropdown.find(option => option.title === fieldData.value)?.color || '#fff',
+                  padding: '5px',
+                  borderRadius: '5px',
+                  color: '#000'
+                }}
+              >
+                {fieldData.value}
+              </div>
+            ) : (
+              'No selection'
+            )}
+          </div>
+        </div>
+      )}
+
       {field.type === 'file_upload' && (
         <div className="form-live-component-container">
-          <div className='form-component-title'>
+          <div className='form-results-component-title'>
             {field.title}:
           </div>
           <div className="form-live-component-value">

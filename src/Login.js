@@ -41,7 +41,7 @@ const Login = () => {
         <div className="login-logo-container">
           <img src={simmonssafe_logo_login} alt="" />
         </div>
-        <h2 className="login-title">Welcome to Form Builder!</h2>
+        <h2 className="login-title">Welcome to the Form Builder!</h2>
         {error && <p className="login-error">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">

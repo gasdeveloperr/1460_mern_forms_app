@@ -7,6 +7,7 @@ import { backend_point } from './consts';
 import { formatDate, getAuthToken } from './utils';
 import FormResultView from './form_results_components/FormResultView';
 import arrow_menu_icon from './icons/arrow-side-menu-icon.svg';
+import './ResultsBoardPage.css'
 
 function ResultsBoard() {
   // const [forms, setForms] = useState([]);
@@ -100,16 +101,25 @@ function ResultsBoard() {
           <Spinner/>
         : 
         <div className="dashboard-body">
-          <div className="dashboard-page-heading">
+          <div className="results-page-heading">
             <div className="dashboard-page-title">
+            {detailResult ? 
+              <div className="go-back-button" onClick={toMainBoardHandler} >
+                <img src={arrow_menu_icon} alt="Go Back" />
+              </div>
+            :
               <a href='/forms/dashboard' className="go-back-button" >
                 <img src={arrow_menu_icon} alt="Go Back" />
               </a>
+            }
               {currentSubmFormName} results
+            </div>
+            <div className="results-sub-title">
+              {detailResult ? `by ${detailResult.submittedBy.email} at ${formatDate(detailResult.submittedAt)}` : ''}
             </div>
           </div>
           {detailResult ? 
-          <FormResultView form={detailResult} goBack={toMainBoardHandler}/>
+          <FormResultView form={detailResult}/>
           :
           <div className="dashboard-page-content"> 
               <div className="clients-table-container">
@@ -134,8 +144,8 @@ function ResultsBoard() {
                         <td className="client-index">
                           {formatDate(form.submittedAt)}
                         </td>
-                        <td className="client-index" onClick={() => setDetailResult(form)}>
-                          See details
+                        <td className="see-results-button" onClick={() => setDetailResult(form)}>
+                          <p>See details</p>
                         </td>
                       </tr>
                     ))}

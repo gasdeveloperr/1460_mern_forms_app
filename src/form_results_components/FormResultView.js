@@ -1,7 +1,6 @@
 import FormResultsComponent from "./FormResultsComponent";
-import FormLiveComponent from "../FormLiveComponent";
 
-const FormResultView = ({form, goBack}) => {
+const FormResultView = ({form}) => {
   return ( 
     <div className="form-live-container">
       <form className="form-live-content">

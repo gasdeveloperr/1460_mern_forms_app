@@ -1,6 +1,6 @@
 export const accept_types_array = ['short_answer', 'long_answer', 'name', 'address', 'email', 'phone',
 'number', 'dropdown', 'radio', 'checkbox', 'date_time', 'file_upload', 
-'section'];
+'section', 'double_section', 'triple_section', 'five_section'];
 
 export const titles_to_types_object = {
   'short_answer': 'Short answer',
@@ -15,7 +15,10 @@ export const titles_to_types_object = {
   'checkbox': 'Checkbox',
   'date_time': 'Date/Time',
   'file_upload': 'File',
-  'section': 'Section'
+  'section': 'Section',
+  'double_section': '2 Columns Section',
+  'triple_section': '3 Columns Section',
+  'five_section': '5 Columns Section',
 };
 
 export const backend_point = 'http://localhost:5000'

@@ -216,6 +216,71 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               </div>
             </div>
           )}
+          {field.type === 'double_section' && (
+            <div>
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
+                {field.title}
+              </div>
+              <div className="form-component-double-section-container">
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[0]}
+                  </div>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[0].color ? field.value[0].color : ''}}>
+                    {field.value[0]|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[1]}
+                  </div>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].color ? field.value[1].color : ''}}>
+                    {field.value[1]|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {field.type === 'triple_section' && (
+            <div>
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
+                {field.title}
+              </div>
+              <div className="form-component-triple-section-container">
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[0]}
+                  </div>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[0].color ? field.value[0].color : ''}}>
+                    {field.value[0]|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[1]}
+                  </div>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].color ? field.value[1].color : ''}}>
+                    {field.value[1]|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[2]}
+                  </div>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[2].color ? field.value[2].color : ''}}>
+                    {field.value[2]|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {field.type === 'file_upload' && (
             <div className="form-short-answer">
               <div className='form-component-title'>
@@ -227,7 +292,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               </div>
             </div>
           )}
-          <RemoveButton opacityVal={removeOpacity} onClick={() => handleRemoveClick(field.id)} />
+          {/* <RemoveButton opacityVal={removeOpacity} onClick={() => handleRemoveClick(field.id)} /> */}
         </div>
         </div>
         <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'bottom'}/>
