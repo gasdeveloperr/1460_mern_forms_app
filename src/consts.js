@@ -21,10 +21,10 @@ export const titles_to_types_object = {
   'five_section': '5 Columns Section',
 };
 
-export const backend_point = 'http://localhost:5000'
+export const backend_point = 'https://one460-forms-backend.onrender.com'
 //'http://localhost:5000'
 //'https://one460-forms-backend.onrender.com'
 
-export const frontend_point = 'http://localhost:3000'
+export const frontend_point = 'https://forms-app-t3gi.onrender.com'
 //'http://localhost:3000'
 //'https://forms-app-t3gi.onrender.com'
