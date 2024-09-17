@@ -94,6 +94,25 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
             )}
           </div>
           <div className="section-group">
+            <div className="section-header" onClick={() => toggleSection('layout')}>
+              <span className={`toggle-icon ${sections.layout ? 'open' : 'closed'}`}>&#9660;</span>
+              Layout and Sections
+            </div>
+            {sections.layout && (
+              <div className="section-content">
+                <DraggableComponent type="double_section" title="2 Columns Section" 
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/>
+                <DraggableComponent type="triple_section" title="3 Columns Section" 
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/>
+                {/* <DraggableComponent type="five_section" title="5 Columns Section" 
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/> */}
+              </div>
+            )}
+          </div>
+          <div className="section-group">
             <div className="section-header" onClick={() => toggleSection('formSettings')}>
               <span className={`toggle-icon ${sections.formSettings ? 'open' : 'closed'}`}>&#9660;</span>
               Form Settings
@@ -117,25 +136,6 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
                     Scored Form
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-          <div className="section-group">
-            <div className="section-header" onClick={() => toggleSection('layout')}>
-              <span className={`toggle-icon ${sections.layout ? 'open' : 'closed'}`}>&#9660;</span>
-              Layout and Sections
-            </div>
-            {sections.layout && (
-              <div className="section-content">
-                <DraggableComponent type="double_section" title="2 Columns Section" 
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
-                <DraggableComponent type="triple_section" title="3 Columns Section" 
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
-                <DraggableComponent type="five_section" title="5 Columns Section" 
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
               </div>
             )}
           </div>

@@ -227,8 +227,8 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
                   <div className='form-component-label'>
                     {field.labels[0]}
                   </div>
-                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[0].color ? field.value[0].color : ''}}>
-                    {field.value[0]|| '⠀'}
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[0].options[0].color ? field.value[0].color : ''}}>
+                    {field.value[0].options[0].title|| '⠀'}
                     <img src={selector_icon} />
                   </div>
                 </div>
@@ -236,8 +236,8 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
                   <div className='form-component-label'>
                     {field.labels[1]}
                   </div>
-                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].color ? field.value[1].color : ''}}>
-                    {field.value[1]|| '⠀'}
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].options[0].color ? field.value[1].color : ''}}>
+                    {field.value[1].options[0].title|| '⠀'}
                     <img src={selector_icon} />
                   </div>
                 </div>
@@ -245,6 +245,43 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
             </div>
           )}
           {field.type === 'triple_section' && (
+            <div>
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
+                {field.title}
+              </div>
+              <div className="form-component-triple-section-container">
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[0]}
+                  </div>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[0].options[0].color ? field.value[0].color : ''}}>
+                    {field.value[0].options[0].title|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[1]}
+                  </div>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].options[0].color ? field.value[1].color : ''}}>
+                    {field.value[1].options[0].title|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[2]}
+                  </div>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].options[0].color ? field.value[1].color : ''}}>
+                    {field.value[2].options[0].title|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* {field.type === 'triple_section' && (
             <div>
               <div className='form-component-title'>
                 {field.required && <span className='required_sign'>*</span>}
@@ -280,7 +317,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
                 </div>
               </div>
             </div>
-          )}
+          )} */}
           {field.type === 'file_upload' && (
             <div className="form-short-answer">
               <div className='form-component-title'>

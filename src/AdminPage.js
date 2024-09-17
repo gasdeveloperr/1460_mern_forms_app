@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
 import emailjs from '@emailjs/browser';
@@ -249,7 +249,7 @@ function AdminPage() {
             <>
             <div className="admin-page-body-title">
               {
-                businessChosen == '' ?
+                businessChosen === '' ?
                 <>
                   {adminPageState}
                   {

@@ -24,7 +24,7 @@ const FormLiveComponent = ({field, index}) => {
     //   }
     // }
     setInputValue(value);
-    if(field.type == 'dropdown'){
+    if(field.type === 'dropdown'){
       const selectedOption = field.dropdown.find(
         (option) => option.title === e.target.value
       );
@@ -35,7 +35,7 @@ const FormLiveComponent = ({field, index}) => {
   const [selectBgColor, setSelectBgColor] = useState('');
 
   useEffect(() => {
-    if(field.type == 'dropdown'){
+    if(field.type === 'dropdown'){
       // Find the initial selected option and set its color as the background
       const initialSelectedOption = field.dropdown.find(option => option.title === field.value);
       if (initialSelectedOption) {
@@ -230,6 +230,58 @@ const FormLiveComponent = ({field, index}) => {
             </div>
           </label>
         )}
+        {/* {field.type === 'double_section' && (
+          <label key={field.id} htmlFor={field.id} className="form-live-component-container">
+            <div className="form-component-dropdown">
+              {field.required && <span>*</span>}
+              {field.title}
+              <div className="form-component-double-section-container">
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[0]}
+                    <CustomSelector field={field} setSelectorValue={setSelectorValue}/>
+                    <input 
+                      fieldtype={field.type}
+                      id={field.id}
+                      name={field.id}
+                      disabled={field.read_only}
+                      value={selectorValue}
+                      hidden/>
+                  </div>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[0].options[0].color ? field.value[0].color : ''}}>
+                    {field.value[0].options[0].title|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+                <div className="form-component-double-section">
+                  <div className='form-component-label'>
+                    {field.labels[1]}
+                  </div>
+                  <CustomSelector field={field} setSelectorValue={setSelectorValue}/>
+                  <input 
+                    fieldtype={field.type}
+                    id={field.id}
+                    name={field.id}
+                    disabled={field.read_only}
+                    value={selectorValue}
+                    hidden/>
+                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].options[0].color ? field.value[1].color : ''}}>
+                    {field.value[1].options[0].title|| '⠀'}
+                    <img src={selector_icon} />
+                  </div>
+                </div>
+              </div>
+              <CustomSelector field={field} setSelectorValue={setSelectorValue}/>
+              <input 
+                fieldtype={field.type}
+                id={field.id}
+                name={field.id}
+                disabled={field.read_only}
+                value={selectorValue}
+                hidden/>
+            </div>
+          </label>
+          )} */}
         {/* {field.type === 'dropdown' && (
           <label key={field.id} htmlFor={field.id} className="form-live-component-container">
             <div className="form-component-dropdown">

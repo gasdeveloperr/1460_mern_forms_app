@@ -162,17 +162,21 @@ const FormBuilder = () => {
       }
       if(item.type === 'double_section'){
         newField.labels = ['section 1', 'section 2']
-        newField.value = [
-          {options:[
-            {title: 'Option 1', selected: true},
-            {title: 'Option 2', selected: false},
-            {title: 'Option 3', selected: false}
-          ]}, 
-          {options:[
-            {title: 'Option 1', selected: true},
-            {title: 'Option 2', selected: false},
-            {title: 'Option 3', selected: false}
-          ]} 
+        newField.value = [ 
+          {
+            options: [
+              { title: 'Option 1', selected: true },
+              { title: 'Option 2', selected: false },
+              { title: 'Option 3', selected: false }
+            ]
+          }, 
+          {
+            options: [
+              { title: 'Option 1', selected: true },
+              { title: 'Option 2', selected: false },
+              { title: 'Option 3', selected: false }
+            ]
+          }
         ];
         newField.sectionsType = 'default';
       }

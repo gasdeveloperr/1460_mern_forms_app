@@ -94,6 +94,44 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     })
     setEditingField({...editingField, dropdown: newOptions})
   } 
+  const addFieldListOptionHandlerNew = (index, sectionIndex) => {
+    const newOptions = [
+      ...editingField.value[sectionIndex].options.slice(0, index + 1),
+      { title: 'Option', selected: false }, // Default new option
+      ...editingField.value[sectionIndex].options.slice(index + 1),
+    ];
+  
+    const newValue = [...editingField.value];
+    newValue[sectionIndex].options = newOptions;
+  
+    setEditingField({ ...editingField, value: newValue });
+  };
+  const deleteFieldListOptionHandlerNew = (index, sectionIndex) => {
+    const newOptions = [
+      ...editingField.value[sectionIndex].options.slice(0, index),
+      ...editingField.value[sectionIndex].options.slice(index + 1),
+    ];
+  
+    const newValue = [...editingField.value];
+    newValue[sectionIndex].options = newOptions;
+  
+    setEditingField({ ...editingField, value: newValue });
+  };
+  const changeFieldListOptionHandlerNew = (e, index, sectionIndex) => {
+    const newOptions = editingField.value[sectionIndex].options.map((option, opt_index) => {
+      if (opt_index === index) {
+        return { ...option, title: e.target.value };
+      }
+      return option;
+    });
+  
+    const newValue = [...editingField.value];
+    newValue[sectionIndex].options = newOptions;
+  
+    setEditingField({ ...editingField, value: newValue });
+  };
+  
+
   // State to manage which color picker is visible
   const [colorPickerVisible, setColorPickerVisible] = useState(null);
   const [color, setColor] = useState({ r: 200, g: 150, b: 35, a: 0.5 });
@@ -104,7 +142,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   };
 
   // Handler for changing the color of the option
-  const changeOptionColorHandler = (color, index) => {
+  const changeOptionColorHandler = (color, index, options_index) => {
     setColor(color);
     const newOptions = editingField.dropdown.map((option, opt_index) => {
       if(opt_index === index){
@@ -356,7 +394,6 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                   {editingField.dropdown.map((option, index)=> (
                     <div key={index} className="option-input">
                       <input type="text" onChange={(e) => changeFieldListOptionHandler(e, index)} value={option.title}/>
-                       {/* Toggle color picker visibility */}
                       <div className="color-picker-container">
                         <div 
                           className="color-preview" 
@@ -386,35 +423,156 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
             <div className="option-content">
               <div className="option-group">
                 <label>OPTIONS for first dropdown</label>
-                  {editingField.value[0].options.map((option, index)=> (
-                    <div key={index} className="option-input">
-                      <input type="text" onChange={(e) => changeFieldListOptionHandler(e, index)} value={option.title}/>
-                       {/* Toggle color picker visibility */}
-                      <div className="color-picker-container">
-                        <div 
-                          className="color-preview" 
-                          onClick={() => toggleColorPicker(index)}
-                          style={{ backgroundColor: option.color || color }}
-                        />
-                        <div className="color-preview-container" >
-                          {colorPickerVisible === index && (
-                            <RgbaColorPicker 
-                              color={color} 
-                              onChange={(color) => changeOptionColorHandler(color, index)}
-                            />
-                          )}
-                        </div>
-                      </div>
-                      <div className="option-buttons">
-                        <button className="field-editor-add-button" onClick={() => addFieldListOptionHandler(index)}>+</button>
-                        <button className="field-editor-remove-button" onClick={() => deleteFieldListOptionHandler(index)}>-</button>
-                      </div>
+                {editingField.value[0].options.map((option, index) => (
+                  <div key={index} className="option-input">
+                    <input
+                      type="text"
+                      onChange={(e) => changeFieldListOptionHandlerNew(e, index, 0)}
+                      value={option.title}
+                    />
+
+                    {/* Color Picker or Other UI for Option (if needed) */}
+
+                    <div className="option-buttons">
+                      <button
+                        className="field-editor-add-button"
+                        onClick={() => addFieldListOptionHandlerNew(index, 0)}
+                      >
+                        +
+                      </button>
+                      <button
+                        className="field-editor-remove-button"
+                        onClick={() => deleteFieldListOptionHandlerNew(index, 0)}
+                      >
+                        -
+                      </button>
                     </div>
-                  ))}
+                  </div>
+                ))}
+              </div>
+
+              {/* OPTIONS for second dropdown */}
+              <div className="option-group">
+                <label>OPTIONS for second dropdown</label>
+                {editingField.value[1].options.map((option, index) => (
+                  <div key={index} className="option-input">
+                    <input
+                      type="text"
+                      onChange={(e) => changeFieldListOptionHandlerNew(e, index, 1)}
+                      value={option.title}
+                    />
+
+                    {/* Color Picker or Other UI for Option (if needed) */}
+
+                    <div className="option-buttons">
+                      <button
+                        className="field-editor-add-button"
+                        onClick={() => addFieldListOptionHandlerNew(index, 1)}
+                      >
+                        +
+                      </button>
+                      <button
+                        className="field-editor-remove-button"
+                        onClick={() => deleteFieldListOptionHandlerNew(index, 1)}
+                      >
+                        -
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
                 : <></>
-              }
+          }
+          {
+            editingField.type == 'triple_section' ?
+            <div className="option-content">
+              <div className="option-group">
+                <label>OPTIONS for first dropdown</label>
+                {editingField.value[0].options.map((option, index) => (
+                  <div key={index} className="option-input">
+                    <input
+                      type="text"
+                      onChange={(e) => changeFieldListOptionHandlerNew(e, index, 0)}
+                      value={option.title}
+                    />
+
+                    {/* Color Picker or Other UI for Option (if needed) */}
+
+                    <div className="option-buttons">
+                      <button
+                        className="field-editor-add-button"
+                        onClick={() => addFieldListOptionHandlerNew(index, 0)}
+                      >
+                        +
+                      </button>
+                      <button
+                        className="field-editor-remove-button"
+                        onClick={() => deleteFieldListOptionHandlerNew(index, 0)}
+                      >
+                        -
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="option-group">
+                <label>OPTIONS for second dropdown</label>
+                {editingField.value[1].options.map((option, index) => (
+                  <div key={index} className="option-input">
+                    <input
+                      type="text"
+                      onChange={(e) => changeFieldListOptionHandlerNew(e, index, 1)}
+                      value={option.title}
+                    />
+
+                    <div className="option-buttons">
+                      <button
+                        className="field-editor-add-button"
+                        onClick={() => addFieldListOptionHandlerNew(index, 1)}
+                      >
+                        +
+                      </button>
+                      <button
+                        className="field-editor-remove-button"
+                        onClick={() => deleteFieldListOptionHandlerNew(index, 1)}
+                      >
+                        -
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="option-group">
+                <label>OPTIONS for third dropdown</label>
+                {editingField.value[2].options.map((option, index) => (
+                  <div key={index} className="option-input">
+                    <input
+                      type="text"
+                      onChange={(e) => changeFieldListOptionHandlerNew(e, index, 2)}
+                      value={option.title}
+                    />
+
+                    <div className="option-buttons">
+                      <button
+                        className="field-editor-add-button"
+                        onClick={() => addFieldListOptionHandlerNew(index, 2)}
+                      >
+                        +
+                      </button>
+                      <button
+                        className="field-editor-remove-button"
+                        onClick={() => deleteFieldListOptionHandlerNew(index, 2)}
+                      >
+                        -
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            : <></>
+          }
           </>
           :
           <></>
