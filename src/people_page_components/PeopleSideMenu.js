@@ -27,7 +27,7 @@ const PeopleSideMenu = ({ activeOption, handleAddingUser, onItemClick}) => {
         <div className={`side-menu-container${isCollapsed ? '-collapsed' : ''}`}>
         <nav className="side-menu-nav">
           <div className="side-menu-collapse-button" onClick={() => setIsCollapsed(prev => !prev)}>
-            <img src={arrow_menu_icon} style={{transform: isCollapsed ? 'rotate(180deg)' : ''}}/>
+            <img src={arrow_menu_icon} style={{transform: isCollapsed ? 'rotate(180deg)' : ''}} alt='>'/>
           </div>
           {
             isCollapsed ? 
@@ -36,35 +36,35 @@ const PeopleSideMenu = ({ activeOption, handleAddingUser, onItemClick}) => {
             <>
             <div className="side-menu-list">
               <a className='side-menu-list-header' href="/">
-                <img src={home_page_icon} className="side-menu-list-header-icon"/>
+                <img src={home_page_icon} className="side-menu-list-header-icon" alt='>'/>
                 Home
               </a>
             </div>
             <div className="side-menu-separator"/>
             <div className="side-menu-list">
               <a className='side-menu-list-header'  href="/clients">
-                <img src={client_icon} className="side-menu-list-header-icon"/>
+                <img src={client_icon} className="side-menu-list-header-icon" alt='>'/>
                   People
               </a>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                 onClick={onItemClick}
               >
-                <img src={clients_icon} className="menu-item-icon"/>
+                <img src={clients_icon} className="menu-item-icon" alt='>'/>
                 <span className="menu-item__label">People </span>
               </div>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                 onClick={() => handleAddingUser()}
               >
-                <img src={client_add_icon} className="menu-item-icon"/>
+                <img src={client_add_icon} className="menu-item-icon" alt='>'/>
                 <span className="menu-item__label">Add user </span>
               </div>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                 onClick={() => handleAddingUser()}
               >
-                <img src={client_add_icon} className="menu-item-icon"/>
+                <img src={client_add_icon} className="menu-item-icon" alt='>'/>
                 <span className="menu-item__label">Batch import </span>
               </div>
               
@@ -72,28 +72,28 @@ const PeopleSideMenu = ({ activeOption, handleAddingUser, onItemClick}) => {
             <div className="side-menu-separator"/>
             <div className="side-menu-list">
               <a className='side-menu-list-header'  href="/configuration">
-                <img src={configuration_icon} className="side-menu-list-header-icon"/>
+                <img src={configuration_icon} className="side-menu-list-header-icon" alt='>'/>
                 Credentials
               </a>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                 onClick={onItemClick}
               >
-                <img src={position_case_icon} className="menu-item-icon"/>
+                <img src={position_case_icon} className="menu-item-icon" alt='>'/>
                 <span className="menu-item__label">Compliance report </span>
               </div>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                 onClick={onItemClick}
               >
-                <img src={data_sheet_icon} className="menu-item-icon"/>
+                <img src={data_sheet_icon} className="menu-item-icon" alt='>'/>
                 <span className="menu-item__label">Reimbursement Report </span>
               </div>
             </div>
             <div className="side-menu-separator"/>
             <div className="side-menu-list">
               <a className='side-menu-list-header'  href="/configuration">
-                <img src={support_icon} className="side-menu-list-header-icon"/>
+                <img src={support_icon} className="side-menu-list-header-icon" alt='>'/>
                 Support
               </a>
             </div>

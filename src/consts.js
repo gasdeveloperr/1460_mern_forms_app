@@ -25,6 +25,6 @@ export const backend_point = 'https://one460-forms-backend.onrender.com'
 //'http://localhost:5000'
 //'https://one460-forms-backend.onrender.com'
 
-export const frontend_point = 'https://forms-app-t3gi.onrender.com'
+export const frontend_point = 'https://forms-app-frontend-0zto.onrender.com'
 //'http://localhost:3000'
 //'https://forms-app-t3gi.onrender.com'

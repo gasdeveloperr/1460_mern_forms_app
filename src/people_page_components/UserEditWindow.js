@@ -125,7 +125,7 @@ const UserEditWindow = ({ onClose, chosenUser, editUserHandler, changeStatusHand
           <div className="form-actions">
             <button className='modal-button' type="submit">Save User</button>
             {
-            chosenUser.status == 'inactive' ? 
+            chosenUser.status === 'inactive' ? 
               <button type="usual" onClick={() => changeStatusHandler('active')}>Activate User</button>
             : 
               <button type="usual" onClick={() => changeStatusHandler('inactive')}>Inactivate User</button>
