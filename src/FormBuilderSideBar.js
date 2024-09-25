@@ -49,6 +49,9 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
                 <DraggableComponent type="long_answer" title="Long Answer"
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd} />
+                <DraggableComponent type="title" title="Title"
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd} />
                 <DraggableComponent type="name" title="Name"
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd} />

@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './CustomSelector.css';
-import dropdown_icon from '../icons/dropdown-icon.svg'
+import dropdown_icon from '../icons/dropdown-icon.svg';
 
-const CustomSelector = ({ field, setSelectorValue}) => {
+const CustomSelector = ({ options, selectedValue, setSelectorValue }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const selectRef = useRef(null);
 
   useEffect(() => {
-    // Find the initial selected option from field.value
-    const initialSelectedOption = field.dropdown.find(option => option.title === field.value);
+    // Find the initial selected option from options array
+    const initialSelectedOption = options.find(option => option.title === selectedValue);
     if (initialSelectedOption) {
       setSelectedOption(initialSelectedOption);
     }
-  }, [field.dropdown, field.value]);
+  }, [options, selectedValue]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -21,7 +21,7 @@ const CustomSelector = ({ field, setSelectorValue}) => {
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
-    setSelectorValue(option.title)
+    setSelectorValue(option.title);  // Pass the selected value back to the parent
     setIsOpen(false);
   };
 
@@ -50,7 +50,7 @@ const CustomSelector = ({ field, setSelectorValue}) => {
       </div>
       {isOpen && (
         <ul className="custom-select-options">
-          {field.dropdown.map((option, index) => (
+          {options.map((option, index) => (
             <li 
               key={index} 
               className="custom-select-option"

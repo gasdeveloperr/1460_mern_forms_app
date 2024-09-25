@@ -90,6 +90,14 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
                 {field.title}
               </div>
               <div className='form-component-input-div long'>
+                {field.value}
+              </div>
+            </div>
+          )}
+          {field.type === 'title' && (
+            <div className="form-short-answer">
+              <div className='form-component-title' style={{backgroundColor: field.color || '#FFFFFF'}}>
+                {field.title}
               </div>
             </div>
           )}

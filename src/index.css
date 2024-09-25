@@ -651,6 +651,18 @@ body {
   font-size: 14px;
   font-weight: 600;
 }
+.form-title-component-title{
+  display: flex;
+  -moz-box-align: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: -5px;
+  margin-bottom: 8px;
+  color: rgb(69, 85, 96);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 0px 6px;
+}
 .form-component-input-div{
   -moz-box-align: center;
   align-items: center;
@@ -662,6 +674,7 @@ body {
   border-radius: 4px;
   background-color: rgb(255, 255, 255);
   color: rgb(69, 85, 96);
+  font-size: 13px;
 }
 .form-component-form-date-time-inputs,
 .form-component-form-date-inputs,
@@ -743,11 +756,15 @@ body {
   font-size: 13px;
   padding: 0px 6px;
 }
+.form-section-label{
+  font-size: 13px;
+  padding-right: 8px;
+}
 .short{
-  height: 31px;
+  min-height: 31px;
 }
 .long{
-  height: 82px;
+  min-height: 82px;
   overflow-y: auto;
 }
 .form-short-answer{
@@ -1069,4 +1086,22 @@ body {
 .go-back-button img {
   width: 32px;
   height: 32px;
+}
+
+
+.size20-icon{
+  width: 20px;
+  height: 20px;
+}
+.size24-icon{
+  width: 24px;
+  height: 24px;
+}
+.size26-icon{
+  width: 26px;
+  height: 26px;
+}
+.size28-icon{
+  width: 28px;
+  height: 28px;
 }

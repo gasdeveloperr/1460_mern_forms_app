@@ -3,13 +3,17 @@ import file_upload_icon from './icons/file-upload-icon.svg'
 import calendar_icon from './icons/calendar-icon.svg'
 import time_icon from './icons/time-icon.svg' 
 import CustomSelector from './form_live_components/CustomSelector';
+import TripleSectionFormComponent from './form_live_components/TripleSectionFormComponent';
+import DoubleSectionFormComponent from './form_live_components/DoubleSectionFormComponent';
 
 
 
 const FormLiveComponent = ({field, index}) => {
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(field.value || '');
   const [errorMessage, setErrorMessage] = useState('');
+  
+  const [fieldData, setFieldData] = useState(field);
 
   const [selectorValue, setSelectorValue] = useState(null);
 
@@ -31,6 +35,26 @@ const FormLiveComponent = ({field, index}) => {
       setSelectBgColor(selectedOption ? selectedOption.color : '');
     }
   };
+
+  const textareaRef = useRef(null);
+
+  const handleResize = (event) => {
+    const textarea = textareaRef.current;
+    textarea.style.height = 'auto'; // Reset the height to auto to shrink if necessary
+    textarea.style.height = `${textarea.scrollHeight}px`; // Adjust to scrollHeight
+  };
+
+  const handleSelectorChange = (selectedOption, sectionIndex) => {
+    const updatedField = { ...field };
+    
+    // Update selected option for the appropriate section
+    updatedField.value[sectionIndex].options.forEach(option => {
+      option.selected = option.title === selectedOption.title;
+    });
+  
+    // Trigger any state updates here (e.g., updating form data)
+    setFieldData(updatedField);
+  };  
 
   const [selectBgColor, setSelectBgColor] = useState('');
 
@@ -62,7 +86,7 @@ const FormLiveComponent = ({field, index}) => {
               )}
               {!field.read_only &&
                 <input className='form-live-input' id={field.id} 
-                  fieldtype={field.type}
+                  fieldtype={field.type} value={inputValue}
                   name={field.title} onChange={handleInputChange} 
                   required={field.required} 
                   disabled={field.read_only}/>
@@ -78,12 +102,23 @@ const FormLiveComponent = ({field, index}) => {
                 {field.title}
               </div>
               <textarea className='long-answer-input' id={field.id} 
-                fieldtype={field.type}
-                name={field.title} onChange={handleInputChange} 
+                fieldtype={field.type} value={field.value}
+                name={field.title} 
+                ref={textareaRef} onChange={(event) => {
+                  handleInputChange(event);
+                  handleResize(event);
+                }}
                 required={field.required} 
                 disabled={field.read_only}/>
             </div>
           </label>
+        )}
+        {field.type === 'title' && (
+          <div className="form-short-answer">
+            <div className='form-title-component-title' style={{backgroundColor: field.color || '#FFFFFF'}}>
+              {field.title}
+            </div>
+          </div>
         )}
         {field.type === 'email' || field.type === 'number'  && (
           <label key={field.id} className="form-live-component-container">
@@ -219,7 +254,7 @@ const FormLiveComponent = ({field, index}) => {
             <div className="form-component-dropdown">
               {field.required && <span>*</span>}
               {field.title}
-              <CustomSelector field={field} setSelectorValue={setSelectorValue}/>
+              <CustomSelector options={field.dropdown} setSelectorValue={setSelectorValue}/>
               <input 
                 fieldtype={field.type}
                 id={field.id}
@@ -230,74 +265,24 @@ const FormLiveComponent = ({field, index}) => {
             </div>
           </label>
         )}
-        {/* {field.type === 'double_section' && (
-          <label key={field.id} htmlFor={field.id} className="form-live-component-container">
-            <div className="form-component-dropdown">
+        {field.type === 'double_section' && (
+          <div className="form-live-component-container">
+            <div className="form-component-title">
               {field.required && <span>*</span>}
-              {field.title}
-              <div className="form-component-double-section-container">
-                <div className="form-component-double-section">
-                  <div className='form-component-label'>
-                    {field.labels[0]}
-                    <CustomSelector field={field} setSelectorValue={setSelectorValue}/>
-                    <input 
-                      fieldtype={field.type}
-                      id={field.id}
-                      name={field.id}
-                      disabled={field.read_only}
-                      value={selectorValue}
-                      hidden/>
-                  </div>
-                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[0].options[0].color ? field.value[0].color : ''}}>
-                    {field.value[0].options[0].title|| '⠀'}
-                    <img src={selector_icon} />
-                  </div>
-                </div>
-                <div className="form-component-double-section">
-                  <div className='form-component-label'>
-                    {field.labels[1]}
-                  </div>
-                  <CustomSelector field={field} setSelectorValue={setSelectorValue}/>
-                  <input 
-                    fieldtype={field.type}
-                    id={field.id}
-                    name={field.id}
-                    disabled={field.read_only}
-                    value={selectorValue}
-                    hidden/>
-                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].options[0].color ? field.value[1].color : ''}}>
-                    {field.value[1].options[0].title|| '⠀'}
-                    <img src={selector_icon} />
-                  </div>
-                </div>
-              </div>
-              <CustomSelector field={field} setSelectorValue={setSelectorValue}/>
-              <input 
-                fieldtype={field.type}
-                id={field.id}
-                name={field.id}
-                disabled={field.read_only}
-                value={selectorValue}
-                hidden/>
+              {field.title} 
             </div>
-          </label>
-          )} */}
-        {/* {field.type === 'dropdown' && (
-          <label key={field.id} htmlFor={field.id} className="form-live-component-container">
-            <div className="form-component-dropdown">
-              {field.title}
-              <select id={field.id} name={field.title} className="form-component-select">
-                { field.dropdown.map((option, index)=> (
-                  <option key={index} value={option.title} 
-                  className="form-component-select-option" style={{backgroundColor: option.color ? option.color : ''}}>
-                    {option.title}
-                  </option>
-                  ))
-                }
-              </select>
+            <DoubleSectionFormComponent field={field} handleSelectorChange={handleSelectorChange}/>
+          </div>
+        )}
+        {field.type === 'triple_section' && (
+          <div className="form-live-component-container">
+            <div className="form-component-title">
+              {field.required && <span>*</span>}
+              {field.title} 
             </div>
-          </label>
-        )} */}
+            <TripleSectionFormComponent field={field} handleSelectorChange={handleSelectorChange}/>
+          </div>
+        )}
         {field.type === 'date_time' && (
           <div className="form-live-component-container">
             <div className='form-component-title'>

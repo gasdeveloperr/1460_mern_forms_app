@@ -1,10 +1,11 @@
-export const accept_types_array = ['short_answer', 'long_answer', 'name', 'address', 'email', 'phone',
+export const accept_types_array = ['short_answer', 'long_answer', 'title', 'name', 'address', 'email', 'phone',
 'number', 'dropdown', 'radio', 'checkbox', 'date_time', 'file_upload', 
 'section', 'double_section', 'triple_section', 'five_section'];
 
 export const titles_to_types_object = {
   'short_answer': 'Short answer',
   'long_answer': 'Long answer',
+  'title': 'Title',
   'name': 'Name',
   'address': 'Address',
   'email': 'Email',
@@ -21,7 +22,7 @@ export const titles_to_types_object = {
   'five_section': '5 Columns Section',
 };
 
-export const backend_point = 'https://one460-forms-backend.onrender.com'
+export const backend_point = 'http://localhost:5000'
 //'http://localhost:5000'
 //'https://one460-forms-backend.onrender.com'
 

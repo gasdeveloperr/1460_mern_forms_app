@@ -12,8 +12,7 @@
   border-radius: 0px;
   box-sizing: border-box;
   margin: calc(40px) auto;
-  max-width: 700px;
-  width: 100%;
+  width: fit-content;
   float: none;
 }
 .form-live-title{
@@ -64,7 +63,7 @@
   transition-timing-function: ease-in-out;
   width: 100%;
 }
-.long-answer-input{
+.long-answer-input {
   color: rgb(89, 93, 100);
   background-color: rgb(255, 255, 255);
   border-style: solid;
@@ -78,12 +77,15 @@
   font-weight: 400;
   line-height: 14px;
   max-width: 100%;
-  padding: calc(7px);
-  transition-property: color, background-color, border, border-color, box-shadow;
-  transition-duration: 0s;
-  transition-timing-function: ease-in-out;
+  padding: 7px;
+  transition: color, background-color, border, border-color, box-shadow 0s ease-in-out;
   width: 100%;
+  height: 100%;
+  min-width: 580px;
+  resize: none; 
+  overflow: hidden; 
 }
+
 .form-live-footer{
   background-color: transparent;
   margin-top: calc(40px);

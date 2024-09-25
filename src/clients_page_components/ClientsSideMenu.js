@@ -8,7 +8,6 @@ import home_page_icon from '../icons/home-page-icon.svg'
 import configuration_icon from '../icons/configuration-icon.svg'
 import arrow_menu_icon from '../icons/arrow-side-menu-icon.svg'
 import position_case_icon from '../icons/positions-case-icon.svg'
-import data_sheet_icon from '../icons/data-sheet-icon.svg'
 import './ClientsSideMenu.css';
 
 
@@ -48,20 +47,20 @@ const ClientsSideMenu = ({ activeOption, handleAddingClient, handleAddingFacilit
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                 onClick={onItemClick}
               >
-                <img src={clients_icon} className="menu-item-icon"/>
+                <img src={clients_icon} className="size28-icon"/>
                 <span className="menu-item__label">Clients </span>
               </div>
               {
                 selectedClient? 
                 <div className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                   onClick={() => handleAddingFacility()}>
-                  <img src={location_add_icon} className="menu-item-icon"/>
+                  <img src={location_add_icon} className="size28-icon"/>
                   <span className="menu-item__label">Add facility </span>
                 </div>
                 :
                 <div className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                   onClick={() => handleAddingClient()}>
-                  <img src={client_add_icon} className="menu-item-icon"/>
+                  <img src={client_add_icon} className="size28-icon"/>
                   <span className="menu-item__label">Add client </span>
                 </div>
               }
@@ -77,15 +76,8 @@ const ClientsSideMenu = ({ activeOption, handleAddingClient, handleAddingFacilit
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
                 onClick={onItemClick}
               >
-                <img src={position_case_icon} className="menu-item-icon"/>
+                <img src={position_case_icon} className="size28-icon"/>
                 <span className="menu-item__label">Positions </span>
-              </div>
-              <div
-                className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
-                onClick={onItemClick}
-              >
-                <img src={data_sheet_icon} className="menu-item-icon"/>
-                <span className="menu-item__label">Safety Data Sheets </span>
               </div>
             </div>
             </>

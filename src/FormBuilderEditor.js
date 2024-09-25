@@ -25,6 +25,9 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     setEditingField({...editingField, read_only: !editingField.read_only})
     //console.log('change editingField : ', editingField)
   }  
+  const changeFieldPreFilledHandler = (e) => {
+    setEditingField({...editingField, value: e.target.value})
+  } 
 
 
   const addFieldCheckOptionHandler = (index) => {
@@ -141,6 +144,11 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     setColorPickerVisible(colorPickerVisible === index ? null : index);
   };
 
+  // Handler for changing the color of the title background
+  const changeTitleColorHandler = (color) => {
+    setColor(color);
+    setEditingField({...editingField, color: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`});
+  };
   // Handler for changing the color of the option
   const changeOptionColorHandler = (color, index, options_index) => {
     setColor(color);
@@ -163,7 +171,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
 
   const [showLogic, setShowLogic] = useState(false);
   const [showGeneral, setShowGeneral] = useState(true);
-  const [showSpecific, setShowSpecific] = useState(false);
+  const [showSpecific, setShowSpecific] = useState(true);
 
   const toggleSection = (section) => {
     if (section === 'logic') {
@@ -260,28 +268,31 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                 </>
                 : <></>
               }
-              <div className="field-editor_checkbox-group">
-                <div className='field-editor_checkbox_container'>
-                  <label htmlFor="required" className="field-editor-label">
-                    <input type="checkbox" id="required" className='field-editor_checkbox' 
-                    checked={editingField.required} onChange={changeFieldRequiredHandler}/>
-                    Required
-                  </label>
+              {
+                editingField.type !== 'title' &&
+                <div className="field-editor_checkbox-group">
+                  <div className='field-editor_checkbox_container'>
+                    <label htmlFor="required" className="field-editor-label">
+                      <input type="checkbox" id="required" className='field-editor_checkbox' 
+                      checked={editingField.required} onChange={changeFieldRequiredHandler}/>
+                      Required
+                    </label>
+                  </div>
+                  <div className='field-editor_checkbox_container'>
+                    <label className="field-editor-label">
+                      <input type="checkbox" id="read-only" className='field-editor_checkbox' 
+                      checked={editingField.read_only} onChange={changeFieldReadOnlyHandler}/>
+                      <label htmlFor="read-only">Read-only</label>
+                    </label>
+                  </div>
+                  {/* <div className='field-editor_checkbox_container'>
+                    <label className="field-editor-label">
+                      <input type="checkbox" id="hide-label" className='field-editor_checkbox' />
+                      <label htmlFor="hide-label">Hide Label</label>
+                    </label>
+                  </div> */}
                 </div>
-                <div className='field-editor_checkbox_container'>
-                  <label className="field-editor-label">
-                    <input type="checkbox" id="read-only" className='field-editor_checkbox' 
-                    checked={editingField.read_only} onChange={changeFieldReadOnlyHandler}/>
-                    <label htmlFor="read-only">Read-only</label>
-                  </label>
-                </div>
-                {/* <div className='field-editor_checkbox_container'>
-                  <label className="field-editor-label">
-                    <input type="checkbox" id="hide-label" className='field-editor_checkbox' />
-                    <label htmlFor="hide-label">Hide Label</label>
-                  </label>
-                </div> */}
-              </div>
+              }
             </div>)
             }
         </div>
@@ -294,6 +305,38 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
         </div>
         {showSpecific ? 
           <>
+          {(editingField.type === 'short_answer' || editingField.type === 'long_answer') && 
+            <div className="option-content">
+              <div className="option-group">
+                <label>Pre-filled value</label>
+                <div className="option-input">
+                  <input type="text" onChange={(e) => changeFieldPreFilledHandler(e)} value={editingField.value}/>
+                </div>
+              </div>
+            </div>
+          }
+          {editingField.type === 'title' && 
+            <div className="option-content">
+              <div className="option-group">
+                <label>Background Color : </label>
+                  <div className="color-picker-container">
+                    <div 
+                      className="color-preview" 
+                      onClick={() => toggleColorPicker(1)}
+                      style={{ backgroundColor: editingField.color || color }}
+                    />
+                    <div className="color-preview-container" >
+                      {colorPickerVisible === 1 && (
+                        <RgbaColorPicker 
+                          color={color} 
+                          onChange={(color) => changeTitleColorHandler(color)}
+                        />
+                      )}
+                    </div>
+                  </div>
+              </div>
+            </div>
+          }
           { editingField.checkbox && 
             <div className="option-content">
               <div className="option-group">

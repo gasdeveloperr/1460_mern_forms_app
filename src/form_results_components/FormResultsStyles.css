@@ -30,3 +30,10 @@
   font-weight: 600;
   font-size: 16px;
 }
+.form-results-section-label{
+  align-items: center;
+  flex-wrap: wrap;
+  display: flex;
+  color: rgb(69, 85, 96);
+  font-size: 13px;
+}

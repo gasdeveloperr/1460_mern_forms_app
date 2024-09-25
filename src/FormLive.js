@@ -103,12 +103,19 @@ const FormLive = () => {
     for (let i = 0; i < formElements.length; i++) {
       const element = formElements[i];
       const customType = element.getAttribute('customtype'); 
+      const sectionName = element.getAttribute('sectionName'); 
       const fieldType = element.getAttribute('fieldtype'); 
       for(let j = 0; j < formFields.length; j++){
         const elementBack = formFields[j];
         if (element.id == elementBack.id ) {
           if (!formData[element.id]) {
             switch(fieldType){
+              case 'double_section' :
+                formData[element.id] = {name: elementBack.title, value:[]}
+                break;
+              case 'triple_section' :
+                formData[element.id] = {name: elementBack.title, value:[]}
+                break;
               case 'checkbox':
                 formData[element.id] = {name: elementBack.title, value:[]}
                 break;
@@ -126,9 +133,17 @@ const FormLive = () => {
           //setting element type for subm data field
           formData[element.id].type = fieldType;
 
-          console.log('elem custom type: ', customType)
-          console.log('elem  type: ', element.type)
+          console.log('formData[element.id] :', formData[element.id])
+
+          console.log(' switch(fieldType) : ', fieldType)
+
           switch(fieldType){
+            case 'double_section' :
+              formData[element.id].value.push({label: sectionName, value: element.value});
+              break;
+            case 'triple_section' :
+              formData[element.id].value.push({label: sectionName, value: element.value});
+              break;
             case 'checkbox':
               if (element.checked) {
                 formData[element.id].value.push(element.name);

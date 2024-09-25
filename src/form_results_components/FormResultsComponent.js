@@ -31,6 +31,13 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
 
+      {field.type === 'title' && (
+        <div className="form-short-answer">
+          <div className='form-title-component-title' style={{backgroundColor: field.color || '#FFFFFF'}}>
+            {field.title}
+          </div>
+        </div>
+      )}
       {field.type === 'radio' && (
         <div className="form-live-component-container">
           <div className='form-results-component-title'>
@@ -111,6 +118,40 @@ const FormResultsComponent = ({ field, data }) => {
             ) : (
               'No selection'
             )}
+          </div>
+        </div>
+      )}
+      {field.type === 'double_section' && (
+        <div className="form-live-component-container">
+          <div className="form-results-component-title">
+            {field.title}:
+          </div>
+          <div className="form-component-double-section-container">
+            {field.labels.map((label, index) => (
+              <div className="form-component-double-section" key={index}>
+                <div className="form-results-section-label">
+                  {label}
+                </div>
+                {fieldData.value[index].value}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {field.type === 'triple_section' && (
+        <div className="form-live-component-container">
+          <div className="form-results-component-title">
+            {field.title}:
+          </div>
+          <div className="form-component-triple-section-container">
+            {field.labels.map((label, index) => (
+              <div className="form-component-double-section" key={index}>
+                <div className="form-results-section-label">
+                  {label}
+                </div>
+                {fieldData.value[index].value}
+              </div>
+            ))}
           </div>
         </div>
       )}
