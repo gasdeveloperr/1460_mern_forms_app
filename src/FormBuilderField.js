@@ -80,6 +80,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
                 {field.title}
               </div>
               <div className='form-component-input-div short'>
+                {field.value}
               </div>
             </div>
           )}
@@ -289,43 +290,79 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               </div>
             </div>
           )}
-          {/* {field.type === 'triple_section' && (
+          {field.type === 'four_inputs_section' && (
+            <div>
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
+                {field.title}
+              </div>
+              <div className="form-component-four-section-container">
+                {field.labels.map((label, index) => (
+                  <div key={index} className="form-component-double-section">
+                    <div className='form-component-label'>
+                      {label}
+                    </div>
+                    <div className='form-component-input-div short'>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+         {field.type === 'five_inputs_section' && (
+            <div>
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
+                {field.title}
+              </div>
+              <div className="form-component-five-section-container">
+                {field.labels.map((label, index) => (
+                  <div key={index} className="form-component-double-section">
+                    <div className='form-component-label'>
+                      {label}
+                    </div>
+                    <div className='form-component-input-div short'>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {field.type === 'multi_section' && (
             <div>
               <div className='form-component-title'>
                 {field.required && <span className='required_sign'>*</span>}
                 {field.title}
               </div>
               <div className="form-component-triple-section-container">
-                <div className="form-component-double-section">
-                  <div className='form-component-label'>
-                    {field.labels[0]}
-                  </div>
-                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[0].color ? field.value[0].color : ''}}>
-                    {field.value[0]|| '⠀'}
-                    <img src={selector_icon} />
-                  </div>
+              <div key={index} className="form-component-double-section">
+                <div className='form-component-label'>
+                  {field.labels[0]}
                 </div>
-                <div className="form-component-double-section">
-                  <div className='form-component-label'>
-                    {field.labels[1]}
-                  </div>
-                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].color ? field.value[1].color : ''}}>
-                    {field.value[1]|| '⠀'}
-                    <img src={selector_icon} />
-                  </div>
-                </div>
-                <div className="form-component-double-section">
-                  <div className='form-component-label'>
-                    {field.labels[2]}
-                  </div>
-                  <div className='form-component-dropdown-div' style={{backgroundColor: field.value[2].color ? field.value[2].color : ''}}>
-                    {field.value[2]|| '⠀'}
-                    <img src={selector_icon} />
-                  </div>
+                <div className='form-component-input-div short'>
+                  {field.value[0]}
                 </div>
               </div>
+              <div className="form-component-double-section">
+                <div className='form-component-label'>
+                  {field.labels[1]}
+                </div>
+                <div className='form-component-dropdown-div' style={{backgroundColor: field.value[1].options[0].color ? field.value[1].color : ''}}>
+                  {field.value[1].options[0].title|| '⠀'}
+                  <img src={selector_icon} />
+                </div>
+              </div>
+              <div key={index} className="form-component-double-section">
+                <div className='form-component-label'>
+                  {field.labels[2]}
+                </div>
+                <div className='form-component-input-div short'>
+                  {field.value[2]}
+                </div>
+              </div>
+              </div>
             </div>
-          )} */}
+           )}
           {field.type === 'file_upload' && (
             <div className="form-short-answer">
               <div className='form-component-title'>

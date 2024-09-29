@@ -124,7 +124,7 @@ const FormResultsComponent = ({ field, data }) => {
       {field.type === 'double_section' && (
         <div className="form-live-component-container">
           <div className="form-results-component-title">
-            {field.title}:
+            {field.title}
           </div>
           <div className="form-component-double-section-container">
             {field.labels.map((label, index) => (
@@ -141,7 +141,7 @@ const FormResultsComponent = ({ field, data }) => {
       {field.type === 'triple_section' && (
         <div className="form-live-component-container">
           <div className="form-results-component-title">
-            {field.title}:
+            {field.title}
           </div>
           <div className="form-component-triple-section-container">
             {field.labels.map((label, index) => (
@@ -149,7 +149,71 @@ const FormResultsComponent = ({ field, data }) => {
                 <div className="form-results-section-label">
                   {label}
                 </div>
+                <div 
+                style={{color: fieldData.value[index].value==='Current'? '#7bb163' :
+                  fieldData.value[index].value==='Out of Date (15-30 Days)'? '#f1c336':
+                  fieldData.value[index].value==='Out of Date (30-60 Days)'? '#e6933b':
+                  fieldData.value[index].value==='Out of Date (More than 60 Days)' ? '#ff0909':
+                  ''}}>
                 {fieldData.value[index].value}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {field.type === 'four_inputs_section' && (
+        <div className="form-live-component-container">
+          <div className="form-results-component-title">
+            {field.title}
+          </div>
+          <div className="form-component-four-section-container">
+            {field.labels.map((label, index) => (
+              <div className="form-component-double-section" key={index}>
+                <div className="form-results-section-label">
+                  {label}
+                </div>
+                {fieldData.value[index]}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {field.type === 'five_inputs_section' && (
+        <div className="form-live-component-container">
+          <div className="form-results-component-title">
+            {field.title}
+          </div>
+          <div className="form-component-five-section-container">
+            {field.labels.map((label, index) => (
+              <div className="form-component-double-section" key={index}>
+                <div className="form-results-section-label">
+                  {label}
+                </div>
+                {fieldData.value[index]}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {field.type === 'multi_section' && (
+        <div className="form-live-component-container">
+          <div className="form-results-component-title">
+            {field.title}
+          </div>
+          <div className="form-component-triple-section-container">
+            {field.labels.map((label, index) => (
+              <div className="form-component-double-section" key={index}>
+                <div className="form-results-section-label">
+                  {label}
+                </div>
+                <div 
+                style={{color: fieldData.value[index]==='Monthly'? '#7bb163' :
+                fieldData.value[index]==='Quarterly'? '#f1c336':
+                (fieldData.value[index]==='Annually' || fieldData.value[index]==='Not Reviewed')? '#ff0909':
+                ''}}>
+                  {fieldData.value[index]}
+                </div>
               </div>
             ))}
           </div>

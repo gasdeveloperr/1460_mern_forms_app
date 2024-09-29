@@ -82,6 +82,7 @@
   width: 100%;
   height: 100%;
   min-width: 580px;
+  max-width: 920px;
   resize: none; 
   overflow: hidden; 
 }
@@ -115,7 +116,7 @@
   margin: 0px auto;
 }
 .form-component-dropdown{
-
+  max-width: 920px;
 }
 .form-component-select {
   appearance: none;

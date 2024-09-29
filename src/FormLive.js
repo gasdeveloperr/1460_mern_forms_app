@@ -89,10 +89,55 @@ const FormLive = () => {
     required: false,
   };
 
+  const [file, setFile] = useState(null);
+
+  // Handle file selection from child component
+  const handleFileChange = (selectedFile) => {
+    setFile(selectedFile);
+  };
+
+  const uploadFile = async (file) => {
+    if (!file) return null;
+  
+    const fileData = new FormData();
+    fileData.append('document', file);
+
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+  
+    try {
+      const response = await axios.post(`${backend_point}/upload`, fileData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      // File uploaded successfully, return file data
+      return response.data.fileData;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      return null;
+    }
+  };
+  
+
   const submitHandler = async(event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     setIsLoading(true);
-
+    
+    let fileData = null;
+    if (file) {
+      // Step 1: Upload the file
+      fileData = await uploadFile(file);
+      if (!fileData) {
+        setIsLoading(false);
+        return; // Stop if the file upload failed
+      }
+    }
     const formData = {};
 
     console.log('formFields : ', formFields)
@@ -114,6 +159,15 @@ const FormLive = () => {
                 formData[element.id] = {name: elementBack.title, value:[]}
                 break;
               case 'triple_section' :
+                formData[element.id] = {name: elementBack.title, value:[]}
+                break;
+              case 'four_inputs_section' :
+                formData[element.id] = {name: elementBack.title, value:[]}
+                break;
+              case 'five_inputs_section' :
+                formData[element.id] = {name: elementBack.title, value:[]}
+                break;
+              case 'multi_section' :
                 formData[element.id] = {name: elementBack.title, value:[]}
                 break;
               case 'checkbox':
@@ -143,6 +197,15 @@ const FormLive = () => {
               break;
             case 'triple_section' :
               formData[element.id].value.push({label: sectionName, value: element.value});
+              break;
+            case 'four_inputs_section' :
+              formData[element.id].value.push(element.value);
+              break;
+            case 'five_inputs_section' :
+              formData[element.id].value.push(element.value);
+              break;
+            case 'multi_section' :
+              formData[element.id].value.push(element.value);
               break;
             case 'checkbox':
               if (element.checked) {
@@ -181,6 +244,7 @@ const FormLive = () => {
     const submittedTime = Date.now();
     const formSubmsn = {
       formData: formData,
+      fileData: fileData,
       formTitle: formTitle,
       formType: formType,
       fields: formFields,
@@ -200,7 +264,8 @@ const FormLive = () => {
       const response = await axios.post(`${backend_point}/api/subm_forms/${formId}`, formSubmsn, config);
       console.log('Form updated successfully:', response.data);
       setIsLoading(false);
-      setIsSubmited(true)
+      setIsSubmited(true);
+      setFile(null)
       //if(response.)
     } catch (error) {
       if (error.response) {
@@ -212,12 +277,7 @@ const FormLive = () => {
       }
       setIsLoading(false);
     }
-    
-
-    // TODO: Perform further actions with the form data (e.g., send to server, update state, etc.)
   };
-
-
 
   return (
     <div className="form-live-page">
@@ -245,7 +305,7 @@ const FormLive = () => {
               {formTitle}
             </div>
             {formFields.map((field, index) => (
-              <FormLiveComponent field={field} index={index}/>
+              <FormLiveComponent field={field} index={index} onFileChange={handleFileChange}/>
               )
             )}
             <div className='form-live-footer'>

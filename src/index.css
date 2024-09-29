@@ -662,6 +662,7 @@ body {
   font-size: 16px;
   font-weight: 600;
   padding: 0px 6px;
+  min-height: 6px;
 }
 .form-component-input-div{
   -moz-box-align: center;
@@ -732,6 +733,7 @@ body {
   border-radius: 4px;
   background-color: rgb(255, 255, 255);
   color: rgb(69, 85, 96);
+  font-size: 14px;
 }
 .form-component-dropdown-div img{
   width: 20px;
@@ -747,6 +749,16 @@ body {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
 }
+.form-component-four-section-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
+.form-component-five-section-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
 .form-component-name-fields{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -755,13 +767,15 @@ body {
 .form-component-label{
   font-size: 13px;
   padding: 0px 6px;
+  min-height: 20.8px;
+  white-space: nowrap;
 }
 .form-section-label{
   font-size: 13px;
   padding-right: 8px;
 }
 .short{
-  min-height: 31px;
+  min-height: 38px;
 }
 .long{
   min-height: 82px;

@@ -5,10 +5,15 @@ import time_icon from './icons/time-icon.svg'
 import CustomSelector from './form_live_components/CustomSelector';
 import TripleSectionFormComponent from './form_live_components/TripleSectionFormComponent';
 import DoubleSectionFormComponent from './form_live_components/DoubleSectionFormComponent';
+import FourSectionFormComponent from './form_live_components/FourSectionFormComponent';
+import FiveSectionFormComponent from './form_live_components/FiveSectionFormComponent';
+import FileUploadFormComponent from './form_live_components/FileUploadFormComponent';
+import AutoResizingTextareaComponent from './form_live_components/AutoResizingTextareaComponent';
+import MultipleSectionFormComponent from './form_live_components/MultipleSectionFormComponent';
 
 
 
-const FormLiveComponent = ({field, index}) => {
+const FormLiveComponent = ({field, index, onFileChange}) => {
 
   const [inputValue, setInputValue] = useState(field.value || '');
   const [errorMessage, setErrorMessage] = useState('');
@@ -38,12 +43,34 @@ const FormLiveComponent = ({field, index}) => {
 
   const textareaRef = useRef(null);
 
+  const handleTextareaChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+    adjustTextareaHeight();
+  };
+
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset height to auto to shrink if needed
+      textarea.style.height = `${textarea.scrollHeight}px`; // Set the height to the scroll height
+    }
+  };
+
   const handleResize = (event) => {
     const textarea = textareaRef.current;
     textarea.style.height = 'auto'; // Reset the height to auto to shrink if necessary
     textarea.style.height = `${textarea.scrollHeight}px`; // Adjust to scrollHeight
   };
 
+  const handleInputsChange = (e, sectionIndex) => {
+    const updatedField = { ...field };
+    
+    // Update the value for the appropriate section with the input value
+    updatedField.value[sectionIndex] = e.target.value;
+    setFieldData(updatedField);
+  };
+  
   const handleSelectorChange = (selectedOption, sectionIndex) => {
     const updatedField = { ...field };
     
@@ -94,25 +121,8 @@ const FormLiveComponent = ({field, index}) => {
             </div>
           </label>
         )}
-        {field.type === 'long_answer' && (
-          <label key={field.id} className="form-live-component-container">
-            <div className="form-short-answer">
-              <div className='form-component-title'>
-                {field.required && <span>*</span>}
-                {field.title}
-              </div>
-              <textarea className='long-answer-input' id={field.id} 
-                fieldtype={field.type} value={field.value}
-                name={field.title} 
-                ref={textareaRef} onChange={(event) => {
-                  handleInputChange(event);
-                  handleResize(event);
-                }}
-                required={field.required} 
-                disabled={field.read_only}/>
-            </div>
-          </label>
-        )}
+        {field.type === 'long_answer' && 
+        <AutoResizingTextareaComponent field={field} handleInputChange={handleInputChange}/>}
         {field.type === 'title' && (
           <div className="form-short-answer">
             <div className='form-title-component-title' style={{backgroundColor: field.color || '#FFFFFF'}}>
@@ -283,6 +293,33 @@ const FormLiveComponent = ({field, index}) => {
             <TripleSectionFormComponent field={field} handleSelectorChange={handleSelectorChange}/>
           </div>
         )}
+        {field.type === 'four_inputs_section' && (
+          <div className="form-live-component-container">
+            <div className="form-component-title">
+              {field.required && <span>*</span>}
+              {field.title} 
+            </div>
+            <FourSectionFormComponent field={field} handleInputChange={handleInputsChange}/>
+          </div>
+        )}
+        {field.type === 'five_inputs_section' && (
+          <div className="form-live-component-container">
+            <div className="form-component-title">
+              {field.required && <span>*</span>}
+              {field.title} 
+            </div>
+            <FiveSectionFormComponent field={field} handleInputChange={handleInputsChange}/>
+          </div>
+        )}
+        {field.type === 'multi_section' && (
+          <div className="form-live-component-container">
+            <div className="form-component-title">
+              {field.required && <span>*</span>}
+              {field.title} 
+            </div>
+            <MultipleSectionFormComponent field={field} handleInputChange={handleInputsChange} handleSelectorChange={handleSelectorChange}/>
+          </div>
+        )}
         {field.type === 'date_time' && (
           <div className="form-live-component-container">
             <div className='form-component-title'>
@@ -308,16 +345,8 @@ const FormLiveComponent = ({field, index}) => {
             </div>
           </div>
         )}
-        {field.type === 'file_upload' && (
-          <label key={field._id} htmlFor={field.id} className="form-live-component-container">
-              <input type="file" id={field.id} name={field.title} className="file-input" 
-              required={field.required} disabled={field.read_only} hidden/>
-              <label htmlFor={field.id} className="form-file-label">
-                {field.required && <span>*</span>}
-                {field.title}
-              </label>
-          </label>
-        )}
+        {field.type === 'file_upload' && 
+        <FileUploadFormComponent field={field} onFileChange={onFileChange}/>}
       </>
     );
 };

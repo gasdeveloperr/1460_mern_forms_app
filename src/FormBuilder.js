@@ -13,7 +13,7 @@ import { getAuthToken } from './utils';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
-  const [formType, setFormType] = useState('blank');
+  const [formType, setFormType] = useState('scored');
   const [formFields, setFormFields] = useState();
   const { formId } = useParams();
 
@@ -38,7 +38,7 @@ const FormBuilder = () => {
   useEffect(() => {
     if (prevFormFields && !isEqual(prevFormFields, formFields)) {
       updateForm(formId)
-      console.log('formFields update goes brrrrr>.',prevFormFields, formFields, formType )
+      //console.log('formFields update goes brrrrr>.',prevFormFields, formFields, formType )
     }
   }, [formFields]);
 
@@ -204,6 +204,42 @@ const FormBuilder = () => {
               { title: 'Option 3', selected: false }
             ]
           }
+        ];
+        newField.sectionsType = 'default';
+      }
+      if(item.type === 'four_inputs_section'){
+        newField.labels = ['section 1', 'section 2', 'section 3', 'section 4']
+        newField.value = [ 
+          '',
+          '',
+          '',
+          ''
+        ];
+        newField.sectionsType = 'inputs';
+      }
+      if(item.type === 'five_inputs_section'){
+        newField.labels = ['section 1', 'section 2', 'section 3', 'section 4','section 5']
+        newField.value = [ 
+          '',
+          '',
+          '',
+          '',
+          ''
+        ];
+        newField.sectionsType = 'inputs';
+      }
+      if(item.type === 'multi_section'){
+        newField.labels = ['section 1', 'section 2', 'section 3' ];
+        newField.value = [
+          '', 
+          {
+            options: [
+              { title: 'Option 1', selected: true },
+              { title: 'Option 2', selected: false },
+              { title: 'Option 3', selected: false }
+            ]
+          }, 
+          ''
         ];
         newField.sectionsType = 'default';
       }

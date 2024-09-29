@@ -1,6 +1,6 @@
 export const accept_types_array = ['short_answer', 'long_answer', 'title', 'name', 'address', 'email', 'phone',
 'number', 'dropdown', 'radio', 'checkbox', 'date_time', 'file_upload', 
-'section', 'double_section', 'triple_section', 'five_section'];
+'section', 'double_section', 'triple_section', 'four_inputs_section', 'five_inputs_section', 'multi_section',];
 
 export const titles_to_types_object = {
   'short_answer': 'Short answer',
@@ -17,9 +17,11 @@ export const titles_to_types_object = {
   'date_time': 'Date/Time',
   'file_upload': 'File',
   'section': 'Section',
-  'double_section': '2 Columns Section',
-  'triple_section': '3 Columns Section',
-  'five_section': '5 Columns Section',
+  'double_section': '2 Selectors Section',
+  'triple_section': '3 Selectors Section',
+  'four_inputs_section' : '4 Inputs Section',
+  'five_inputs_section': '5 Inputs Section',
+  'multi_section' : 'Multiple Section',
 };
 
 export const backend_point = 'http://localhost:5000'
