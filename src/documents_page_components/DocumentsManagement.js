@@ -7,13 +7,19 @@ import updload_icon from '../icons/upload-icon.svg'
 import file_export from '../icons/file-export-icon.svg'
 import pdf_icon from '../icons/file-pdf-icon.svg'
 import { Document, Page } from 'react-pdf';
+import { getAuthToken, getUserId } from '../utils';
+import { backend_point } from '../consts';
+import axios from 'axios';
 
-const DocumentsManagement = ({files}) => {
+
+const DocumentsManagement = ({files, updateUserData}) => {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [previewOption, setPreviewOption] = useState('content');
+
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const [documents, setDocuments] = useState([
     {
@@ -103,9 +109,38 @@ const DocumentsManagement = ({files}) => {
     setSelectedDocument(document);
   };
 
+  const userId = getUserId()
   
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages);
+  const uploadFile = async (file) => {
+    if (!file) return null;
+  
+    const fileData = new FormData();
+    fileData.append('document', file);
+
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+  
+    try {
+      await axios.post(`${backend_point}/api/users/fileUpload/${userId}`, fileData, config);
+  
+      updateUserData()
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      return null;
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      uploadFile(file); // Upload the file immediately after selection
+    }
   };
 
   return (
@@ -117,11 +152,19 @@ const DocumentsManagement = ({files}) => {
           {selectedSubcategory && <span> &gt; {selectedSubcategory.name}</span>}
           {selectedDocument && <span> &gt; {selectedDocument.fileName}</span>}
         </div>
-        {selectedDocument &&
-          <div>
-            <img src={updload_icon} className='size24-icon' alt="updload icon" />
-          </div>
-        }
+        
+          <>
+            <input
+            type="file"
+            accept="application/pdf, image/*"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+            id="file-input"
+            />
+            <div onClick={() => document.getElementById('file-input').click()}>
+              <img src={updload_icon} className='size24-icon' alt="upload icon" />
+            </div>
+          </>
       </div>
       <div className="document-management-content">
         <div className="sidebar">
