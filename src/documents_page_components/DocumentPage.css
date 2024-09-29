@@ -90,6 +90,9 @@
   width: 100%;
   font-size: 15px;
 }
+.document-preview-info{
+  padding: 8px 12px;
+}
 .document-preview-option,
 .document-preview-option-chosen{
   margin-bottom: -4px;

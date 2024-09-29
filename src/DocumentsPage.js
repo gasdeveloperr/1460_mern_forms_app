@@ -5,7 +5,7 @@ import axios from 'axios';
 import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
 import { backend_point } from './consts';
-import { getAuthToken, getUserRole } from './utils';
+import { getAuthToken, getUserId, getUserRole } from './utils';
 import DashboardTable from './dashboard_page_components/DashboardTable';
 import DocumentsSideMenu from './documents_page_components/DocumentsSideMenu';
 import DocumentsManagement from './documents_page_components/DocumentsManagement';
@@ -13,17 +13,17 @@ import DocumentsManagement from './documents_page_components/DocumentsManagement
 function DocumentsPage() {
 
   const navigate = useNavigate();
-
-  const [forms, setForms] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState('')
 
   const userRole = getUserRole();
+  const userId = getUserId();
+
+  const [files, setFiles] = useState([])
 
   const [activeOption, setActiveOption] = useState('clients')
 
-  
-  const fetchForms = async () => {
+  const fetchUser = async () => {
 
     const token = getAuthToken();
 
@@ -34,25 +34,24 @@ function DocumentsPage() {
       },
     };
 
-
     try {
-      const response = await axios.get(`${backend_point}/api/forms/all`, config);
+      const response = await axios.get(`${backend_point}/api/users/${userId}`, config);
       setIsLoading(false);
-      setForms(response.data);
+      setFiles(response.data.files);
     } catch (err) {
       if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
         navigate('/login');
       }else{
-        setIsError('Error fetching form, please refresh the page')
-        console.error('Error fetching forms:', err);
+        setIsError('Error fetching user, please refresh the page')
+        console.error('Error fetching user:', err);
       }
     }
   };
 
   useEffect(() => {
     setIsLoading(true);
-    fetchForms();
+    fetchUser();
   }, []);
 
   const createFormHandler = async () => {
@@ -94,7 +93,7 @@ function DocumentsPage() {
       
       if (response.status === 200) {
         // Delete request was successful
-        fetchForms();
+        fetchUser();
       } else {
         // Handle other response statuses if needed
         setIsError('Error deleting a form, please refresh the page');
@@ -130,7 +129,7 @@ function DocumentsPage() {
                 {isError}
               </div>
               :
-              <DocumentsManagement/>
+              <DocumentsManagement files={files}/>
               // forms.map((form) => (
               //   <div className="form-list-item" key={form._id}>
               //     {form.title}
@@ -155,53 +154,6 @@ function DocumentsPage() {
           </div>
         </div>
       </div>
-      {/* <div className="dashboard-body">
-      <div className="dashboard-page-heading">
-        <div className="dashboard-page-title">
-          Welcome to Dashboard
-        </div>
-        {
-          (userRole === 'admin' || userRole ==='editor') && 
-          <div className="new-form-btn" onClick={() => createFormHandler()}>
-            Create new Form
-          </div>
-        }
-      </div>
-      <div className="dashboard-page-content">
-        <div className="dashboard-form-list">
-          {
-            isLoading ?
-              <Spinner/>
-            :  
-            isError ?
-            <div className='error-message' >
-              {isError}
-            </div>
-            :
-            forms.map((form) => (
-              <div className="form-list-item" key={form._id}>
-                {form.title}
-                <div className="form-actions">
-                  {(userRole === 'editor' || userRole ==='admin') &&
-                    <a href={`/forms/builder/${form._id}`} className="edit">
-                      Edit
-                    </a>
-                  }
-                  <a href={`/forms/live/${form._id}`} className="fill">
-                    Use
-                  </a>
-                  {(userRole === 'editor' || userRole ==='admin') &&
-                    <div className="delete" onClick={() => deleteFormHandler(form._id)}>
-                      <img src={trash_icon} className="remove-icon"/>
-                    </div>
-                  }
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-      </div> */}
     </div>
   );
 }

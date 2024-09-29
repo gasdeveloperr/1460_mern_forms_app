@@ -8,7 +8,7 @@ import file_export from '../icons/file-export-icon.svg'
 import pdf_icon from '../icons/file-pdf-icon.svg'
 import { Document, Page } from 'react-pdf';
 
-const DocumentsManagement = () => {
+const DocumentsManagement = ({files}) => {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
@@ -115,7 +115,7 @@ const DocumentsManagement = () => {
           <span>Home</span>
           {selectedCategory && <span> &gt; {selectedCategory.category}</span>}
           {selectedSubcategory && <span> &gt; {selectedSubcategory.name}</span>}
-          {selectedDocument && <span> &gt; {selectedDocument}</span>}
+          {selectedDocument && <span> &gt; {selectedDocument.fileName}</span>}
         </div>
         {selectedDocument &&
           <div>
@@ -125,7 +125,15 @@ const DocumentsManagement = () => {
       </div>
       <div className="document-management-content">
         <div className="sidebar">
-          <ul>
+
+        {files && 
+        files.map((file, fileIndex) => (
+          <li className='file-title' key={fileIndex} onClick={(e) => { e.stopPropagation(); handleDocumentClick(file); }}>
+            <img src={file_icon} className='size20-icon' alt="file icon" />
+            <span>{file.fileName}</span>
+          </li>)
+        )}
+          {/* <ul>
             {documents.map((category, categoryIndex) => (
               <li key={category.category} onClick={() => handleCategoryClick(categoryIndex)}>
                 <div className='folder-title'>
@@ -159,14 +167,16 @@ const DocumentsManagement = () => {
                 }
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
 
         <div className="document-viewer">
+          {
+          selectedDocument  ? (
           <div className="document-preview">
             <h3 className="document-preview-title"> 
               <img src={pdf_icon} className='size24-icon' alt="pdf icon" />
-              {selectedDocument}
+              {selectedDocument.fileName}
             </h3>
             <div className="document-preview-body">
               <div className="document-preview-options">
@@ -179,34 +189,35 @@ const DocumentsManagement = () => {
                   Document Info
                 </div>
               </div>
-              {
-              selectedDocument  ? (
                 <div className="document-preview-content">
                   {
-                    previewOption === 'content' ?
-                    <Document
-                      file={`path/to/your/documents/${selectedDocument}`}
-                      onLoadSuccess={onDocumentLoadSuccess}
-                    >
-                      {Array.from(
-                        new Array(numPages),
-                        (el, index) => (
-                          <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-                        )
-                      )}
-                    </Document>
+                    previewOption === 'content' ?           
+                    <div>
+                      <iframe src={selectedDocument.fileUrl} width='1000px' height='1200px' />
+                    </div>
+                    // <Document
+                    //   file={`path/to/your/documents/${selectedDocument}`}
+                    //   onLoadSuccess={onDocumentLoadSuccess}
+                    // >
+                    //   {Array.from(
+                    //     new Array(numPages),
+                    //     (el, index) => (
+                    //       <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+                    //     )
+                    //   )}
+                    // </Document>
                     :
                     <div className="document-preview-info">
-                      Document content info for {selectedDocument} goes here.
+                      Document content info for {selectedDocument.fileName} goes here.
                     </div>
                   }
                 </div>
-                ) : (
-                  <p>Select a document to view its content.</p>
-                )
-              }
-            </div>
-          </div>
+              </div>
+            </div> 
+            ) : (
+              <p>Select a document to view its content.</p>
+            )
+          }
         </div>
       </div>
       
