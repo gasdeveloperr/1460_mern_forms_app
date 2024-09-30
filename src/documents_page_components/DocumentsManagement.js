@@ -12,7 +12,7 @@ import { backend_point } from '../consts';
 import axios from 'axios';
 
 
-const DocumentsManagement = ({files, updateUserData}) => {
+const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
@@ -111,22 +111,46 @@ const DocumentsManagement = ({files, updateUserData}) => {
 
   const userId = getUserId()
   
-  const uploadFile = async (file) => {
+  const uploadFileToAWS = async (file) => {
     if (!file) return null;
   
     const fileData = new FormData();
     fileData.append('document', file);
-
+    
+    try {
+      const response = await axios.post(`${backend_point}/upload`, fileData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data.fileData;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      return null;
+    }
+  };
+    
+  const uploadFile = async (file) => {
+    setIsLoading(true);
+    
+    let fileData = null;
+    if (file) {
+      fileData = await uploadFileToAWS(file);
+      if (!fileData) {
+        setIsLoading(false);
+        return;
+      }
+    }
+    console.log('file data: ', fileData)
     const token = getAuthToken();
     const config = {
       headers: {
         'Authorization': `${token}`,
-        'Content-Type': 'multipart/form-data',
       },
     };
   
     try {
-      await axios.post(`${backend_point}/api/users/fileUpload/${userId}`, fileData, config);
+      await axios.post(`${backend_point}/api/users/fileUpload/${userId}`, {fileData: fileData}, config);
   
       updateUserData()
     } catch (error) {
@@ -139,7 +163,8 @@ const DocumentsManagement = ({files, updateUserData}) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
-      uploadFile(file); // Upload the file immediately after selection
+      console.log('file to upload: ', file)
+      uploadFile(file);
     }
   };
 
@@ -161,7 +186,7 @@ const DocumentsManagement = ({files, updateUserData}) => {
             style={{ display: 'none' }}
             id="file-input"
             />
-            <div onClick={() => document.getElementById('file-input').click()}>
+            <div style={{cursor:'pointer'}} onClick={() => document.getElementById('file-input').click()}>
               <img src={updload_icon} className='size24-icon' alt="upload icon" />
             </div>
           </>

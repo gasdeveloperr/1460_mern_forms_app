@@ -129,7 +129,7 @@ function DocumentsPage() {
                 {isError}
               </div>
               :
-              <DocumentsManagement files={files} updateUserData={fetchUser}/>
+              <DocumentsManagement files={files} updateUserData={fetchUser} setIsLoading={setIsLoading}/>
               // forms.map((form) => (
               //   <div className="form-list-item" key={form._id}>
               //     {form.title}
