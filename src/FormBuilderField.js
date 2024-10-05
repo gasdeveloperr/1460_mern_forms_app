@@ -290,6 +290,44 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               </div>
             </div>
           )}
+          {field.type === 'two_inputs_section' && (
+            <div>
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
+                {field.title}
+              </div>
+              <div className="form-component-double-section-container">
+                {field.labels.map((label, index) => (
+                  <div key={index} className="form-component-double-section">
+                    <div className='form-component-label'>
+                      {label}
+                    </div>
+                    <div className='form-component-input-div short'>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {field.type === 'triple_inputs_section' && (
+            <div>
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
+                {field.title}
+              </div>
+              <div className="form-component-triple-section-container">
+                {field.labels.map((label, index) => (
+                  <div key={index} className="form-component-double-section">
+                    <div className='form-component-label'>
+                      {label}
+                    </div>
+                    <div className='form-component-input-div short'>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {field.type === 'four_inputs_section' && (
             <div>
               <div className='form-component-title'>

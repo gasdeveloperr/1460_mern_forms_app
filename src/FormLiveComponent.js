@@ -5,6 +5,8 @@ import time_icon from './icons/time-icon.svg'
 import CustomSelector from './form_live_components/CustomSelector';
 import TripleSectionFormComponent from './form_live_components/TripleSectionFormComponent';
 import DoubleSectionFormComponent from './form_live_components/DoubleSectionFormComponent';
+import DoubleInputsSectionFormComponent from './form_live_components/DoubleInputsSectionFormComponent';
+import TripleInputsSectionFormComponent from './form_live_components/TripleInputsSectionFormComponent';
 import FourSectionFormComponent from './form_live_components/FourSectionFormComponent';
 import FiveSectionFormComponent from './form_live_components/FiveSectionFormComponent';
 import FileUploadFormComponent from './form_live_components/FileUploadFormComponent';
@@ -291,6 +293,24 @@ const FormLiveComponent = ({field, index, onFileChange}) => {
               {field.title} 
             </div>
             <TripleSectionFormComponent field={field} handleSelectorChange={handleSelectorChange}/>
+          </div>
+        )}
+        {field.type === 'two_inputs_section' && (
+          <div className="form-live-component-container">
+            <div className="form-component-title">
+              {field.required && <span>*</span>}
+              {field.title} 
+            </div>
+            <DoubleInputsSectionFormComponent field={field} handleInputChange={handleInputsChange}/>
+          </div>
+        )}
+        {field.type === 'triple_inputs_section' && (
+          <div className="form-live-component-container">
+            <div className="form-component-title">
+              {field.required && <span>*</span>}
+              {field.title} 
+            </div>
+            <TripleInputsSectionFormComponent field={field} handleInputChange={handleInputsChange}/>
           </div>
         )}
         {field.type === 'four_inputs_section' && (

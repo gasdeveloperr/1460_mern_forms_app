@@ -109,6 +109,12 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
                 <DraggableComponent type="triple_section" title="3 Selectors Section" 
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}/>
+                <DraggableComponent type="two_inputs_section" title="2 Inputs Section"
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/>
+                <DraggableComponent type="triple_inputs_section" title="3 Inputs Section"
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/>
                 <DraggableComponent type="four_inputs_section" title="4 Inputs Section"
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}/>

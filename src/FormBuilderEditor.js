@@ -1,10 +1,11 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './FormBuilderEditor.css';
 import { OutsideClickContext } from './OutsideClickContext';
 import { titles_to_types_object } from './consts';
 import trash_icon from './icons/trash-can.svg'
 import duplicate_icon from './icons/duplicate-icon.svg'
-import { RgbaColorPicker } from "react-colorful";
+import { HexColorPicker  } from "react-colorful";
+import convert from "color-convert"; 
 
 const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setEditingField, handleDuplicateClick}) => {
 
@@ -152,27 +153,201 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     setEditingField({ ...editingField, value: newValue });
   };
   
-
-  // State to manage which color picker is visible
   const [colorPickerVisible, setColorPickerVisible] = useState(null);
-  const [color, setColor] = useState({ r: 200, g: 150, b: 35, a: 0.5 });
+  const [color, setColor] = useState(editingField.color);
 
-  // Toggle visibility of the color picker
-  const toggleColorPicker = (index) => {
+  const [hexColor, setHexColor] = useState();
+  const [rgbColor, setRgbColor] = useState();
+  const [cmykColor, setCmykColor] = useState();
+
+  useEffect(() => {
+    if (editingField.color && !hexColor && editingField.type === 'title') {
+      if (editingField.color.includes('rgba')) {
+        // Extract rgba values from string
+        const rgbaValues = editingField.color.match(/rgba?\((\d+), (\d+), (\d+),? (\d+\.?\d*)?\)/);
+        if (rgbaValues) {
+          const rgbaArray = [
+            parseInt(rgbaValues[1]), // Red
+            parseInt(rgbaValues[2]), // Green
+            parseInt(rgbaValues[3])  // Blue
+          ];
+  
+          const hex = convert.rgb.hex(rgbaArray); // Convert array to hex
+          setColor(hex);
+          setHexColor(hex);
+          setRgbColor(convert.hex.rgb(hex));
+          setCmykColor(convert.hex.cmyk(hex));
+  
+          console.log('Converted RGBA to HEX:', hex);
+        } else {
+          setColor(editingField.color);
+          setHexColor(editingField.color);
+          setRgbColor(convert.hex.rgb(editingField.color));
+          setCmykColor(convert.hex.cmyk(editingField.color));
+        }
+      } else {
+        setColor(editingField.color);
+        setHexColor(editingField.color);
+        setRgbColor(convert.hex.rgb(editingField.color));
+        setCmykColor(convert.hex.cmyk(editingField.color));
+      }
+    }
+    if(!editingField.color && editingField.type === 'title'){
+      const startHex = '#FFFFFF'
+      setColor(startHex);
+      setHexColor(startHex);
+      setRgbColor(convert.hex.rgb(startHex));
+      setCmykColor(convert.hex.cmyk(startHex));
+    }
+  }, [editingField]);
+  
+  useEffect(() => {
+    //console.log('Updated color:', color);
+  }, [color]);
+  
+  const toggleColorPicker = (index, startColor) => {
+    //console.log('startColor : ',startColor)
+    if(startColor){
+      if (startColor.includes('rgba')) {
+        const rgbaValues = startColor.match(/rgba?\((\d+), (\d+), (\d+),? (\d+\.?\d*)?\)/);
+        if (rgbaValues) {
+          const rgbaArray = [
+            parseInt(rgbaValues[1]), // Red
+            parseInt(rgbaValues[2]), // Green
+            parseInt(rgbaValues[3])  // Blue
+          ];
+  
+          const hex = convert.rgb.hex(rgbaArray); // Convert array to hex
+          setColor(hex);
+          setHexColor(hex);
+          setRgbColor(convert.hex.rgb(hex));
+          setCmykColor(convert.hex.cmyk(hex));
+        } else {
+          setColor(startColor);
+          setHexColor(startColor);
+          setRgbColor(convert.hex.rgb(startColor));
+          setCmykColor(convert.hex.cmyk(startColor));
+        }
+      } else {
+        setColor(startColor);
+        setHexColor(startColor);
+        setRgbColor(convert.hex.rgb(startColor));
+        setCmykColor(convert.hex.cmyk(startColor));
+      }
+    }
     setColorPickerVisible(colorPickerVisible === index ? null : index);
   };
 
-  // Handler for changing the color of the title background
   const changeTitleColorHandler = (color) => {
     setColor(color);
-    setEditingField({...editingField, color: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`});
+    setEditingField({...editingField, color: color});
   };
+
+  const handleTitleColorChange = (newHexColor) => {
+    setHexColor(newHexColor);
+    const rgb = convert.hex.rgb(newHexColor);
+    const cmyk = convert.rgb.cmyk(rgb);
+  
+    setRgbColor(rgb);
+    setCmykColor(cmyk);
+  
+    changeTitleColorHandler(newHexColor);
+  };
+  
+  const handleTitleHexChange = (e) => {
+    const hex = e.target.value;
+    setHexColor(hex);
+  
+    const rgb = convert.hex.rgb(hex);
+    const cmyk = convert.hex.cmyk(hex);  
+  
+    setRgbColor(rgb);
+    setCmykColor(cmyk);
+    changeTitleColorHandler(hex);
+  };
+  
+  const handleTitleRgbChange = (e) => {
+    const rgb = e.target.value.split(',').map(Number);
+    setRgbColor(rgb);
+  
+    const hex = convert.rgb.hex(rgb);
+    const cmyk = convert.rgb.cmyk(rgb);
+  
+    setHexColor('#'+hex);
+    setCmykColor(cmyk);
+  
+    changeTitleColorHandler('#'+convert.rgb.hex(rgb));
+  };
+  
+  const handleTitleCmykChange = (e) => {
+    const cmyk = e.target.value.split(',').map(Number);
+    setCmykColor(cmyk);
+  
+    const rgb = convert.cmyk.rgb(cmyk); 
+    const hex = convert.cmyk.hex(cmyk);
+  
+    setRgbColor(rgb);
+    setHexColor('#'+hex);
+  
+    changeTitleColorHandler('#'+convert.cmyk.hex(cmyk));
+  };
+  
+  const handleColorChange = (newHexColor, index) => {
+    setHexColor(newHexColor);
+    const rgb = convert.hex.rgb(newHexColor);
+    const cmyk = convert.rgb.cmyk(rgb);
+  
+    setRgbColor(rgb);
+    setCmykColor(cmyk);
+  
+    changeOptionColorHandler(newHexColor, index);
+  };
+  
+  const handleHexChange = (e, index) => {
+    const hex = e.target.value;
+    setHexColor(hex);
+  
+    const rgb = convert.hex.rgb(hex);
+    const cmyk = convert.hex.cmyk(hex);  
+  
+    setRgbColor(rgb);
+    setCmykColor(cmyk);
+    changeOptionColorHandler(hex, index);
+  };
+  
+  const handleRgbChange = (e, index) => {
+    const rgb = e.target.value.split(',').map(Number);
+    setRgbColor(rgb);
+  
+    const hex = convert.rgb.hex(rgb);
+    const cmyk = convert.rgb.cmyk(rgb);
+  
+    setHexColor('#'+hex);
+    setCmykColor(cmyk);
+  
+    changeOptionColorHandler('#'+convert.rgb.hex(rgb), index);
+  };
+  
+  const handleCmykChange = (e, index) => {
+    const cmyk = e.target.value.split(',').map(Number);
+    setCmykColor(cmyk);
+  
+    const rgb = convert.cmyk.rgb(cmyk); 
+    const hex = convert.cmyk.hex(cmyk);
+  
+    setRgbColor(rgb);
+    setHexColor('#'+hex);
+  
+    changeOptionColorHandler('#'+convert.cmyk.hex(cmyk), index);
+  };
+  
   // Handler for changing the color of the option
   const changeOptionColorHandler = (color, index, options_index) => {
     setColor(color);
+    //console.log('changeOptionColorHandler color index  :', color, index)
     const newOptions = editingField.dropdown.map((option, opt_index) => {
       if(opt_index === index){
-        option.color = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`; // Update the color property
+        option.color = color;
       }
       return option;
     });
@@ -259,7 +434,8 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
               </div>
               {
                 (editingField.type === 'double_section' || editingField.type === 'triple_section' 
-                || editingField.type === 'four_inputs_section' || editingField.type === 'five_inputs_section'
+                  || editingField.type === 'two_inputs_section' || editingField.type === 'triple_inputs_section'
+                  || editingField.type === 'four_inputs_section' || editingField.type === 'five_inputs_section'
                 || editingField.type === 'multi_section') 
                 && (
                   <>
@@ -328,21 +504,51 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
             <div className="option-content">
               <div className="option-group">
                 <label>Background Color : </label>
-                  <div className="color-picker-container">
-                    <div 
-                      className="color-preview" 
-                      onClick={() => toggleColorPicker(1)}
-                      style={{ backgroundColor: editingField.color || color }}
-                    />
-                    <div className="color-preview-container" >
-                      {colorPickerVisible === 1 && (
-                        <RgbaColorPicker 
-                          color={color} 
-                          onChange={(color) => changeTitleColorHandler(color)}
-                        />
-                      )}
+                <div className="color-picker-container">
+                  <div
+                    className="color-preview"
+                    onClick={() => toggleColorPicker(1)}
+                    style={ !color ? {backgroundColor: '#FFFFFF'} : color.includes('rgba') ? 
+                    {backgroundColor: '#FFFFFF'} : {backgroundColor: color}}
+                  />
+                  { (color && hexColor && rgbColor && cmykColor) && colorPickerVisible && (
+                    <div className="color-preview-container">
+                      <HexColorPicker  color={color} onChange={handleTitleColorChange} />
+                      <div className="color-format-inputs">
+                        <div className="rgb-input-container">
+                          <label htmlFor="rgb-input">HEX</label>
+                          <input
+                            type="text"
+                            className="color-preview-input"
+                            value={hexColor}
+                            onChange={handleTitleHexChange}
+                            placeholder="HEX"
+                          />
+                        </div>
+                        <div className="rgb-input-container">
+                          <label htmlFor="rgb-input">RGB</label>
+                          <input
+                            type="text"
+                            className="color-preview-input"
+                            value={rgbColor.join(',')}
+                            onChange={handleTitleRgbChange}
+                            placeholder="RGB (r,g,b)"
+                          />
+                        </div>
+                        <div className="rgb-input-container">
+                          <label htmlFor="rgb-input">CMYK</label>
+                          <input
+                            type="text"
+                            className="color-preview-input"
+                            value={cmykColor.join(',')}
+                            onChange={handleTitleCmykChange}
+                            placeholder="CMYK (c,m,y,k)"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                </div>
               </div>
             </div>
           }
@@ -447,6 +653,51 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                     <div key={index} className="option-input">
                       <input type="text" onChange={(e) => changeFieldListOptionHandler(e, index)} value={option.title}/>
                       <div className="color-picker-container">
+                        <div
+                          className="color-preview"
+                          onClick={() => toggleColorPicker(index, option.color || '#FFFFFF')}
+                          style={ !option.color ? {backgroundColor: '#FFFFFF'} : option.color.includes('rgba') ? 
+                          {backgroundColor: '#FFFFFF'} : {backgroundColor: option.color}}
+                        />
+                        { (hexColor && rgbColor && cmykColor) && colorPickerVisible === index && (
+                          <div className="color-preview-container">
+                            <HexColorPicker  color={option.color} onChange={(color) => handleColorChange(color, index)} />
+                            <div className="color-format-inputs">
+                              <div className="rgb-input-container">
+                                <label htmlFor="rgb-input">HEX</label>
+                                <input
+                                  type="text"
+                                  className="color-preview-input"
+                                  value={hexColor}
+                                  onChange={e => handleHexChange(e, index)}
+                                  placeholder="HEX"
+                                />
+                              </div>
+                              <div className="rgb-input-container">
+                                <label htmlFor="rgb-input">RGB</label>
+                                <input
+                                  type="text"
+                                  className="color-preview-input"
+                                  value={rgbColor.join(',')}
+                                  onChange={e => handleRgbChange(e, index)}
+                                  placeholder="RGB (r,g,b)"
+                                />
+                              </div>
+                              <div className="rgb-input-container">
+                                <label htmlFor="rgb-input">CMYK</label>
+                                <input
+                                  type="text"
+                                  className="color-preview-input"
+                                  value={cmykColor.join(',')}
+                                  onChange={e => handleCmykChange(e, index)}
+                                  placeholder="CMYK (c,m,y,k)"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      {/* <div className="color-picker-container">
                         <div 
                           className="color-preview" 
                           onClick={() => toggleColorPicker(index)}
@@ -454,13 +705,13 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                         />
                         <div className="color-preview-container" >
                           {colorPickerVisible === index && (
-                            <RgbaColorPicker 
+                            <HexColorPicker  
                               color={color} 
                               onChange={(color) => changeOptionColorHandler(color, index)}
                             />
                           )}
                         </div>
-                      </div>
+                      </div> */}
                       <div className="option-buttons">
                         <button className="field-editor-add-button" onClick={() => addFieldListOptionHandler(index)}>+</button>
                         <button className="field-editor-remove-button" onClick={() => deleteFieldListOptionHandler(index)}>-</button>
@@ -598,3 +849,19 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
 };
 
 export default FieldBuilderEditor;
+
+  // <div className="color-picker-container">
+  //   <div 
+  //     className="color-preview" 
+  //     onClick={() => toggleColorPicker(1)}
+  //     style={{ backgroundColor: editingField.color || color }}
+  //   />
+  //   <div className="color-preview-container" >
+  //     {colorPickerVisible === 1 && (
+  //       <HexColorPicker  
+  //         color={color} 
+  //         onChange={(color) => changeTitleColorHandler(color)}
+  //       />
+  //     )}
+  //   </div>
+  // </div> 

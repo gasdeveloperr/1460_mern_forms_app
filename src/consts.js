@@ -1,6 +1,6 @@
 export const accept_types_array = ['short_answer', 'long_answer', 'title', 'name', 'address', 'email', 'phone',
 'number', 'dropdown', 'radio', 'checkbox', 'date_time', 'file_upload', 
-'section', 'double_section', 'triple_section', 'four_inputs_section', 'five_inputs_section', 'multi_section',];
+'section', 'double_section', 'triple_section', 'two_inputs_section', 'triple_inputs_section', 'four_inputs_section', 'five_inputs_section', 'multi_section',];
 
 export const titles_to_types_object = {
   'short_answer': 'Short answer',
@@ -19,6 +19,8 @@ export const titles_to_types_object = {
   'section': 'Section',
   'double_section': '2 Selectors Section',
   'triple_section': '3 Selectors Section',
+  'two_inputs_section' : '2 Inputs Section',
+  'triple_inputs_section': '3 Inputs Section',
   'four_inputs_section' : '4 Inputs Section',
   'five_inputs_section': '5 Inputs Section',
   'multi_section' : 'Multiple Section',

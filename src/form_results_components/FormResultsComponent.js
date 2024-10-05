@@ -162,6 +162,40 @@ const FormResultsComponent = ({ field, data }) => {
           </div>
         </div>
       )}
+      {field.type === 'two_inputs_section' && (
+        <div className="form-live-component-container">
+          <div className="form-results-component-title">
+            {field.title}
+          </div>
+          <div className="form-component-double-section-container">
+            {field.labels.map((label, index) => (
+              <div className="form-component-double-section" key={index}>
+                <div className="form-results-section-label">
+                  {label}
+                </div>
+                {fieldData.value[index]}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {field.type === 'triple_inputs_section' && (
+        <div className="form-live-component-container">
+          <div className="form-results-component-title">
+            {field.title}
+          </div>
+          <div className="form-component-triple-section-container">
+            {field.labels.map((label, index) => (
+              <div className="form-component-double-section" key={index}>
+                <div className="form-results-section-label">
+                  {label}
+                </div>
+                {fieldData.value[index]}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       {field.type === 'four_inputs_section' && (
         <div className="form-live-component-container">
           <div className="form-results-component-title">

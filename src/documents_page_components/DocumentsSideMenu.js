@@ -52,7 +52,7 @@ const DocumentsSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => 
                 onClick={onItemClick}
               >
                 <img src={file_attachment_icon} className="size28-icon" alt='doc'/>
-                <span className="menu-item__label">Documents Management </span>
+                <span className="menu-item__label">Document Management</span>
               </div>
               <div
                 className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}

@@ -207,6 +207,23 @@ const FormBuilder = () => {
         ];
         newField.sectionsType = 'default';
       }
+      if(item.type === 'two_inputs_section'){
+        newField.labels = ['section 1', 'section 2',]
+        newField.value = [ 
+          '',
+          ''
+        ];
+        newField.sectionsType = 'inputs';
+      }
+      if(item.type === 'triple_inputs_section'){
+        newField.labels = ['section 1', 'section 2', 'section 3',]
+        newField.value = [ 
+          '',
+          '',
+          ''
+        ];
+        newField.sectionsType = 'inputs';
+      }
       if(item.type === 'four_inputs_section'){
         newField.labels = ['section 1', 'section 2', 'section 3', 'section 4']
         newField.value = [ 

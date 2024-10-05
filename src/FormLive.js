@@ -161,6 +161,12 @@ const FormLive = () => {
               case 'triple_section' :
                 formData[element.id] = {name: elementBack.title, value:[]}
                 break;
+              case 'two_inputs_section' :
+                formData[element.id] = {name: elementBack.title, value:[]}
+                break;
+              case 'triple_inputs_section' :
+                formData[element.id] = {name: elementBack.title, value:[]}
+                break;
               case 'four_inputs_section' :
                 formData[element.id] = {name: elementBack.title, value:[]}
                 break;
@@ -197,6 +203,12 @@ const FormLive = () => {
               break;
             case 'triple_section' :
               formData[element.id].value.push({label: sectionName, value: element.value});
+              break;
+            case 'two_inputs_section' :
+              formData[element.id].value.push(element.value);
+              break;
+            case 'triple_inputs_section' :
+              formData[element.id].value.push(element.value);
               break;
             case 'four_inputs_section' :
               formData[element.id].value.push(element.value);
