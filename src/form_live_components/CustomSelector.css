@@ -20,6 +20,7 @@
   align-items: center;
   justify-content: space-between;
   font-size: 14px;
+  white-space: nowrap;
 }
 .custom-select-display img{
   width: 20px;

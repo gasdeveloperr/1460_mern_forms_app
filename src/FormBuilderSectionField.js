@@ -10,7 +10,7 @@ import file_upload_icon from './icons/file-upload-icon.svg'
 import calendar_icon from './icons/calendar-icon.svg'
 import FormBuilderSectionComponent from './FormBuilderSectionComponent';
 
-const FormBuilderField = ({field, index, isDragging, setIsDragging, 
+const FormBuilderSectionField = ({field, index, isDragging, setIsDragging, 
   handleDrop, 
   updateFormField, removeFormField, 
   editingField, setEditingField,
@@ -442,9 +442,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
           {field.type === 'add_component_button' && (
             <div className='form-component-add-button'>
               <img src={plus_icon}/>
-              {field.adding_component.type ? 
-              'Add '+field.adding_component.type.replace(/_/g, ' ')
-              : field.title }
+              {field.title}
             </div>
           )}
           {field.type === 'file_upload' && (
@@ -456,10 +454,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
             </div>
           )}
           {field.type === 'section' && (
-            <FormBuilderSectionComponent index={index} isDragging={isDragging} setIsDragging={setIsDragging}
-             handleDrop={handleDrop} section={field}
-             editingField={editingField} setEditingField={setEditingField}
-             editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}/>
+            <FormBuilderSectionComponent index={index} isDragging={isDragging} handleDrop={handleDrop} sectionId={field.id}/>
           )}
           {/* <RemoveButton opacityVal={removeOpacity} onClick={() => handleRemoveClick(field.id)} /> */}
         </div>
@@ -469,4 +464,4 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
     );
 };
 
-export default FormBuilderField;
+export default FormBuilderSectionField;

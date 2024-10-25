@@ -3,9 +3,11 @@ import './FormBuilderEditor.css';
 import { OutsideClickContext } from './OutsideClickContext';
 import { titles_to_types_object } from './consts';
 import trash_icon from './icons/trash-can.svg'
+import plus_icon from './icons/plus-icon.svg'
 import duplicate_icon from './icons/duplicate-icon.svg'
 import { HexColorPicker  } from "react-colorful";
 import convert from "color-convert"; 
+import ComponentTypeSelector from './ComponentTypeSelector';
 
 const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setEditingField, handleDuplicateClick}) => {
 
@@ -364,6 +366,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
 
   const [showLogic, setShowLogic] = useState(false);
   const [showGeneral, setShowGeneral] = useState(true);
+  const [showColumns, setShowColumns] = useState(true);
   const [showSpecific, setShowSpecific] = useState(true);
 
   const toggleSection = (section) => {
@@ -371,6 +374,8 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       setShowLogic(!showLogic);
     } else if (section === 'general') {
       setShowGeneral(!showGeneral);
+    } else if (section === 'columns') {
+      setShowColumns(!showColumns);
     } else if (section === 'specific') {
       setShowSpecific(!showSpecific);
     }
@@ -381,6 +386,118 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     setEditingField({ id: '' });
   }
 
+  const changeColumnTypeHandler = (type, index) => {
+    const updatedValues = [...editingField.value];
+  
+    // If the type is 'dropdown', add default options
+    if (type === 'dropdown') {
+      updatedValues[index] = {
+        ...updatedValues[index],
+        type: type,
+        options: [
+          { title: 'Option 1', selected: true },
+          { title: 'Option 2', selected: false },
+          { title: 'Option 3', selected: false }
+        ]
+      };
+    } else {
+      // For other types, just update the type without adding options
+      updatedValues[index] = {
+        ...updatedValues[index],
+        type: type,
+        options: undefined, // Clear options for non-dropdown types if needed
+      };
+    }
+  
+    console.log('updatedValues : ', updatedValues);
+    setEditingField({ ...editingField, value: updatedValues });
+  };
+  
+  const handleRemovingColumn = (columnIndex) => {
+    const newValue = editingField.value.filter((_, index) => index !== columnIndex);
+    const newLabels = editingField.labels.filter((_, index) => index !== columnIndex);
+    setEditingField({ ...editingField, value: newValue, labels: newLabels });
+  };
+  const handleAddingNewColumn = () => {
+    const newValue = [...editingField.value, {
+      type: 'input',
+      value: ''
+    }]
+    const newLabels = [...editingField.labels, 'label']
+    setEditingField({...editingField, value: newValue, labels: newLabels});
+  }
+
+
+  const handleTypeChange = (type) => {
+    let newComponent = {
+      type: type,
+      value: '',
+    };
+  
+    switch (type) {
+      case 'dropdown':
+        newComponent = {
+          ...newComponent,
+          dropdown: [
+            { title: 'Option 1', selected: true },
+            { title: 'Option 2', selected: false },
+            { title: 'Option 3', selected: false },
+          ],
+        };
+        break;
+      
+      case 'name':
+        newComponent = {
+          ...newComponent,
+          labels: ['First name', 'Last name'],
+        };
+        break;
+  
+      case 'radio':
+        newComponent = {
+          ...newComponent,
+          radio: [
+            { title: 'Option 1', checked: true },
+            { title: 'Option 2', checked: false },
+            { title: 'Option 3', checked: false },
+          ],
+          layout: 'vertical',
+        };
+        break;
+  
+      case 'checkbox':
+        newComponent = {
+          ...newComponent,
+          checkbox: [
+            { title: 'Option 1', checked: true },
+            { title: 'Option 2', checked: false },
+            { title: 'Option 3', checked: false },
+          ],
+          layout: 'vertical',
+        };
+        break;
+  
+      case 'date_time':
+        newComponent = {
+          ...newComponent,
+          dateFormat: 'MM/DD/YYYY',
+          timeFormat: '12',
+          value: {
+            date: '',
+            time: '',
+          },
+        };
+        break;
+  
+      default:
+        break;
+    }
+  
+    setEditingField((prev) => ({
+      ...prev,
+      adding_component: newComponent,
+    }));
+  };
   
   const dateFormatOptions=  [
     { label: 'MM/DD/YYYY', value: 'MM/DD/YYYY' },
@@ -482,6 +599,85 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
             }
         </div>
       </div>
+      {
+        editingField.type === 'columns' &&
+        <div className="section-group">
+          <div className="field-editor__section">
+            <div className="section-header" onClick={() => toggleSection('columns')}>
+              <span className={`toggle-icon ${showColumns ? 'open' : 'closed'}`}>&#9660;</span>
+              Columns' Settings
+            </div>
+            {showColumns && (
+              <>
+              <div className="option-content">
+                {
+                  editingField.type === 'columns'
+                  && (
+                    <>
+                      {editingField.labels.map((label, index) => (
+                        <div key={index} className="field-editor__field">
+                          <label className="field-editor__label">{`${['First', 'Second', 'Third', 'Fourth', 'Fifth'][index]} label`}</label>
+                          <div className="field-editor-column">
+                            <input
+                              type="text"
+                              value={label}
+                              onChange={e => changeFieldLabelHandler(e, index)}
+                              className="field-editor__input"
+                            />
+                            <button className="field-editor-remove-button" onClick={() => handleRemovingColumn(index)}>
+                              -
+                            </button>
+                          </div>
+                          <label className="field-editor__label">Column`s type: </label>
+                          <div className="field-editor-column">
+                            <div className={`field-editor-column-type${editingField.value[index].type === 'dropdown' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('dropdown', index)}>
+                              Dropdown
+                            </div> 
+                            <div className={`field-editor-column-type${editingField.value[index].type === 'input' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('input', index)}>
+                              Input
+                            </div> 
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )
+                }
+                {
+                  editingField.type !== 'title' &&
+                  <div className="field-editor_checkbox-group">
+                    <div className='field-editor_checkbox_container'>
+                      <label htmlFor="required" className="field-editor-label">
+                        <input type="checkbox" id="required" className='field-editor_checkbox' 
+                        checked={editingField.required} onChange={changeFieldRequiredHandler}/>
+                        Required
+                      </label>
+                    </div>
+                    <div className='field-editor_checkbox_container'>
+                      <label className="field-editor-label">
+                        <input type="checkbox" id="read-only" className='field-editor_checkbox' 
+                        checked={editingField.read_only} onChange={changeFieldReadOnlyHandler}/>
+                        <label htmlFor="read-only">Read-only</label>
+                      </label>
+                    </div>
+                    {/* <div className='field-editor_checkbox_container'>
+                      <label className="field-editor-label">
+                        <input type="checkbox" id="hide-label" className='field-editor_checkbox' />
+                        <label htmlFor="hide-label">Hide Label</label>
+                      </label>
+                    </div> */}
+                  </div>
+                }
+                <div className="field-editor-add-column" onClick={() => handleAddingNewColumn()}>
+                  <img src={plus_icon} />
+                  Add new column
+                </div> 
+              </div>
+              </>
+              )
+            }
+          </div>
+        </div>
+      }
       <div className="section-group">
       <div className="field-editor__section">
         <div className="section-header" onClick={() => toggleSection('specific')}>
@@ -830,6 +1026,16 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                   <div className="option-input">
                     <input type="text" onChange={(e) => changeSectionFieldPreFilledHandler(e,2)} value={editingField.value[2]}/>
                   </div>
+                </div>
+              </div>
+            )
+          }
+          {
+            editingField.type === 'add_component_button' && (
+              <div className="option-content">
+                <div className="option-group">
+                  <label>Select component to add:</label>
+                  <ComponentTypeSelector selectedType={editingField.adding_component.type} onChange={handleTypeChange} />
                 </div>
               </div>
             )

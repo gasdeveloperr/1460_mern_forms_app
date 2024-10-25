@@ -12,6 +12,7 @@ import FiveSectionFormComponent from './form_live_components/FiveSectionFormComp
 import FileUploadFormComponent from './form_live_components/FileUploadFormComponent';
 import AutoResizingTextareaComponent from './form_live_components/AutoResizingTextareaComponent';
 import MultipleSectionFormComponent from './form_live_components/MultipleSectionFormComponent';
+import ColumnsFormComponent from './form_live_components/ColumnsFormComponent';
 
 
 
@@ -61,14 +62,13 @@ const FormLiveComponent = ({field, index, onFileChange}) => {
 
   const handleResize = (event) => {
     const textarea = textareaRef.current;
-    textarea.style.height = 'auto'; // Reset the height to auto to shrink if necessary
-    textarea.style.height = `${textarea.scrollHeight}px`; // Adjust to scrollHeight
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
   const handleInputsChange = (e, sectionIndex) => {
     const updatedField = { ...field };
     
-    // Update the value for the appropriate section with the input value
     updatedField.value[sectionIndex] = e.target.value;
     setFieldData(updatedField);
   };
@@ -76,12 +76,9 @@ const FormLiveComponent = ({field, index, onFileChange}) => {
   const handleSelectorChange = (selectedOption, sectionIndex) => {
     const updatedField = { ...field };
     
-    // Update selected option for the appropriate section
     updatedField.value[sectionIndex].options.forEach(option => {
       option.selected = option.title === selectedOption.title;
     });
-  
-    // Trigger any state updates here (e.g., updating form data)
     setFieldData(updatedField);
   };  
 
@@ -338,6 +335,15 @@ const FormLiveComponent = ({field, index, onFileChange}) => {
               {field.title} 
             </div>
             <MultipleSectionFormComponent field={field} handleInputChange={handleInputsChange} handleSelectorChange={handleSelectorChange}/>
+          </div>
+        )}
+        {field.type === 'columns' && (
+          <div className="form-live-component-container">
+            <div className="form-component-title">
+              {field.required && <span>*</span>}
+              {field.title} 
+            </div>
+            <ColumnsFormComponent field={field} handleInputChange={handleInputsChange} handleSelectorChange={handleSelectorChange}/>
           </div>
         )}
         {field.type === 'date_time' && (

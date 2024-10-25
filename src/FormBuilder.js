@@ -43,6 +43,7 @@ const FormBuilder = () => {
   }, [formFields]);
 
   const [editingField, setEditingField] = useState({id:''})
+  const [editingSectionField, setEditingSectionField] = useState({id:''})
 
  
   const fetchForm = async () => {
@@ -115,7 +116,7 @@ const FormBuilder = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dropAreaPositions, setDropAreaPositions] = useState([]);
 
-  const handleDrop = (item, dropIndex) => {
+  const handleDrop = (item, dropIndex, sectionId) => {
     if(item.index === 'bar_component'){
       const newField = {
         id: Date.now(),
@@ -260,8 +261,57 @@ const FormBuilder = () => {
         ];
         newField.sectionsType = 'default';
       }
-      console.log('new field :', newField)
-      setFormFields([...formFields.slice(0, dropIndex), newField, ...formFields.slice(dropIndex)]);
+      if(item.type === 'columns'){
+        newField.labels = ['label 1', 'label 2', 'label 3' ];
+        newField.value = [
+          {
+            type: 'short_answer',
+            value: ''
+          }, 
+          {
+            type: 'short_answer',
+            value: ''
+          }, 
+          {
+            type: 'dropdown',
+            options: [
+              { title: 'Option 1', selected: true },
+              { title: 'Option 2', selected: false },
+              { title: 'Option 3', selected: false }
+            ]
+          }, 
+        ];
+        newField.sectionsType = 'default';
+      }
+      if (item.type === 'add_component_button'){
+        newField.adding_component = {
+          type: 'short_answer',
+          value: ''
+        }
+      }
+      if (item.type === 'section') {
+        newField.components = []
+      }
+      if(sectionId){
+        // Find the section and add the new component to its 'components' array
+        const updatedFormFields = formFields.map((field) => {
+          if (field.id === sectionId && field.type === 'section') {
+            console.log('finded section : ', field)
+            return {
+              ...field,
+              components: [...field.components, newField],
+            };
+          }
+          return field;
+        });
+    
+        setFormFields(updatedFormFields);
+        console.log('new field into section:', newField);
+
+      }else{
+        setFormFields([...formFields.slice(0, dropIndex), newField, ...formFields.slice(dropIndex)]);
+        console.log('new field :', newField)
+      }
     }else{
       const itemIndex = formFields.findIndex(field => field.id === item.id)
       const newField = {...item, id: Date.now()}
@@ -373,13 +423,13 @@ const FormBuilder = () => {
                 </div>
                 :
                 formFields.map((field, index) => (
-                    <FormBuilderField key={index} field={field} index={index}
-                      isDragging={isDragging} setIsDragging={setIsDragging}
-                      handleDrop={handleDrop} 
-                      updateFormField={updateFormField} removeFormField={removeFormField} 
-                      editingField={editingField} setEditingField={setEditingField}/>
-                  )
-                )
+                  <FormBuilderField key={index} field={field} index={index}
+                    isDragging={isDragging} setIsDragging={setIsDragging}
+                    handleDrop={handleDrop} 
+                    updateFormField={updateFormField} removeFormField={removeFormField} 
+                    editingField={editingField} setEditingField={setEditingField}
+                    editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}/>
+                ))
               }
               <div className="form-submit-button-container">
                { formFields.length !== 0 ? 

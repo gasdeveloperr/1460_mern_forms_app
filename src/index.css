@@ -718,8 +718,22 @@ body {
   color: rgb(69, 85, 96);
   margin-left: 8px;
 }
-.form-component-file-upload img{
+.form-component-file-upload img,
+.form-component-add-button img{
   width: 24px;
+}
+.form-component-add-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 10px 8px;
+  box-sizing: border-box;
+  border: 3px solid rgb(211, 221, 225);
+  border-radius: 14px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(69, 85, 96);
+  margin-left: 8px;
 }
 .form-component-dropdown-div{
   -moz-box-align: center;
@@ -734,10 +748,15 @@ body {
   background-color: rgb(255, 255, 255);
   color: rgb(69, 85, 96);
   font-size: 14px;
+  white-space: nowrap;
 }
 .form-component-dropdown-div img{
   width: 20px;
   height: 20px;
+}
+.form-component-dynamic-columns-container {
+  display: grid;
+  gap: 20px;
 }
 .form-component-double-section-container{
   display: grid;
@@ -896,11 +915,23 @@ body {
   background-color: #fff;
   opacity: 0.5;
 }
-.drop-over {
-  background-color: blue;
-}
 .drop-top{
   margin-bottom: 5px;
+}
+.section-drop-area{
+  width: 100%;
+  height: fit-content;
+  min-height: 40px;
+  background-color: #fff;
+  opacity: 0.5;
+}
+.drop-over{
+  background-color: blue;
+}
+.section-drop-over{
+  border: 2px dotted #686868;
+  border-radius: 4px;
+  background-color: blue;
 }
 .drop-bottom{
   margin-top: 5px;

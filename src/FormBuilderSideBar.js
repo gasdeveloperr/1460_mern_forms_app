@@ -16,7 +16,7 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
 
   const [sections, setSections] = useState({
     basic: true,
-    advanced: false,
+    advanced: true,
     layout: true,
     formSettings: false,
   });
@@ -93,6 +93,12 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
                 <DraggableComponent type="file_upload" title="File Upload" 
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd} />
+                <DraggableComponent type="columns" title="Columns"
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/>
+                <DraggableComponent type="add_component_button" title="Add component button"
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/>
               </div>
             )}
           </div>
@@ -103,7 +109,10 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
             </div>
             {sections.layout && (
               <div className="section-content">
-                <DraggableComponent type="double_section" title="2 Selectors Section" 
+                <DraggableComponent type="section" title="Section"
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}/>
+                {/* <DraggableComponent type="double_section" title="2 Selectors Section" 
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}/>
                 <DraggableComponent type="triple_section" title="3 Selectors Section" 
@@ -123,7 +132,7 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
                 onDragEnd={handleDragEnd}/>
                 <DraggableComponent type="multi_section" title="Multiple Section"
                 onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
+                onDragEnd={handleDragEnd}/> */}
               </div>
             )}
           </div>

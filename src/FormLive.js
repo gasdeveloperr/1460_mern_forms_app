@@ -150,6 +150,7 @@ const FormLive = () => {
       const customType = element.getAttribute('customtype'); 
       const sectionName = element.getAttribute('sectionName'); 
       const fieldType = element.getAttribute('fieldtype'); 
+      const columnType = element.getAttribute('columntype'); 
       for(let j = 0; j < formFields.length; j++){
         const elementBack = formFields[j];
         if (element.id == elementBack.id ) {
