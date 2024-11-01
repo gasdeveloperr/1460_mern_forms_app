@@ -8,8 +8,11 @@ import duplicate_icon from './icons/duplicate-icon.svg'
 import { HexColorPicker  } from "react-colorful";
 import convert from "color-convert"; 
 import ComponentTypeSelector from './ComponentTypeSelector';
+import LegacyComponentsOptions from './form_builder_editor_components/LegacyComponentsOptions';
+import DropdownOptions from './form_builder_editor_components/DropdownOptions';
 
-const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setEditingField, handleDuplicateClick}) => {
+const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setEditingField,
+  handleDuplicateClick}) => {
 
   const changeFieldTitleHandler = (e) => {
     setEditingField({...editingField, title: e.target.value})
@@ -47,6 +50,15 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       ...prevState,
       value: newValues
     }));
+  };
+  const changeColumnFieldPreFilledHandler = (e, columnIndex) => {
+    
+    const newValue = [...editingField.value];
+    newValue[columnIndex].value = e.target.value;
+
+    console.log('newValue: ',  newValue)
+  
+    setEditingField({ ...editingField, value: newValue });
   };
 
 
@@ -637,13 +649,29 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                               Input
                             </div> 
                           </div>
+                          <div className="field-editor_checkbox-group">
+                            <div className='field-editor_checkbox_container'>
+                              <label htmlFor="required" className="field-editor-label">
+                                <input type="checkbox" id="required" className='field-editor_checkbox' 
+                                checked={editingField.required} onChange={changeFieldRequiredHandler}/>
+                                Required
+                              </label>
+                            </div>
+                            <div className='field-editor_checkbox_container'>
+                              <label className="field-editor-label">
+                                <input type="checkbox" id="read-only" className='field-editor_checkbox' 
+                                checked={editingField.read_only} onChange={changeFieldReadOnlyHandler}/>
+                                <label htmlFor="read-only">Read-only</label>
+                              </label>
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </>
                   )
                 }
                 {
-                  editingField.type !== 'title' &&
+                  editingField.type !== 'title' &&  editingField.type !== 'columns' &&
                   <div className="field-editor_checkbox-group">
                     <div className='field-editor_checkbox_container'>
                       <label htmlFor="required" className="field-editor-label">
@@ -659,12 +687,6 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                         <label htmlFor="read-only">Read-only</label>
                       </label>
                     </div>
-                    {/* <div className='field-editor_checkbox_container'>
-                      <label className="field-editor-label">
-                        <input type="checkbox" id="hide-label" className='field-editor_checkbox' />
-                        <label htmlFor="hide-label">Hide Label</label>
-                      </label>
-                    </div> */}
                   </div>
                 }
                 <div className="field-editor-add-column" onClick={() => handleAddingNewColumn()}>
@@ -842,191 +864,58 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
             </div>
           }
           {editingField.dropdown && 
-            <div className="option-content">
-              <div className="option-group">
-                <label>OPTIONS</label>
-                  {editingField.dropdown.map((option, index)=> (
-                    <div key={index} className="option-input">
-                      <input type="text" onChange={(e) => changeFieldListOptionHandler(e, index)} value={option.title}/>
-                      <div className="color-picker-container">
-                        <div
-                          className="color-preview"
-                          onClick={() => toggleColorPicker(index, option.color || '#FFFFFF')}
-                          style={ !option.color ? {backgroundColor: '#FFFFFF'} : option.color.includes('rgba') ? 
-                          {backgroundColor: '#FFFFFF'} : {backgroundColor: option.color}}
-                        />
-                        { (hexColor && rgbColor && cmykColor) && colorPickerVisible === index && (
-                          <div className="color-preview-container">
-                            <HexColorPicker  color={option.color} onChange={(color) => handleColorChange(color, index)} />
-                            <div className="color-format-inputs">
-                              <div className="rgb-input-container">
-                                <label htmlFor="rgb-input">HEX</label>
-                                <input
-                                  type="text"
-                                  className="color-preview-input"
-                                  value={hexColor}
-                                  onChange={e => handleHexChange(e, index)}
-                                  placeholder="HEX"
-                                />
-                              </div>
-                              <div className="rgb-input-container">
-                                <label htmlFor="rgb-input">RGB</label>
-                                <input
-                                  type="text"
-                                  className="color-preview-input"
-                                  value={rgbColor.join(',')}
-                                  onChange={e => handleRgbChange(e, index)}
-                                  placeholder="RGB (r,g,b)"
-                                />
-                              </div>
-                              <div className="rgb-input-container">
-                                <label htmlFor="rgb-input">CMYK</label>
-                                <input
-                                  type="text"
-                                  className="color-preview-input"
-                                  value={cmykColor.join(',')}
-                                  onChange={e => handleCmykChange(e, index)}
-                                  placeholder="CMYK (c,m,y,k)"
-                                />
-                              </div>
-                            </div>
+          <DropdownOptions editingField={editingField} changeListOptionHandler={changeFieldListOptionHandlerNew} 
+          handleColorChange={handleColorChange} toggleColorPicker={toggleColorPicker}
+          colorPickerVisible={colorPickerVisible} hexColor={hexColor} rgbColor={rgbColor} cmykColor={cmykColor}
+          handleRgbChange={handleRgbChange} handleHexChange={handleHexChange} handleCmykChange={handleCmykChange}
+          addListOptionHandler={addFieldListOptionHandler} deleteListOptionHandler={deleteFieldListOptionHandler}/>
+          }
+          <LegacyComponentsOptions editingField={editingField} changeFieldListOptionHandler={changeFieldListOptionHandler} 
+          addFieldListOptionHandlerNew={addFieldListOptionHandlerNew} deleteFieldListOptionHandlerNew={deleteFieldListOptionHandlerNew}
+          changeSectionFieldPreFilledHandler={changeSectionFieldPreFilledHandler}/>
+          {
+            editingField.type === 'columns' && (
+              <div className="option-content">
+                {
+                  editingField.value.map((value, index) => (
+                    value.type === 'input' ?
+                    <div key={index} className="option-group">
+                      <label>Pre-filled value for input</label>
+                      <div className="option-input">
+                        <input type="text" onChange={(e) => changeColumnFieldPreFilledHandler(e, index)} value={value.value}/>
+                      </div>
+                    </div>
+                    :
+                    <div key={index} className="option-group">
+                      <label>OPTIONS for dropdown</label>
+                      {value.options.map((option, optionIndex) => (
+                        <div key={optionIndex} className="option-input">
+                          <input
+                            type="text"
+                            onChange={(e) => changeFieldListOptionHandlerNew(e, optionIndex, index)}
+                            value={option.title}
+                          />
+    
+                          <div className="option-buttons">
+                            <button
+                              className="field-editor-add-button"
+                              onClick={() => addFieldListOptionHandlerNew(optionIndex, index)}
+                            >
+                              +
+                            </button>
+                            <button
+                              className="field-editor-remove-button"
+                              onClick={() => deleteFieldListOptionHandlerNew(optionIndex, index)}
+                            >
+                              -
+                            </button>
                           </div>
-                        )}
-                      </div>
-                      {/* <div className="color-picker-container">
-                        <div 
-                          className="color-preview" 
-                          onClick={() => toggleColorPicker(index)}
-                          style={{ backgroundColor: option.color || color }}
-                        />
-                        <div className="color-preview-container" >
-                          {colorPickerVisible === index && (
-                            <HexColorPicker  
-                              color={color} 
-                              onChange={(color) => changeOptionColorHandler(color, index)}
-                            />
-                          )}
                         </div>
-                      </div> */}
-                      <div className="option-buttons">
-                        <button className="field-editor-add-button" onClick={() => addFieldListOptionHandler(index)}>+</button>
-                        <button className="field-editor-remove-button" onClick={() => deleteFieldListOptionHandler(index)}>-</button>
-                      </div>
+                      ))}
                     </div>
-                  ))}
-              </div>
-            </div>
-          }
-          {
-            editingField.type === 'double_section' && (
-              <div className="option-content">
-                {editingField.value.map((dropdown, dropdownIndex) => (
-                  <div key={dropdownIndex} className="option-group">
-                    <label>{`OPTIONS for ${['first', 'second'][dropdownIndex]} dropdown`}</label>
-                    {dropdown.options.map((option, optionIndex) => (
-                      <div key={optionIndex} className="option-input">
-                        <input
-                          type="text"
-                          onChange={(e) => changeFieldListOptionHandlerNew(e, optionIndex, dropdownIndex)}
-                          value={option.title}
-                        />
-                        <div className="option-buttons">
-                          <button
-                            className="field-editor-add-button"
-                            onClick={() => addFieldListOptionHandlerNew(optionIndex, dropdownIndex)}
-                          >
-                            +
-                          </button>
-                          <button
-                            className="field-editor-remove-button"
-                            onClick={() => deleteFieldListOptionHandlerNew(optionIndex, dropdownIndex)}
-                          >
-                            -
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )
-          }
-          {
-            editingField.type === 'triple_section' && (
-              <div className="option-content">
-                {editingField.value.map((dropdown, dropdownIndex) => (
-                  <div key={dropdownIndex} className="option-group">
-                    <label>{`OPTIONS for ${['first', 'second', 'third'][dropdownIndex]} dropdown`}</label>
-                    {dropdown.options.map((option, optionIndex) => (
-                      <div key={optionIndex} className="option-input">
-                        <input
-                          type="text"
-                          onChange={(e) => changeFieldListOptionHandlerNew(e, optionIndex, dropdownIndex)}
-                          value={option.title}
-                        />
-                        <div className="option-buttons">
-                          <button
-                            className="field-editor-add-button"
-                            onClick={() => addFieldListOptionHandlerNew(optionIndex, dropdownIndex)}
-                          >
-                            +
-                          </button>
-                          <button
-                            className="field-editor-remove-button"
-                            onClick={() => deleteFieldListOptionHandlerNew(optionIndex, dropdownIndex)}
-                          >
-                            -
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )
-          }
-          {
-            editingField.type === 'multi_section' && (
-              <div className="option-content">
-                <div className="option-group">
-                  <label>Pre-filled value for First input</label>
-                  <div className="option-input">
-                    <input type="text" onChange={(e) => changeSectionFieldPreFilledHandler(e,0)} value={editingField.value[0]}/>
-                  </div>
-                </div>
-                <div className="option-group">
-                  <label>OPTIONS for dropdown</label>
-                  {editingField.value[1].options.map((option, optionIndex) => (
-                    <div key={optionIndex} className="option-input">
-                      <input
-                        type="text"
-                        onChange={(e) => changeFieldListOptionHandlerNew(e, optionIndex, 1)}
-                        value={option.title}
-                      />
 
-                      <div className="option-buttons">
-                        <button
-                          className="field-editor-add-button"
-                          onClick={() => addFieldListOptionHandlerNew(optionIndex, 1)}
-                        >
-                          +
-                        </button>
-                        <button
-                          className="field-editor-remove-button"
-                          onClick={() => deleteFieldListOptionHandlerNew(optionIndex, 1)}
-                        >
-                          -
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="option-group">
-                  <label>Pre-filled value for Third input</label>
-                  <div className="option-input">
-                    <input type="text" onChange={(e) => changeSectionFieldPreFilledHandler(e,2)} value={editingField.value[2]}/>
-                  </div>
-                </div>
+                  ))
+                }
               </div>
             )
           }
@@ -1040,34 +929,17 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
               </div>
             )
           }
-
           </>
           :
           <></>
         }
       </div>
     </div>
-      </>
-      : <></>
+    </>
+    : <></>
     }
     </div>
   );
 };
 
 export default FieldBuilderEditor;
-
-  // <div className="color-picker-container">
-  //   <div 
-  //     className="color-preview" 
-  //     onClick={() => toggleColorPicker(1)}
-  //     style={{ backgroundColor: editingField.color || color }}
-  //   />
-  //   <div className="color-preview-container" >
-  //     {colorPickerVisible === 1 && (
-  //       <HexColorPicker  
-  //         color={color} 
-  //         onChange={(color) => changeTitleColorHandler(color)}
-  //       />
-  //     )}
-  //   </div>
-  // </div> 

@@ -35,12 +35,22 @@ const FormBuilder = () => {
 
   const prevFormFields = usePrevious(formFields);
 
+  // useEffect(() => {
+  //   if (prevFormFields && !isEqual(prevFormFields, formFields)) {
+  //     updateForm(formId)
+  //     console.log('formFields update goes brrrrr>.',prevFormFields, formFields, formType )
+  //   }
+  // }, [formFields]);
   useEffect(() => {
-    if (prevFormFields && !isEqual(prevFormFields, formFields)) {
-      updateForm(formId)
-      //console.log('formFields update goes brrrrr>.',prevFormFields, formFields, formType )
+    const prevFormFieldsStr = JSON.stringify(prevFormFields);
+    const currentFormFieldsStr = JSON.stringify(formFields);
+  
+    if (prevFormFields && prevFormFieldsStr !== currentFormFieldsStr) {
+      updateForm(formId);
+      console.log('Form fields updated:', prevFormFields, formFields, formType);
     }
   }, [formFields]);
+  
 
   const [editingField, setEditingField] = useState({id:''})
   const [editingSectionField, setEditingSectionField] = useState({id:''})
@@ -62,9 +72,13 @@ const FormBuilder = () => {
       setFormType(formData.formType);
       setFormFields(formData.fields);
     } catch (err) {
-      console.log('we have error on front');
-      setIsError('Error fetching form, please refresh the page');
-      console.error('Error fetching form:', err);
+      if(err.response && err.response.status === 401){
+        localStorage.removeItem('token');
+        navigate('/login');
+      }else{
+        setIsError('Error fetching form, please refresh the page');
+        console.error('Error fetching form:', err);
+      }
     }
   };
 
@@ -343,6 +357,21 @@ const FormBuilder = () => {
     }
     setFormFields(updatedFormFields);
   };
+  const removeFormSectionField = (id, sectionId) => {
+    const updatedFormFields = formFields.map((field) => {
+      if (field.id === sectionId) {
+        return {
+          ...field,
+          components: field.components.filter((component) => component.id !== id),
+        };
+      }
+      return field;
+    });
+  
+    // Update formFields with the modified array
+    setFormFields(updatedFormFields);
+  };
+
   const handleDuplicateClick = (id) => {
     const fieldToDuplicate = formFields.find((field) => field.id === id);
   
@@ -394,9 +423,10 @@ const FormBuilder = () => {
         </div> */}
         <div className="form-builder-page-content">
           <FormBuilderSideBar setIsDragging={setIsDragging} setDropAreaPositions ={setDropAreaPositions} 
-          removeFormField={removeFormField} duplicateField={handleDuplicateClick}
+          removeFormField={removeFormField} removeFormSectionField={removeFormSectionField} duplicateField={handleDuplicateClick}
           updateFormTypeHandler={updateFormTypeHandler} formType={formType}
-          editingField={editingField} setEditingField={setEditingField}/>
+          editingField={editingField} setEditingField={setEditingField}
+          editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField} />
           <div className='form-builder-part'>
            {formFields && 
            <div className='form-constructor' >

@@ -8,7 +8,7 @@ import selector_icon from './icons/selector-icon.svg'
 import plus_icon from './icons/plus-icon.svg'
 import file_upload_icon from './icons/file-upload-icon.svg'
 import calendar_icon from './icons/calendar-icon.svg'
-import FormBuilderSectionComponent from './FormBuilderSectionComponent';
+import FormBuilderSection from './FormBuilderSection';
 
 const FormBuilderField = ({field, index, isDragging, setIsDragging, 
   handleDrop, 
@@ -25,7 +25,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
   const handleOutsideClick = useCallback(() => {
     if (field.id === editingField.id) {
       setRemoveOpacity('0');
-      //console.log('clicked outside')
+      //console.log('clicked outside', editingField, editingSectionField)
       if (!isEqual(field, editingField)) {
         updateFormField(field.id, editingField);
       }
@@ -59,12 +59,12 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
 
   const opacity = isFieldDragging ? 0.7 : 1;
 
-  const onClickEditorHandler = (event, fieldId) => {
+  const onClickEditorHandler = (event, field) => {
     const isRemoveButton = event.target.closest('.remove-button');
     
     if (!isRemoveButton) {
       setRemoveOpacity('1');
-      setEditingField(fieldId);
+      setEditingField(field);
     }
   };
  
@@ -447,16 +447,19 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
               : field.title }
             </div>
           )}
-          {field.type === 'file_upload' && (
+           {field.type === 'file_upload' && (
             <div className="form-short-answer">
-              <div className='form-component-file-upload'>
-                <img src={plus_icon}/>
+              <div className='form-component-title'>
+                {field.required && <span className='required_sign'>*</span>}
                 {field.title}
+              </div>
+              <div className='form-component-file-upload'>
+                <img src={file_upload_icon}/>
               </div>
             </div>
           )}
           {field.type === 'section' && (
-            <FormBuilderSectionComponent index={index} isDragging={isDragging} setIsDragging={setIsDragging}
+            <FormBuilderSection index={index} isDragging={isDragging} setIsDragging={setIsDragging}
              handleDrop={handleDrop} section={field}
              editingField={editingField} setEditingField={setEditingField}
              editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}/>

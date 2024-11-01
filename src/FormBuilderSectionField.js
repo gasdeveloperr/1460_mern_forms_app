@@ -8,10 +8,10 @@ import selector_icon from './icons/selector-icon.svg'
 import plus_icon from './icons/plus-icon.svg'
 import file_upload_icon from './icons/file-upload-icon.svg'
 import calendar_icon from './icons/calendar-icon.svg'
-import FormBuilderSectionComponent from './FormBuilderSectionComponent';
+import FormBuilderSectionComponent from './FormBuilderSection';
 
 const FormBuilderSectionField = ({field, index, isDragging, setIsDragging, 
-  handleDrop, 
+  handleDrop, sectionId,
   updateFormField, removeFormField, 
   editingField, setEditingField,
   editingSectionField, setEditingSectionField}) => {
@@ -23,19 +23,19 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
   const [removeOpacity, setRemoveOpacity] = useState('0')
 
   const handleOutsideClick = useCallback(() => {
-    if (field.id === editingField.id) {
+    if (field.id === editingSectionField.id) {
       setRemoveOpacity('0');
-      //console.log('clicked outside')
-      if (!isEqual(field, editingField)) {
-        updateFormField(field.id, editingField);
-      }
-      setEditingField({ id: '' });
+      //console.log('clicked outside W', editingField, editingSectionField)
+      // if (!isEqual(field, editingSectionField)) {
+      //   updateFormField(field.id, editingSectionField);
+      // }
+      setEditingSectionField({ id: '' });
     }
-  }, [field, editingField, updateFormField, setEditingField]);
+  }, [field, editingField, updateFormField, setEditingSectionField]);
 
   const handleRemoveClick = (fieldId) => {
     removeFormField(fieldId)
-    setEditingField({ id: '' });
+    setEditingSectionField({ id: '' });
   }
 
   useEffect(() => {
@@ -59,12 +59,13 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
 
   const opacity = isFieldDragging ? 0.7 : 1;
 
-  const onClickEditorHandler = (event, fieldId) => {
+  const onClickEditorHandler = (event, field) => {
     const isRemoveButton = event.target.closest('.remove-button');
     
     if (!isRemoveButton) {
       setRemoveOpacity('1');
-      setEditingField(fieldId);
+      setEditingSectionField(field);
+      console.log('setEditingSectionField : ',editingSectionField)
     }
   };
  
@@ -80,8 +81,8 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
 
     return (
       <div key={field.id}  style={{ opacity }} className="form-field-container">
-        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'top'}/>
-        <div className={`form-field ${field.id === editingField.id ? 'chosen-field' : '' }`} ref={formFieldRef} 
+        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'top'} sectionId={sectionId}/>
+        <div className={`form-field ${field.id === editingSectionField.id ? 'chosen-field' : '' }`} ref={formFieldRef} 
         onClick={(e) => onClickEditorHandler(e, field)}>
           <div ref={ref}>
           {field.type === 'short_answer' && (
@@ -453,13 +454,9 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
               </div>
             </div>
           )}
-          {field.type === 'section' && (
-            <FormBuilderSectionComponent index={index} isDragging={isDragging} handleDrop={handleDrop} sectionId={field.id}/>
-          )}
-          {/* <RemoveButton opacityVal={removeOpacity} onClick={() => handleRemoveClick(field.id)} /> */}
         </div>
         </div>
-        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'bottom'}/>
+        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'bottom'} sectionId={sectionId}/>
       </div>
     );
 };

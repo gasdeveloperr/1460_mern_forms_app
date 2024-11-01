@@ -2,7 +2,7 @@ import { useDrop } from 'react-dnd';
 import { section_accept_types_array } from './consts';
 import FormBuilderSectionField from './FormBuilderSectionField';
 
-const FormBuilderSectionComponent = ({
+const FormBuilderSection = ({
   editingField, setEditingField,
   editingSectionField, setEditingSectionField,
   index, isDragging, setIsDragging, handleDrop, section}) => {
@@ -27,7 +27,7 @@ const FormBuilderSectionComponent = ({
       section.components.map((field, index) => (
         <FormBuilderSectionField key={index} field={field} index={index}
           isDragging={isDragging} setIsDragging={setIsDragging}
-          handleDrop={handleDrop} 
+          handleDrop={handleDrop} sectionId={section.id}
           editingField={editingField} setEditingField={setEditingField}
           editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}/>
       ))
@@ -38,4 +38,4 @@ const FormBuilderSectionComponent = ({
   );
 };
 
-export default FormBuilderSectionComponent;
+export default FormBuilderSection;
