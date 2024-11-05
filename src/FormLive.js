@@ -7,7 +7,7 @@ import FormLiveComponent from './FormLiveComponent';
 import './FormLiveStyles.css';
 import Spinner from './Spinner';
 import { backend_point } from './consts';
-import { getAuthToken, getUserEmail, getUserId } from './utils';
+import { addingNewComponent, getAuthToken, getUserEmail, getUserId } from './utils';
 
 const FormLive = () => {
 
@@ -292,6 +292,14 @@ const FormLive = () => {
     }
   };
 
+  
+  const handleAddingComponent = (componentData) => {
+    const addingIndex = componentData.index;
+    const newField = addingNewComponent(componentData.adding_component);
+    console.log('handleAddingComponent : ', addingIndex, newField)
+    setFormFields([...formFields.slice(0, addingIndex), newField, ...formFields.slice(addingIndex+1)])
+  };
+
   return (
     <div className="form-live-page">
       <Header/>
@@ -317,9 +325,30 @@ const FormLive = () => {
             <div className="form-live-title">
               {formTitle}
             </div>
-            {formFields.map((field, index) => (
-              <FormLiveComponent field={field} index={index} onFileChange={handleFileChange}/>
-              )
+            {formFields.map((field, index) => {
+              return field.type === 'section' ?(
+                <div key={field.id || index} className="section-container">
+                  {field.components.map((sectionField, sectionIndex) => (
+                    <FormLiveComponent
+                      key={sectionField.id || `${index}-${sectionIndex}`}
+                      field={sectionField}
+                      index={sectionIndex}
+                      parentIndex={index}
+                      onFileChange={handleFileChange}
+                      handleAddingComponent={handleAddingComponent}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <FormLiveComponent
+                  key={field.id || index}
+                  field={field}
+                  index={index}
+                  onFileChange={handleFileChange}
+                  handleAddingComponent={handleAddingComponent}
+                />
+              );
+              }
             )}
             <div className='form-live-footer'>
               <div className='form-live-submit-button-container'>

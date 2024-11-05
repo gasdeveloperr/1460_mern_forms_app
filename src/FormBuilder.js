@@ -9,7 +9,7 @@ import { accept_types_array, backend_point } from './consts';
 import isEqual from 'lodash/isEqual';
 import Spinner from './Spinner';
 import { useNavigate } from 'react-router-dom';
-import { getAuthToken } from './utils';
+import { addingNewComponent, getAuthToken } from './utils';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
@@ -132,180 +132,7 @@ const FormBuilder = () => {
 
   const handleDrop = (item, dropIndex, sectionId) => {
     if(item.index === 'bar_component'){
-      const newField = {
-        id: Date.now(),
-        type: item.type,
-        title: item.title,
-        value: '',
-        options: [],
-        required: false,
-        read_only: false,
-      };
-      if(item.type === 'name'){
-        newField.labels = ['First name', 'Last name']
-      }
-      if(item.type === 'checkbox'){
-        newField.checkbox = [
-          {title: 'Option 1', checked: true},
-          {title: 'Option 2', checked: false},
-          {title: 'Option 3', checked: false}
-        ];
-        newField.layout = 'vertical';
-      }
-      if(item.type === 'radio'){
-        newField.radio = [
-          {title: 'Option 1', checked: true},
-          {title: 'Option 2', checked: false},
-          {title: 'Option 3', checked: false}
-        ];
-        newField.layout = 'vertical';
-      }
-      if(item.type === 'dropdown'){
-        newField.dropdown = [
-          {title: 'Option 1', selected: true},
-          {title: 'Option 2', selected: false},
-          {title: 'Option 3', selected: false}
-        ];
-      }
-      if(item.type === 'date_time'){
-        newField.dateFormat = 'MM/DD/YYYY'
-        newField.timeFormat = '12'
-        newField.value = {
-          date: '',
-          time: '',
-        }
-      }
-      if(item.type === 'double_section'){
-        newField.labels = ['section 1', 'section 2']
-        newField.value = [ 
-          {
-            options: [
-              { title: 'Option 1', selected: true },
-              { title: 'Option 2', selected: false },
-              { title: 'Option 3', selected: false }
-            ]
-          }, 
-          {
-            options: [
-              { title: 'Option 1', selected: true },
-              { title: 'Option 2', selected: false },
-              { title: 'Option 3', selected: false }
-            ]
-          }
-        ];
-        newField.sectionsType = 'default';
-      }
-      if(item.type === 'triple_section'){
-        newField.labels = ['section 1', 'section 2', 'section 3' ];
-        newField.value = [
-          {
-            options: [
-              { title: 'Option 1', selected: true },
-              { title: 'Option 2', selected: false },
-              { title: 'Option 3', selected: false }
-            ]
-          }, 
-          {
-            options: [
-              { title: 'Option 1', selected: true },
-              { title: 'Option 2', selected: false },
-              { title: 'Option 3', selected: false }
-            ]
-          }, 
-          {
-            options: [
-              { title: 'Option 1', selected: true },
-              { title: 'Option 2', selected: false },
-              { title: 'Option 3', selected: false }
-            ]
-          }
-        ];
-        newField.sectionsType = 'default';
-      }
-      if(item.type === 'two_inputs_section'){
-        newField.labels = ['section 1', 'section 2',]
-        newField.value = [ 
-          '',
-          ''
-        ];
-        newField.sectionsType = 'inputs';
-      }
-      if(item.type === 'triple_inputs_section'){
-        newField.labels = ['section 1', 'section 2', 'section 3',]
-        newField.value = [ 
-          '',
-          '',
-          ''
-        ];
-        newField.sectionsType = 'inputs';
-      }
-      if(item.type === 'four_inputs_section'){
-        newField.labels = ['section 1', 'section 2', 'section 3', 'section 4']
-        newField.value = [ 
-          '',
-          '',
-          '',
-          ''
-        ];
-        newField.sectionsType = 'inputs';
-      }
-      if(item.type === 'five_inputs_section'){
-        newField.labels = ['section 1', 'section 2', 'section 3', 'section 4','section 5']
-        newField.value = [ 
-          '',
-          '',
-          '',
-          '',
-          ''
-        ];
-        newField.sectionsType = 'inputs';
-      }
-      if(item.type === 'multi_section'){
-        newField.labels = ['section 1', 'section 2', 'section 3' ];
-        newField.value = [
-          '', 
-          {
-            options: [
-              { title: 'Option 1', selected: true },
-              { title: 'Option 2', selected: false },
-              { title: 'Option 3', selected: false }
-            ]
-          }, 
-          ''
-        ];
-        newField.sectionsType = 'default';
-      }
-      if(item.type === 'columns'){
-        newField.labels = ['label 1', 'label 2', 'label 3' ];
-        newField.value = [
-          {
-            type: 'short_answer',
-            value: ''
-          }, 
-          {
-            type: 'short_answer',
-            value: ''
-          }, 
-          {
-            type: 'dropdown',
-            options: [
-              { title: 'Option 1', selected: true },
-              { title: 'Option 2', selected: false },
-              { title: 'Option 3', selected: false }
-            ]
-          }, 
-        ];
-        newField.sectionsType = 'default';
-      }
-      if (item.type === 'add_component_button'){
-        newField.adding_component = {
-          type: 'short_answer',
-          value: ''
-        }
-      }
-      if (item.type === 'section') {
-        newField.components = []
-      }
+      const newField = addingNewComponent(item);
       if(sectionId){
         // Find the section and add the new component to its 'components' array
         const updatedFormFields = formFields.map((field) => {
@@ -318,7 +145,6 @@ const FormBuilder = () => {
           }
           return field;
         });
-    
         setFormFields(updatedFormFields);
         console.log('new field into section:', newField);
 
@@ -327,11 +153,47 @@ const FormBuilder = () => {
         console.log('new field :', newField)
       }
     }else{
-      const itemIndex = formFields.findIndex(field => field.id === item.id)
-      const newField = {...item, id: Date.now()}
-      const dragField = formFields[itemIndex];
-      const newArray = [...formFields.slice(0, itemIndex), ...formFields.slice(itemIndex+1)]
-      setFormFields([...newArray.slice(0, dropIndex), newField, ...newArray.slice(dropIndex)])
+      if(sectionId){
+        const updatedFormFields = formFields.map((field) => {
+          if (field.id === sectionId && field.type === 'section') {
+            console.log('found section:', field);
+      
+            // Find the current index of the component to be moved
+            const itemIndex = field.components.findIndex(component => component.id === item.id);
+      
+            // Remove the component from its current position and insert it into the new position
+            const newComponentsArray = [
+              ...field.components.slice(0, itemIndex),
+              ...field.components.slice(itemIndex + 1)
+            ];
+            const newField = { ...item}; // Assign a new ID if needed
+            setEditingField({ ...field, components: [
+                ...newComponentsArray.slice(0, dropIndex),
+                newField,
+                ...newComponentsArray.slice(dropIndex)
+              ]})
+            return {
+              ...field,
+              components: [
+                ...newComponentsArray.slice(0, dropIndex),
+                newField,
+                ...newComponentsArray.slice(dropIndex)
+              ],
+            };
+          }
+          return field;
+        });
+        
+        setFormFields(updatedFormFields);
+        console.log('moved component within section:', updatedFormFields);
+
+      }else{
+        const itemIndex = formFields.findIndex(field => field.id === item.id)
+        const newField = {...item, id: Date.now()}
+        const dragField = formFields[itemIndex];
+        const newArray = [...formFields.slice(0, itemIndex), ...formFields.slice(itemIndex+1)]
+        setFormFields([...newArray.slice(0, dropIndex), newField, ...newArray.slice(dropIndex)])
+      }
     }
   };
 

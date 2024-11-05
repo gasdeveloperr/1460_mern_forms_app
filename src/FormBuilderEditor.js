@@ -4,6 +4,7 @@ import { OutsideClickContext } from './OutsideClickContext';
 import { titles_to_types_object } from './consts';
 import trash_icon from './icons/trash-can.svg'
 import plus_icon from './icons/plus-icon.svg'
+import save_icon from './icons/save-icon.svg'
 import duplicate_icon from './icons/duplicate-icon.svg'
 import { HexColorPicker  } from "react-colorful";
 import convert from "color-convert"; 
@@ -583,6 +584,16 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                 )
               }
               {
+                editingField.type === 'add_component_button' && (
+                  <div className="option-content">
+                    <div className="option-group">
+                      <label>Select component to add:</label>
+                      <ComponentTypeSelector selectedType={editingField.adding_component.type} onChange={handleTypeChange} />
+                    </div>
+                  </div>
+                )
+              }
+              {
                 editingField.type !== 'title' &&
                 <div className="field-editor_checkbox-group">
                   <div className='field-editor_checkbox_container'>
@@ -645,8 +656,8 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                             <div className={`field-editor-column-type${editingField.value[index].type === 'dropdown' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('dropdown', index)}>
                               Dropdown
                             </div> 
-                            <div className={`field-editor-column-type${editingField.value[index].type === 'input' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('input', index)}>
-                              Input
+                            <div className={`field-editor-column-type${editingField.value[index].type === 'short_answer' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('short_answer', index)}>
+                              Short answer
                             </div> 
                           </div>
                           <div className="field-editor_checkbox-group">
@@ -885,9 +896,13 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                         <input type="text" onChange={(e) => changeColumnFieldPreFilledHandler(e, index)} value={value.value}/>
                       </div>
                     </div>
-                    :
+                    : value.type === 'dropdown' ?
                     <div key={index} className="option-group">
-                      <label>OPTIONS for dropdown</label>
+                      <label>
+                        OPTIONS for dropdown 
+                        <img className="option-group-img" src={save_icon} 
+                        onClick={()=> {}} alt='save'/>
+                      </label>
                       {value.options.map((option, optionIndex) => (
                         <div key={optionIndex} className="option-input">
                           <input
@@ -913,7 +928,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                         </div>
                       ))}
                     </div>
-
+                    : <></>
                   ))
                 }
               </div>
@@ -921,12 +936,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
           }
           {
             editingField.type === 'add_component_button' && (
-              <div className="option-content">
-                <div className="option-group">
-                  <label>Select component to add:</label>
-                  <ComponentTypeSelector selectedType={editingField.adding_component.type} onChange={handleTypeChange} />
-                </div>
-              </div>
+              <div></div>
             )
           }
           </>

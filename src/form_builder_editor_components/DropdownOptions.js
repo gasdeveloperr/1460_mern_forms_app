@@ -1,4 +1,5 @@
 import { HexColorPicker } from "react-colorful";
+import save_icon from '../icons/save-icon.svg'
 
 const DropdownOptions = ({editingField, changeListOptionHandler, 
   handleColorChange, toggleColorPicker, 
@@ -9,7 +10,11 @@ const DropdownOptions = ({editingField, changeListOptionHandler,
   return ( 
     <div className="option-content">
       <div className="option-group">
-        <label>OPTIONS</label>
+        <label>
+          OPTIONS
+          <img className="option-group-img" src={save_icon} 
+          onClick={()=> {}} alt='save'/>
+        </label>
           {editingField.dropdown.map((option, index)=> (
             <div key={index} className="option-input">
               <input type="text" onChange={(e) => changeListOptionHandler(e, index)} value={option.title}/>

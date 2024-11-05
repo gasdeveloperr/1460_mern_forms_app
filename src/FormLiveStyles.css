@@ -265,3 +265,28 @@
   animation: fadeOut 3s ease-in-out forwards;
   width: 514px;
 }
+.form-live-adding-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 10px 8px;
+  box-sizing: border-box;
+  border: 3px solid rgb(211, 221, 225);
+  border-radius: 14px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(69, 85, 96);
+  margin-left: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.form-live-adding-button img{
+  width: 24px;
+}
+
+.form-live-adding-button:hover{
+  opacity: 0.8;
+  background-color: rgb(233, 232, 232);
+
+}

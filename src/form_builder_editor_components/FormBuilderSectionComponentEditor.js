@@ -94,7 +94,6 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
     setEditingField({ ...editingField, components: updatedComponents });
   };
   
-  // Change the pre-filled value for a specific column in a component
   const changeColumnFieldPreFilledHandler = (e, columnIndex) => {
     const updatedComponents = editingField.components.map((field) => {
       if (field.id === editingSectionField.id) {
@@ -258,7 +257,6 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
     setEditingField({ ...editingField, components: updatedComponents });
   };
 
-  // Add a dropdown option at a specific index within editingField
   const addFieldListOptionHandler = (index) => {
     const updatedComponents = editingField.components.map((field) => {
       if (field.id === editingSectionField.id) {
@@ -367,52 +365,49 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
 
   
   const [colorPickerVisible, setColorPickerVisible] = useState(null);
-  const [color, setColor] = useState(editingSectionField.color);
+  const [color, setColor] = useState(editingSectionField.color); //міу
 
   const [hexColor, setHexColor] = useState();
   const [rgbColor, setRgbColor] = useState();
   const [cmykColor, setCmykColor] = useState();
 
   useEffect(() => {
-    if (editingField.color && !hexColor && editingField.type === 'title') {
-      if (editingField.color.includes('rgba')) {
-        // Extract rgba values from string
-        const rgbaValues = editingField.color.match(/rgba?\((\d+), (\d+), (\d+),? (\d+\.?\d*)?\)/);
-        if (rgbaValues) {
-          const rgbaArray = [
-            parseInt(rgbaValues[1]), // Red
-            parseInt(rgbaValues[2]), // Green
-            parseInt(rgbaValues[3])  // Blue
-          ];
+    if (editingSectionField.color && !hexColor && editingSectionField.type === 'title') {
+      handleColorInitialization(editingSectionField.color);
+    } else if (!editingSectionField.color && editingSectionField.type === 'title') {
+      initializeDefaultColor();
+    }
+  }, [editingSectionField]);
   
-          const hex = convert.rgb.hex(rgbaArray); // Convert array to hex
-          setColor(hex);
-          setHexColor(hex);
-          setRgbColor(convert.hex.rgb(hex));
-          setCmykColor(convert.hex.cmyk(hex));
-  
-          console.log('Converted RGBA to HEX:', hex);
-        } else {
-          setColor(editingField.color);
-          setHexColor(editingField.color);
-          setRgbColor(convert.hex.rgb(editingField.color));
-          setCmykColor(convert.hex.cmyk(editingField.color));
-        }
+  const handleColorInitialization = (initialColor) => {
+    if (initialColor.includes('rgba')) {
+      const rgbaValues = initialColor.match(/rgba?\((\d+), (\d+), (\d+),? (\d+\.?\d*)?\)/);
+      if (rgbaValues) {
+        const rgbaArray = [
+          parseInt(rgbaValues[1]),
+          parseInt(rgbaValues[2]),
+          parseInt(rgbaValues[3])
+        ];
+        const hex = convert.rgb.hex(rgbaArray);
+        setColorValues(hex);
       } else {
-        setColor(editingField.color);
-        setHexColor(editingField.color);
-        setRgbColor(convert.hex.rgb(editingField.color));
-        setCmykColor(convert.hex.cmyk(editingField.color));
+        setColorValues(initialColor);
       }
+    } else {
+      setColorValues(initialColor);
     }
-    if(!editingField.color && editingField.type === 'title'){
-      const startHex = '#FFFFFF'
-      setColor(startHex);
-      setHexColor(startHex);
-      setRgbColor(convert.hex.rgb(startHex));
-      setCmykColor(convert.hex.cmyk(startHex));
-    }
-  }, [editingField]);
+  };
+
+  const setColorValues = (newColor) => {
+    setColor(newColor);
+    setHexColor(newColor);
+    setRgbColor(convert.hex.rgb(newColor));
+    setCmykColor(convert.hex.cmyk(newColor));
+  };
+  const initializeDefaultColor = () => {
+    const startHex = '#FFFFFF';
+    setColorValues(startHex);
+  };
   
   useEffect(() => {
     //console.log('Updated color:', color);
@@ -452,8 +447,16 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
   };
 
   const changeTitleColorHandler = (color) => {
+    const updatedComponents = editingField.components.map((field) => {
+      if (field.id === editingSectionField.id) {
+        return { ...field, color: color };
+      }
+      return field;
+    });
+
     setColor(color);
-    setEditingField({...editingField, color: color});
+    setEditingField({ ...editingField, components: updatedComponents });
+    setEditingSectionField({...editingSectionField, color: color});
   };
 
   const handleTitleColorChange = (newHexColor) => {
@@ -554,17 +557,23 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
     changeOptionColorHandler('#'+convert.cmyk.hex(cmyk), index);
   };
   
-  // Handler for changing the color of the option
   const changeOptionColorHandler = (color, index, options_index) => {
-    setColor(color);
-    //console.log('changeOptionColorHandler color index  :', color, index)
-    const newOptions = editingField.dropdown.map((option, opt_index) => {
-      if(opt_index === index){
-        option.color = color;
+    
+    let newOptions = [];
+    const updatedComponents = editingField.components.map((field) => {
+      if (field.id === editingSectionField.id) {
+        newOptions = field.dropdown.map((option, opt_index) => {
+          if(opt_index === index){
+            option.color = color;
+          }
+          return option;
+        });
       }
-      return option;
+      return field;
     });
-    setEditingField({...editingField, dropdown: newOptions});
+    setColor(color);
+    setEditingField({ ...editingField, components: updatedComponents });
+    setEditingSectionField({...editingSectionField, dropdown: newOptions});
   };
 
   const changeDateFormatHandler = (selectedFormat) => {
@@ -595,49 +604,73 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
   const handleRemoveClick = (fieldId) => {
     removeFormSectionField(fieldId, editingField.id)
     setEditingSectionField({ id: '' });
+    setEditingField({ id: '' });
   }
 
   const changeColumnTypeHandler = (type, index) => {
-    const updatedValues = [...editingField.value];
-  
-    // If the type is 'dropdown', add default options
-    if (type === 'dropdown') {
-      updatedValues[index] = {
-        ...updatedValues[index],
-        type: type,
-        options: [
-          { title: 'Option 1', selected: true },
-          { title: 'Option 2', selected: false },
-          { title: 'Option 3', selected: false }
-        ]
-      };
-    } else {
-      // For other types, just update the type without adding options
-      updatedValues[index] = {
-        ...updatedValues[index],
-        type: type,
-        options: undefined, // Clear options for non-dropdown types if needed
-      };
-    }
-  
-    console.log('updatedValues : ', updatedValues);
-    setEditingField({ ...editingField, value: updatedValues });
+    let updatedValues = [];
+    const updatedComponents = editingField.components.map((field) => {
+      if (field.id === editingSectionField.id) {
+        updatedValues = [...field.value];
+        if (type === 'dropdown') {
+          updatedValues[index] = {
+            ...updatedValues[index],
+            type: type,
+            options: [
+              { title: 'Option 1', selected: true },
+              { title: 'Option 2', selected: false },
+              { title: 'Option 3', selected: false }
+            ]
+          };
+        } else {
+          updatedValues[index] = {
+            ...updatedValues[index],
+            type: type,
+            options: undefined,
+          };
+        }
+      return {...field, value: updatedValues};
+      }
+      return field
+    });
+    setEditingField({ ...editingField, components: updatedComponents });
+    setEditingSectionField({...editingSectionField, value: updatedValues});
   };
   
   const handleRemovingColumn = (columnIndex) => {
-    const newValue = editingField.value.filter((_, index) => index !== columnIndex);
-    const newLabels = editingField.labels.filter((_, index) => index !== columnIndex);
-    setEditingField({ ...editingField, value: newValue, labels: newLabels });
+    let updatedValues = [];
+    let updatedLabels = [];
+    const updatedComponents = editingField.components.map((field) => {
+      if (field.id === editingSectionField.id) {
+        updatedValues = field.value.filter((_, index) => index !== columnIndex);
+        updatedLabels = field.labels.filter((_, index) => index !== columnIndex);
+        return { ...field, value: updatedValues, labels: updatedLabels };
+      }
+      return field;
+    });
+  
+    setEditingField({ ...editingField, components: updatedComponents });
+    setEditingSectionField({ ...editingSectionField, value: updatedValues, labels: updatedLabels });
   };
+  
   const handleAddingNewColumn = () => {
-    const newValue = [...editingField.value, {
-      type: 'input',
-      value: ''
-    }]
-    const newLabels = [...editingField.labels, 'label']
-    setEditingField({...editingField, value: newValue, labels: newLabels});
-  }
-
+    let updatedValues = [];
+    let updatedLabels = [];
+    const updatedComponents = editingField.components.map((field) => {
+      if (field.id === editingSectionField.id) {
+        updatedValues = [
+          ...field.value,
+          { type: 'input', value: '' }
+        ];
+        updatedLabels = [...field.labels, 'label'];
+        return { ...field, value: updatedValues, labels: updatedLabels };
+      }
+      return field;
+    });
+  
+    setEditingField({ ...editingField, components: updatedComponents });
+    setEditingSectionField({ ...editingSectionField, value: updatedValues, labels: updatedLabels });
+  };
 
   const handleTypeChange = (type) => {
     let newComponent = {
@@ -823,8 +856,8 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                           <div className={`field-editor-column-type${editingSectionField.value[index].type === 'dropdown' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('dropdown', index)}>
                             Dropdown
                           </div> 
-                          <div className={`field-editor-column-type${editingSectionField.value[index].type === 'input' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('input', index)}>
-                            Input
+                          <div className={`field-editor-column-type${editingSectionField.value[index].type === 'short_answer' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('short_answer', index)}>
+                            Short answer
                           </div> 
                         </div>
                         <div className="field-editor_checkbox-group">
@@ -1060,7 +1093,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                       <input type="text" onChange={(e) => changeColumnFieldPreFilledHandler(e, index)} value={value.value}/>
                     </div>
                   </div>
-                  :
+                  : value.type === 'dropdown' ?
                   <div key={index} className="option-group">
                     <label>OPTIONS for dropdown</label>
                     {value.options.map((option, optionIndex) => (
@@ -1088,7 +1121,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                       </div>
                     ))}
                   </div>
-
+                  : <></>
                 ))
               }
             </div>

@@ -13,10 +13,11 @@ import FileUploadFormComponent from './form_live_components/FileUploadFormCompon
 import AutoResizingTextareaComponent from './form_live_components/AutoResizingTextareaComponent';
 import MultipleSectionFormComponent from './form_live_components/MultipleSectionFormComponent';
 import ColumnsFormComponent from './form_live_components/ColumnsFormComponent';
+import AddButtonComponent from './form_live_components/AddButtonComponent';
 
 
 
-const FormLiveComponent = ({field, index, onFileChange}) => {
+const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddingComponent}) => {
 
   const [inputValue, setInputValue] = useState(field.value || '');
   const [errorMessage, setErrorMessage] = useState('');
@@ -344,6 +345,11 @@ const FormLiveComponent = ({field, index, onFileChange}) => {
               {field.title} 
             </div>
             <ColumnsFormComponent field={field} handleInputChange={handleInputsChange} handleSelectorChange={handleSelectorChange}/>
+          </div>
+        )}
+        {field.type === 'add_component_button' && (
+          <div className="form-live-component-container">
+            <AddButtonComponent field={field} handleAddingComponent={handleAddingComponent}/>
           </div>
         )}
         {field.type === 'date_time' && (

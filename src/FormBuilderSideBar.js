@@ -32,7 +32,7 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
   return (
     <div className='left-bar'>
       {
-        editingField && editingField.id !== '' && !editingSectionField ? 
+        editingField && editingField.id !== '' && editingSectionField.id === '' ? 
         <FieldBuilderEditor removeFormField={removeFormField} duplicateField={duplicateField}
         editingField={editingField} setEditingField={setEditingField}
         editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}/>

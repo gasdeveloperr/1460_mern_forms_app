@@ -252,9 +252,18 @@
 .option-group {
   margin-bottom: 10px;
 }
+.option-group-img{
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.option-group-img:hover{
+  opacity: 0.8;
+}
 
 .option-group label {
-  display: block;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 5px;
   font-size: 14px;
   font-weight: bold;
