@@ -122,6 +122,7 @@
   display: flex;
   gap: 4px;
   align-items: center;
+  margin-bottom: 6px;
 }
 .field-editor-column-type,
 .field-editor-column-type-selected{

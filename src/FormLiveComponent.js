@@ -17,7 +17,7 @@ import AddButtonComponent from './form_live_components/AddButtonComponent';
 
 
 
-const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddingComponent}) => {
+const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddingComponent, isSectionComponent}) => {
 
   const [inputValue, setInputValue] = useState(field.value || '');
   const [errorMessage, setErrorMessage] = useState('');
@@ -69,7 +69,6 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
 
   const handleInputsChange = (e, sectionIndex) => {
     const updatedField = { ...field };
-    
     updatedField.value[sectionIndex] = e.target.value;
     setFieldData(updatedField);
   };
@@ -77,6 +76,20 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
   const handleSelectorChange = (selectedOption, sectionIndex) => {
     const updatedField = { ...field };
     
+    updatedField.value[sectionIndex].options.forEach(option => {
+      option.selected = option.title === selectedOption.title;
+    });
+    setFieldData(updatedField);
+  };  
+  const handleColumnInputsChange = (e, sectionIndex) => {
+    const updatedField = { ...field };
+    console.log('handleInputsChange', updatedField.value[sectionIndex])
+    updatedField.value[sectionIndex].value = e;
+    setFieldData(updatedField);
+  };
+  const handleColumnSelectorChange = (selectedOption, sectionIndex) => {
+    const updatedField = { ...field };
+    console.log('handleColumnSelectorChange : ', selectedOption, sectionIndex)
     updatedField.value[sectionIndex].options.forEach(option => {
       option.selected = option.title === selectedOption.title;
     });
@@ -344,7 +357,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               {field.required && <span>*</span>}
               {field.title} 
             </div>
-            <ColumnsFormComponent field={field} handleInputChange={handleInputsChange} handleSelectorChange={handleSelectorChange}/>
+            <ColumnsFormComponent field={field} handleInputsChange={handleColumnInputsChange} handleSelectorChange={handleColumnSelectorChange}/>
           </div>
         )}
         {field.type === 'add_component_button' && (

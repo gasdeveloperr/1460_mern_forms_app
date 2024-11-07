@@ -3,7 +3,14 @@ import '../FormLiveStyles.css';
 
 const FormResultsComponent = ({ field, data }) => {
   // Get the submitted data for this field
-  const fieldData = data[field.id]; 
+  let fieldData = {};
+  if (data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) {
+    console.log(data[field.id]);
+    fieldData = data[field.id];
+  } else {
+    console.log(`No data found for field ID: ${field.id}`);
+    return null;
+  }
 
   return (
     <>
@@ -231,6 +238,29 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'multi_section' && (
+        <div className="form-live-component-container">
+          <div className="form-results-component-title">
+            {field.title}
+          </div>
+          <div className="form-component-triple-section-container">
+            {field.labels.map((label, index) => (
+              <div className="form-component-double-section" key={index}>
+                <div className="form-results-section-label">
+                  {label}
+                </div>
+                <div 
+                style={{color: fieldData.value[index]==='Monthly'? '#7bb163' :
+                fieldData.value[index]==='Quarterly'? '#f1c336':
+                (fieldData.value[index]==='Annually' || fieldData.value[index]==='Not Reviewed')? '#ff0909':
+                ''}}>
+                  {fieldData.value[index]}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {field.type === 'columns' && (
         <div className="form-live-component-container">
           <div className="form-results-component-title">
             {field.title}

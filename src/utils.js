@@ -205,3 +205,107 @@ export const addingNewComponent = (componentData) => {
   }
   return newField; 
 };
+
+  // Function to initialize and update formData based on fieldType
+  export function initializeFieldData({ element, elementBack, formData, fieldType, customType, sectionName }) {
+    if (!formData[element.id]) {
+      switch(fieldType){
+        case 'double_section' :
+          formData[element.id] = {name: elementBack.title, value:[]}
+          break;
+        case 'triple_section' :
+          formData[element.id] = {name: elementBack.title, value:[]}
+          break;
+        case 'two_inputs_section' :
+          formData[element.id] = {name: elementBack.title, value:[]}
+          break;
+        case 'triple_inputs_section' :
+          formData[element.id] = {name: elementBack.title, value:[]}
+          break;
+        case 'four_inputs_section' :
+          formData[element.id] = {name: elementBack.title, value:[]}
+          break;
+        case 'five_inputs_section' :
+          formData[element.id] = {name: elementBack.title, value:[]}
+          break;
+        case 'multi_section' :
+          formData[element.id] = {name: elementBack.title, value:[]}
+          break;
+        case 'columns' :
+          formData[element.id] = {name: elementBack.title, value:[]}
+          break;
+        case 'checkbox':
+          formData[element.id] = {name: elementBack.title, value:[]}
+          break;
+        case 'name': 
+          formData[element.id] = {name: elementBack.title, value:{}}
+          break;
+        case 'date_time':  
+          formData[element.id] = {name: elementBack.title, value:{}}
+          break;
+        default:
+          formData[element.id] = {name: elementBack.title, value:''};
+          break;
+      }
+    }
+    //setting element type for subm data field
+    formData[element.id].type = fieldType;
+
+    console.log('formData : ', formData[element.id])
+
+    switch(fieldType){
+      case 'double_section' :
+        formData[element.id].value.push({label: sectionName, value: element.value});
+        break;
+      case 'triple_section' :
+        formData[element.id].value.push({label: sectionName, value: element.value});
+        break;
+      case 'two_inputs_section' :
+        formData[element.id].value.push(element.value);
+        break;
+      case 'triple_inputs_section' :
+        formData[element.id].value.push(element.value);
+        break;
+      case 'four_inputs_section' :
+        formData[element.id].value.push(element.value);
+        break;
+      case 'five_inputs_section' :
+        formData[element.id].value.push(element.value);
+        break;
+      case 'multi_section' :
+        formData[element.id].value.push(element.value);
+        break;
+      case 'columns' :
+        formData[element.id].value.push(element.value);
+        break;
+      case 'checkbox':
+        if (element.checked) {
+          formData[element.id].value.push(element.name);
+        };
+        break;
+      case 'radio': 
+        if (element.checked) {
+          formData[element.id].value = element.value;
+        }
+        break;
+      case 'name': 
+        if (customType === 'first_name') {
+          formData[element.id].value.first_name = element.value;
+        }
+        if (customType === 'last_name') {
+          formData[element.id].value.last_name = element.value;
+        }
+        break;
+      case 'date_time':  
+        if (customType === 'date') {
+          formData[element.id].value.date = element.value;
+        }
+        if (customType === 'time') {
+          formData[element.id].value.time = element.value;
+        }
+        break;
+      default:
+        formData[element.id].value = element.value;
+        break;
+    }
+  }

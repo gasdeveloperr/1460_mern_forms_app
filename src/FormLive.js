@@ -7,7 +7,7 @@ import FormLiveComponent from './FormLiveComponent';
 import './FormLiveStyles.css';
 import Spinner from './Spinner';
 import { backend_point } from './consts';
-import { addingNewComponent, getAuthToken, getUserEmail, getUserId } from './utils';
+import { addingNewComponent, getAuthToken, getUserEmail, getUserId, initializeFieldData } from './utils';
 
 const FormLive = () => {
 
@@ -131,18 +131,14 @@ const FormLive = () => {
     
     let fileData = null;
     if (file) {
-      // Step 1: Upload the file
       fileData = await uploadFile(file);
       if (!fileData) {
         setIsLoading(false);
-        return; // Stop if the file upload failed
+        return;
       }
     }
     const formData = {};
 
-    console.log('formFields : ', formFields)
-
-    // Loop through all the form elements and collect their values
     const formElements = event.target.elements;
     console.log('form elements  : ',formElements);
     for (let i = 0; i < formElements.length; i++) {
@@ -151,113 +147,42 @@ const FormLive = () => {
       const sectionName = element.getAttribute('sectionName'); 
       const fieldType = element.getAttribute('fieldtype'); 
       const columnType = element.getAttribute('columntype'); 
+
+      console.log(' saving results  : ', fieldType, element)
       for(let j = 0; j < formFields.length; j++){
-        const elementBack = formFields[j];
-        if (element.id == elementBack.id ) {
-          if (!formData[element.id]) {
-            switch(fieldType){
-              case 'double_section' :
-                formData[element.id] = {name: elementBack.title, value:[]}
-                break;
-              case 'triple_section' :
-                formData[element.id] = {name: elementBack.title, value:[]}
-                break;
-              case 'two_inputs_section' :
-                formData[element.id] = {name: elementBack.title, value:[]}
-                break;
-              case 'triple_inputs_section' :
-                formData[element.id] = {name: elementBack.title, value:[]}
-                break;
-              case 'four_inputs_section' :
-                formData[element.id] = {name: elementBack.title, value:[]}
-                break;
-              case 'five_inputs_section' :
-                formData[element.id] = {name: elementBack.title, value:[]}
-                break;
-              case 'multi_section' :
-                formData[element.id] = {name: elementBack.title, value:[]}
-                break;
-              case 'checkbox':
-                formData[element.id] = {name: elementBack.title, value:[]}
-                break;
-              case 'name': 
-                formData[element.id] = {name: elementBack.title, value:{}}
-                break;
-              case 'date_time':  
-                formData[element.id] = {name: elementBack.title, value:{}}
-                break;
-              default:
-                formData[element.id] = {name: elementBack.title, value:''};
-                break;
+        if(formFields[j].type === 'section'){
+          for (let k = 0; k < formFields[j].components.length; k++) {
+            const elementBack = formFields[j].components[k];
+            console.log(element.id, elementBack.id)
+            if (element.id == elementBack.id) {
+              initializeFieldData({
+                element,
+                elementBack,
+                formData,
+                fieldType,
+                customType,
+                sectionName,
+              });
             }
           }
-          //setting element type for subm data field
-          formData[element.id].type = fieldType;
-
-          console.log('formData[element.id] :', formData[element.id])
-
-          console.log(' switch(fieldType) : ', fieldType)
-
-          switch(fieldType){
-            case 'double_section' :
-              formData[element.id].value.push({label: sectionName, value: element.value});
-              break;
-            case 'triple_section' :
-              formData[element.id].value.push({label: sectionName, value: element.value});
-              break;
-            case 'two_inputs_section' :
-              formData[element.id].value.push(element.value);
-              break;
-            case 'triple_inputs_section' :
-              formData[element.id].value.push(element.value);
-              break;
-            case 'four_inputs_section' :
-              formData[element.id].value.push(element.value);
-              break;
-            case 'five_inputs_section' :
-              formData[element.id].value.push(element.value);
-              break;
-            case 'multi_section' :
-              formData[element.id].value.push(element.value);
-              break;
-            case 'checkbox':
-              if (element.checked) {
-                formData[element.id].value.push(element.name);
-              };
-              break;
-            case 'radio': 
-              if (element.checked) {
-                formData[element.id].value = element.value;
-              }
-              break;
-            case 'name': 
-              if (customType === 'first_name') {
-                formData[element.id].value.first_name = element.value;
-              }
-              if (customType === 'last_name') {
-                formData[element.id].value.last_name = element.value;
-              }
-              break;
-            case 'date_time':  
-              if (customType === 'date') {
-                formData[element.id].value.date = element.value;
-              }
-              if (customType === 'time') {
-                formData[element.id].value.time = element.value;
-              }
-              break;
-            default:
-              formData[element.id].value = element.value;
-              break;
-          }
+        }
+        const elementBack = formFields[j];
+        if (toString(element.id) == elementBack.id ) {
+          initializeFieldData({
+            element,
+            elementBack,
+            formData,
+            fieldType,
+            customType,
+            sectionName,
+          });
         }
       }
     }
-
     const submittedTime = Date.now();
     const formSubmsn = {
       formData: formData,
-      fileData: fileData,
+      fileData: fileData || '',
       formTitle: formTitle,
       formType: formType,
       fields: formFields,
@@ -336,6 +261,7 @@ const FormLive = () => {
                       parentIndex={index}
                       onFileChange={handleFileChange}
                       handleAddingComponent={handleAddingComponent}
+                      isSectionComponent={true}
                     />
                   ))}
                 </div>

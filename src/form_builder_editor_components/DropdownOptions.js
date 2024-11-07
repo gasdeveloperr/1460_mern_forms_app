@@ -1,19 +1,23 @@
 import { HexColorPicker } from "react-colorful";
-import save_icon from '../icons/save-icon.svg'
+import save_icon from '../icons/save-icon.svg';
 
 const DropdownOptions = ({editingField, changeListOptionHandler, 
   handleColorChange, toggleColorPicker, 
   colorPickerVisible,
   hexColor, rgbColor, cmykColor,
   handleRgbChange, handleHexChange, handleCmykChange,
-  addListOptionHandler, deleteListOptionHandler  } ) => {
+  addListOptionHandler, deleteListOptionHandler, handleOptionsSaving,
+  setIsOptionsChoosingWindow  } ) => {
   return ( 
     <div className="option-content">
       <div className="option-group">
         <label>
           OPTIONS
+          <div onClick={() => setIsOptionsChoosingWindow(true)}>
+            Choose
+          </div>
           <img className="option-group-img" src={save_icon} 
-          onClick={()=> {}} alt='save'/>
+          onClick={()=> handleOptionsSaving(editingField.dropdown)} alt='save'/>
         </label>
           {editingField.dropdown.map((option, index)=> (
             <div key={index} className="option-input">

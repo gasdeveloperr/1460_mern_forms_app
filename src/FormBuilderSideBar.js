@@ -4,7 +4,8 @@ import FieldBuilderEditor from "./FormBuilderEditor";
 import FormBuilderSectionComponentEditor from "./form_builder_editor_components/FormBuilderSectionComponentEditor";
 
 const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormField, removeFormSectionField, duplicateField,
-    updateFormTypeHandler, formType, editingField, setEditingField, editingSectionField, setEditingSectionField }) => {
+    updateFormTypeHandler, formType, editingField, setEditingField, editingSectionField, setEditingSectionField,
+    handleOptionsSaving, setIsOptionsChoosingWindow}) => {
 
   const handleDragStart = () => {
     setIsDragging(true);
@@ -35,11 +36,13 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
         editingField && editingField.id !== '' && editingSectionField.id === '' ? 
         <FieldBuilderEditor removeFormField={removeFormField} duplicateField={duplicateField}
         editingField={editingField} setEditingField={setEditingField}
-        editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}/>
+        editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
+        handleOptionsSaving={handleOptionsSaving} setIsOptionsChoosingWindow={setIsOptionsChoosingWindow}/>
         : editingSectionField && editingSectionField.id !== '' ?
         <FormBuilderSectionComponentEditor removeFormSectionField={removeFormSectionField} duplicateField={duplicateField}
         editingField={editingField} setEditingField={setEditingField}
-        editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}/>
+        editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
+        handleOptionsSaving={handleOptionsSaving} setIsOptionsChoosingWindow={setIsOptionsChoosingWindow}/>
         :
         <div className="form-builder-components">
           <div className="section-group">

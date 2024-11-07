@@ -10,6 +10,8 @@ import isEqual from 'lodash/isEqual';
 import Spinner from './Spinner';
 import { useNavigate } from 'react-router-dom';
 import { addingNewComponent, getAuthToken } from './utils';
+import OptionsSavingWindow from './OptionsSavingWindow';
+import OptionsChoosingWindow from './OptionsChoosingWindow';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
@@ -88,8 +90,6 @@ const FormBuilder = () => {
     setIsLoading(true);
     fetchForm();
   }, []);
-
-//formId
 
   const updateForm = async (formId) => {
 
@@ -196,6 +196,24 @@ const FormBuilder = () => {
       }
     }
   };
+    
+  const [options, setOptions] = useState('');
+  const [chosenOptions, setChosenOptions] = useState('');
+  const [isOptionsSavingWindow, setIsOptionsSavingWindow] = useState(false);
+  const [isOptionsChoosingWindow, setIsOptionsChoosingWindow] = useState(false);
+
+  const handleOptionsSaving = (optionsData) => {
+    setOptions(optionsData);
+    setIsOptionsSavingWindow(true);
+
+  }
+  const closeOptionsSavingWindow = () => {
+    setIsOptionsSavingWindow(false);
+  }
+  const closeOptionsChoosingWindow = () => {
+    setIsOptionsChoosingWindow(false);
+
+  }
 
   const updateFormTitleHandler = (e) => {
     setFormTitle(e.target.value)
@@ -283,12 +301,18 @@ const FormBuilder = () => {
             <span className="icon"></span>
           </div>
         </div> */}
+        <OptionsSavingWindow isOpen={isOptionsSavingWindow} optionsData={options} 
+        onClose={closeOptionsSavingWindow} handleSaving={handleOptionsSaving}/>
+        <OptionsChoosingWindow isOpen={isOptionsChoosingWindow} choseOption={setChosenOptions} 
+        onClose={closeOptionsChoosingWindow}/>
+    
         <div className="form-builder-page-content">
           <FormBuilderSideBar setIsDragging={setIsDragging} setDropAreaPositions ={setDropAreaPositions} 
           removeFormField={removeFormField} removeFormSectionField={removeFormSectionField} duplicateField={handleDuplicateClick}
           updateFormTypeHandler={updateFormTypeHandler} formType={formType}
           editingField={editingField} setEditingField={setEditingField}
-          editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField} />
+          editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField} 
+          handleOptionsSaving={handleOptionsSaving} setIsOptionsChoosingWindow={setIsOptionsChoosingWindow}/>
           <div className='form-builder-part'>
            {formFields && 
            <div className='form-constructor' >

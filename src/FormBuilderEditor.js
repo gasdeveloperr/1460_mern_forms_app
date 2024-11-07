@@ -13,7 +13,7 @@ import LegacyComponentsOptions from './form_builder_editor_components/LegacyComp
 import DropdownOptions from './form_builder_editor_components/DropdownOptions';
 
 const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setEditingField,
-  handleDuplicateClick}) => {
+  handleDuplicateClick, handleOptionsSaving, setIsOptionsChoosingWindow}) => {
 
   const changeFieldTitleHandler = (e) => {
     setEditingField({...editingField, title: e.target.value})
@@ -523,6 +523,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   ]
 
   const { fieldEditorRef } = useContext(OutsideClickContext);
+
   return (
     <div className="field-editor" ref={fieldEditorRef}>
     { editingField && editingField.id !== '' ?
@@ -800,12 +801,12 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                 <div className="field-editor-radio-group">
                   <label>
                     <input type="radio" name="layout" value="vertical" 
-                    onChange={changeFieldCheckboxLayoutHandler} checked={editingField.layout == 'vertical'} />
+                    onChange={changeFieldCheckboxLayoutHandler} checked={editingField.layout === 'vertical'} />
                     Vertical
                   </label>
                   <label>
                     <input type="radio" name="layout" value="horizontal" 
-                    onChange={changeFieldCheckboxLayoutHandler} checked={editingField.layout == 'horizontal'}/>
+                    onChange={changeFieldCheckboxLayoutHandler} checked={editingField.layout === 'horizontal'}/>
                     Horizontal
                   </label>
                 </div>
@@ -835,12 +836,12 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                 <div className="field-editor-radio-group">
                   <label>
                     <input type="radio" name="layout" value="vertical" 
-                    onChange={changeFieldRadioLayoutHandler} checked={editingField.layout == 'vertical'} />
+                    onChange={changeFieldRadioLayoutHandler} checked={editingField.layout === 'vertical'} />
                     Vertical
                   </label>
                   <label>
                     <input type="radio" name="layout" value="horizontal" 
-                    onChange={changeFieldRadioLayoutHandler} checked={editingField.layout == 'horizontal'}/>
+                    onChange={changeFieldRadioLayoutHandler} checked={editingField.layout === 'horizontal'}/>
                     Horizontal
                   </label>
                 </div>
@@ -879,7 +880,8 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
           handleColorChange={handleColorChange} toggleColorPicker={toggleColorPicker}
           colorPickerVisible={colorPickerVisible} hexColor={hexColor} rgbColor={rgbColor} cmykColor={cmykColor}
           handleRgbChange={handleRgbChange} handleHexChange={handleHexChange} handleCmykChange={handleCmykChange}
-          addListOptionHandler={addFieldListOptionHandler} deleteListOptionHandler={deleteFieldListOptionHandler}/>
+          addListOptionHandler={addFieldListOptionHandler} deleteListOptionHandler={deleteFieldListOptionHandler}
+          handleOptionsSaving={handleOptionsSaving} setIsOptionsChoosingWindow={setIsOptionsChoosingWindow}/>
           }
           <LegacyComponentsOptions editingField={editingField} changeFieldListOptionHandler={changeFieldListOptionHandler} 
           addFieldListOptionHandlerNew={addFieldListOptionHandlerNew} deleteFieldListOptionHandlerNew={deleteFieldListOptionHandlerNew}
@@ -900,8 +902,11 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                     <div key={index} className="option-group">
                       <label>
                         OPTIONS for dropdown 
+                        <div onClick={() => setIsOptionsChoosingWindow(true)}>
+                          Choose
+                        </div>
                         <img className="option-group-img" src={save_icon} 
-                        onClick={()=> {}} alt='save'/>
+                        onClick={()=> handleOptionsSaving(value.options)} alt='save'/>
                       </label>
                       {value.options.map((option, optionIndex) => (
                         <div key={optionIndex} className="option-input">

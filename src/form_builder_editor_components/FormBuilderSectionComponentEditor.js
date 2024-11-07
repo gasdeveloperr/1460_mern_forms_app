@@ -3,7 +3,8 @@ import '../FormBuilderEditor.css';
 import { OutsideClickContext } from '../OutsideClickContext';
 import { titles_to_types_object } from '../consts';
 import trash_icon from '../icons/trash-can.svg'
-import plus_icon from '../icons/plus-icon.svg'
+import plus_icon from '../icons/plus-icon.svg';
+import save_icon from '../icons/save-icon.svg';
 import duplicate_icon from '../icons/duplicate-icon.svg'
 import { HexColorPicker  } from "react-colorful";
 import convert from "color-convert"; 
@@ -11,7 +12,8 @@ import ComponentTypeSelector from '../ComponentTypeSelector';
 import DropdownOptions from '../form_builder_editor_components/DropdownOptions';
 
 const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateField, editingField, setEditingField,
-  editingSectionField, setEditingSectionField,  handleDuplicateClick}) => {
+  editingSectionField, setEditingSectionField,  handleDuplicateClick, handleOptionsSaving,
+  setIsOptionsChoosingWindow}) => {
 
   const changeFieldTitleHandler = (e) => {
     const updatedComponents = editingField.components.map((field) => {
@@ -1079,7 +1081,8 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
         handleColorChange={handleColorChange} toggleColorPicker={toggleColorPicker}
         colorPickerVisible={colorPickerVisible} hexColor={hexColor} rgbColor={rgbColor} cmykColor={cmykColor}
         handleRgbChange={handleRgbChange} handleHexChange={handleHexChange} handleCmykChange={handleCmykChange}
-        addListOptionHandler={addFieldListOptionHandler} deleteListOptionHandler={deleteFieldListOptionHandler}/>
+        addListOptionHandler={addFieldListOptionHandler} deleteListOptionHandler={deleteFieldListOptionHandler}
+        handleOptionsSaving={handleOptionsSaving} setIsOptionsChoosingWindow={setIsOptionsChoosingWindow}/>
         }
         {
           editingSectionField.type === 'columns' && (
@@ -1095,7 +1098,14 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                   </div>
                   : value.type === 'dropdown' ?
                   <div key={index} className="option-group">
-                    <label>OPTIONS for dropdown</label>
+                    <label>
+                      OPTIONS for dropdown
+                      <div onClick={() => setIsOptionsChoosingWindow(true)}>
+                        Choose
+                      </div>
+                      <img className="option-group-img" src={save_icon} 
+                      onClick={()=> handleOptionsSaving(value.options)} alt='save'/>
+                    </label>
                     {value.options.map((option, optionIndex) => (
                       <div key={optionIndex} className="option-input">
                         <input

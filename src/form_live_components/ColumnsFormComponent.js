@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import CustomSelector from './CustomSelector';
 
-const ColumnsFormComponent = ({ field, handleInputValueChange, handleSelectorChange }) => {
+const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange }) => {
   const [sectionValues, setSectionValues] = useState([]);
 
   // Initialize values based on field structure
@@ -13,17 +13,16 @@ const ColumnsFormComponent = ({ field, handleInputValueChange, handleSelectorCha
       return col.value || '';
     });
     setSectionValues(initialValues);
-  }, [field.columns]);
+  }, [field.value]);
 
   const handleValueChange = (value, index) => {
     const newValues = [...sectionValues];
     newValues[index] = value;
     setSectionValues(newValues);
-
-    if (field.columns[index].type === 'dropdown') {
-      handleSelectorChange(value, index); // Handle custom dropdown change
+    if (field.value[index].type === 'dropdown') {
+      handleSelectorChange(value, index);
     } else {
-      handleInputValueChange(value, index); // Handle regular input change
+      handleInputsChange(value, index);
     }
   };
 
@@ -44,16 +43,30 @@ const ColumnsFormComponent = ({ field, handleInputValueChange, handleSelectorCha
           </div>
           
           {field.value[index].type === 'dropdown' ? (
-            <CustomSelector
-              options={field.value[index].options}
-              selectedValue={sectionValues[index]}
-              setSelectorValue={(selectedOption) => handleValueChange(selectedOption, index)}
-            />
+            <>
+              <CustomSelector
+                options={field.value[index].options}
+                selectedValue={sectionValues[index]}
+                setSelectorValue={(selectedOption) => handleValueChange(selectedOption, index)}
+              />
+              <input
+                fieldtype={field.type}
+                id={field.id}
+                name={field.id}
+                sectionName={field.labels[index]}
+                customtype="columns"
+                disabled={field.read_only}
+                value={sectionValues[index]}
+                onChange={() => {}}
+                hidden
+              />
+            </>
           ) : (
             <input
               className="form-live-input"
               id={field.id}
-              fieldtype={field.value[index].type}
+              fieldtype={field.type}
+              columnType={field.type}
               value={sectionValues[index]}
               name={`${field.id}-${index}`}
               onChange={(e) => handleValueChange(e.target.value, index)}
