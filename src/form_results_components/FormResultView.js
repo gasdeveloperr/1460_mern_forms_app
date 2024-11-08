@@ -9,10 +9,14 @@ const FormResultView = ({form}) => {
         <PDFViewerComponent form={form} />
         :
         <form className="form-live-content">
-          {form.fields.map((field, index) => (
-             <FormResultsComponent key={index} field={field} data={form.data}/>
-            )
-          )}
+         {form.fields.map((field, index) => (
+          field.type === 'section' ? 
+            field.components.map((sectionComp, indexComp) => (
+              <FormResultsComponent key={indexComp} field={sectionComp} data={form.data} />
+            ))
+          : 
+            <FormResultsComponent key={index} field={field} data={form.data} />
+        ))}
         </form>
       }
     </div>

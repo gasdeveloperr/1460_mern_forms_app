@@ -267,7 +267,7 @@ const FormResultsComponent = ({ field, data }) => {
           </div>
           <div className="form-component-triple-section-container">
             {field.labels.map((label, index) => (
-              <div className="form-component-double-section" key={index}>
+              <div className="form-component-column" key={index}>
                 <div className="form-results-section-label">
                   {label}
                 </div>

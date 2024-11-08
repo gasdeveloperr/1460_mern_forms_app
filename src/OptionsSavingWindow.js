@@ -54,7 +54,7 @@ const OptionsSavingWindow = ({isOpen, optionsData, onClose, handleSaving}) => {
   )
 
   return (
-    <div className="window-overlay">
+    <div className="window-overlay" id='saving-options-window'>
       <div className="window-content">
         <h2>Save these options to use them later</h2>
         <form onSubmit={handleSubmit}>

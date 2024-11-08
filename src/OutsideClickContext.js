@@ -9,6 +9,17 @@ export const OutsideClickProvider = ({ children }) => {
   const [outsideClickHandlers, setOutsideClickHandlers] = useState([]);
 
   const handleClickOutside = (event) => {
+
+    //console.log('click detected')
+    if (
+      event.target.closest('#saving-options-window') 
+      // ||
+      // event.target.closest('#choosing-options-window')
+    ) {
+      console.log('click dis')
+      return;
+    }
+
     if (
       formFieldRef.current &&
       !formFieldRef.current.contains(event.target) &&

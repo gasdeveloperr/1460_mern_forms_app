@@ -261,6 +261,16 @@
 .option-group-img:hover{
   opacity: 0.8;
 }
+.option-group-features{
+  display: flex;
+  gap: 12px;
+}
+.choose-option-button{
+  cursor: pointer;
+}
+.choose-option-button:hover{
+  opacity: 0.8;
+}
 
 .option-group label {
   display: flex;

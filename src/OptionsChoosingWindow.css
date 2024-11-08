@@ -1,0 +1,40 @@
+.options-chooser-body{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0px;
+}
+/* .option-chooser-container:hover{
+  opacity: 0.7;
+} */
+.option-chooser-container{
+  display: flex;
+  flex-direction: column;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgb(211, 221, 225);
+  width: -moz-fit-content;
+  width: fit-content;
+  height: fit-content;
+  gap: 6px;
+  cursor: pointer;
+}
+.option-hr{
+  color: rgb(211, 221, 225)
+}
+.option-chooser-title{
+  font-weight: 600;
+}
+.options-chooser-list{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.option-chooser{
+  display: flex;
+  justify-content: space-between;
+}
+.option-chooser-buttons{
+  display: flex;
+  justify-content: space-between;
+}

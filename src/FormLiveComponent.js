@@ -83,13 +83,13 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
   };  
   const handleColumnInputsChange = (e, sectionIndex) => {
     const updatedField = { ...field };
-    console.log('handleInputsChange', updatedField.value[sectionIndex])
+    //console.log('handleInputsChange', updatedField.value[sectionIndex])
     updatedField.value[sectionIndex].value = e;
     setFieldData(updatedField);
   };
   const handleColumnSelectorChange = (selectedOption, sectionIndex) => {
     const updatedField = { ...field };
-    console.log('handleColumnSelectorChange : ', selectedOption, sectionIndex)
+    //console.log('handleColumnSelectorChange : ', selectedOption, sectionIndex)
     updatedField.value[sectionIndex].options.forEach(option => {
       option.selected = option.title === selectedOption.title;
     });

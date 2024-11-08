@@ -5,7 +5,7 @@ import FormBuilderSectionComponentEditor from "./form_builder_editor_components/
 
 const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormField, removeFormSectionField, duplicateField,
     updateFormTypeHandler, formType, editingField, setEditingField, editingSectionField, setEditingSectionField,
-    handleOptionsSaving, setIsOptionsChoosingWindow}) => {
+    handleOptionsSaving, chooseOptionsToChange}) => {
 
   const handleDragStart = () => {
     setIsDragging(true);
@@ -37,12 +37,12 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
         <FieldBuilderEditor removeFormField={removeFormField} duplicateField={duplicateField}
         editingField={editingField} setEditingField={setEditingField}
         editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
-        handleOptionsSaving={handleOptionsSaving} setIsOptionsChoosingWindow={setIsOptionsChoosingWindow}/>
+        handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange}/>
         : editingSectionField && editingSectionField.id !== '' ?
         <FormBuilderSectionComponentEditor removeFormSectionField={removeFormSectionField} duplicateField={duplicateField}
         editingField={editingField} setEditingField={setEditingField}
         editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
-        handleOptionsSaving={handleOptionsSaving} setIsOptionsChoosingWindow={setIsOptionsChoosingWindow}/>
+        handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange}/>
         :
         <div className="form-builder-components">
           <div className="section-group">

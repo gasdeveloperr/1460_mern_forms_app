@@ -758,6 +758,9 @@ body {
   display: grid;
   gap: 20px;
 }
+.form-component-column {
+  min-width: 100px;
+}
 .form-component-double-section-container{
   display: grid;
   grid-template-columns: 1fr 1fr;

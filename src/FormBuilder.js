@@ -86,7 +86,7 @@ const FormBuilder = () => {
 
   useEffect(() => {
     const timeLog = new Date()
-    console.log('load new form page : ', timeLog)
+    //console.log('load new form page : ', timeLog)
     setIsLoading(true);
     fetchForm();
   }, []);
@@ -199,20 +199,81 @@ const FormBuilder = () => {
     
   const [options, setOptions] = useState('');
   const [chosenOptions, setChosenOptions] = useState('');
+  const [chosenOptionsToUpdate, setChosenOptionsToUpdate] = useState('');
+  const [chosenOptionsColumnToUpdate, setChosenOptionsColumnToUpdate] = useState('');
   const [isOptionsSavingWindow, setIsOptionsSavingWindow] = useState(false);
   const [isOptionsChoosingWindow, setIsOptionsChoosingWindow] = useState(false);
 
   const handleOptionsSaving = (optionsData) => {
     setOptions(optionsData);
     setIsOptionsSavingWindow(true);
-
   }
   const closeOptionsSavingWindow = () => {
     setIsOptionsSavingWindow(false);
   }
   const closeOptionsChoosingWindow = () => {
     setIsOptionsChoosingWindow(false);
+    setChosenOptionsToUpdate('');
+  }
 
+  const chooseOptionsToChange = (fieldId, columnIndex) => {
+    setIsOptionsChoosingWindow(true);
+    setChosenOptionsColumnToUpdate(columnIndex);
+    setChosenOptionsToUpdate(fieldId);
+  }
+  // console.log('chosenOptionsToUpdate  and chosenOptions', chosenOptionsToUpdate, newOptions, formFields)
+  const updateChosenOptions = (newOptions) => { 
+    const updatedFields = formFields.map(field => {
+      if (field.id === chosenOptionsToUpdate && field.type === 'columns') {
+        console.log('found columns')
+        const updatedValues = field.value.map((component, index) => {
+          if(index === chosenOptionsColumnToUpdate){
+            return { ...component, options: newOptions.optionsData } 
+          }
+          return component
+        });
+        return { ...field, value: updatedValues };
+      }else{
+        if (field.id === chosenOptionsToUpdate) {
+          if(field.type === 'dropdown'){
+            console.log('found dropdown')
+            return { ...field, dropdown: newOptions.optionsData };
+          }else{
+            console.log('found not dropdown', field)
+            return { ...field, options: newOptions.optionsData };
+          }
+        } else if (field.components) {
+          const updatedComponents = field.components.map(componentObj => {
+            if (componentObj.id === chosenOptionsToUpdate && componentObj.type === 'columns') {
+              console.log('found columns')
+              const updatedValues = componentObj.value.map((component, index) => {
+                if(index === chosenOptionsColumnToUpdate){
+                  return { ...component, options: newOptions.optionsData } 
+                }
+                return component
+              });
+              return { ...componentObj, value: updatedValues };
+            }else{
+              if (componentObj.id === chosenOptionsToUpdate) {
+                if(componentObj.type === 'dropdown'){
+                  console.log('found dropdown')
+                  return { ...componentObj, dropdown: newOptions.optionsData };
+                }else{
+                  console.log('found not dropdown', componentObj)
+                  return { ...componentObj, options: newOptions.optionsData };
+                }
+              } 
+              return componentObj;
+            }
+          });
+          return { ...field, components: updatedComponents };
+        }
+        return field;
+      }
+    });
+    console.log('updatedFields ', updatedFields)
+    setFormFields(updatedFields);
+    closeOptionsChoosingWindow();
   }
 
   const updateFormTitleHandler = (e) => {
@@ -303,7 +364,7 @@ const FormBuilder = () => {
         </div> */}
         <OptionsSavingWindow isOpen={isOptionsSavingWindow} optionsData={options} 
         onClose={closeOptionsSavingWindow} handleSaving={handleOptionsSaving}/>
-        <OptionsChoosingWindow isOpen={isOptionsChoosingWindow} choseOption={setChosenOptions} 
+        <OptionsChoosingWindow isOpen={isOptionsChoosingWindow} choseOption={updateChosenOptions} 
         onClose={closeOptionsChoosingWindow}/>
     
         <div className="form-builder-page-content">
@@ -312,7 +373,7 @@ const FormBuilder = () => {
           updateFormTypeHandler={updateFormTypeHandler} formType={formType}
           editingField={editingField} setEditingField={setEditingField}
           editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField} 
-          handleOptionsSaving={handleOptionsSaving} setIsOptionsChoosingWindow={setIsOptionsChoosingWindow}/>
+          handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange}/>
           <div className='form-builder-part'>
            {formFields && 
            <div className='form-constructor' >

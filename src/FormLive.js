@@ -182,7 +182,7 @@ const FormLive = () => {
     const submittedTime = Date.now();
     const formSubmsn = {
       formData: formData,
-      fileData: fileData || '',
+      fileData: fileData,
       formTitle: formTitle,
       formType: formType,
       fields: formFields,

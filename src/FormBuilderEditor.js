@@ -5,6 +5,7 @@ import { titles_to_types_object } from './consts';
 import trash_icon from './icons/trash-can.svg'
 import plus_icon from './icons/plus-icon.svg'
 import save_icon from './icons/save-icon.svg'
+import chooser_options_icon from './icons/chooser-options.svg'
 import duplicate_icon from './icons/duplicate-icon.svg'
 import { HexColorPicker  } from "react-colorful";
 import convert from "color-convert"; 
@@ -13,7 +14,7 @@ import LegacyComponentsOptions from './form_builder_editor_components/LegacyComp
 import DropdownOptions from './form_builder_editor_components/DropdownOptions';
 
 const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setEditingField,
-  handleDuplicateClick, handleOptionsSaving, setIsOptionsChoosingWindow}) => {
+  handleDuplicateClick, handleOptionsSaving, chooseOptionsToChange}) => {
 
   const changeFieldTitleHandler = (e) => {
     setEditingField({...editingField, title: e.target.value})
@@ -37,14 +38,11 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   } 
 
   const changeSectionFieldPreFilledHandler = (e, sectionIndex) => {
-    // Create a shallow copy of the value array to avoid direct mutation
     let newValues = [...editingField.value];
-  
-    // Update the specific index with the new value from the input
     newValues[sectionIndex] = e.target.value;
   
     // Log the updated value for debugging
-    console.log('Updated editingField.value:', newValues);
+    //console.log('Updated editingField.value:', newValues);
   
     // Update the editingField state with the modified value array
     setEditingField(prevState => ({
@@ -57,7 +55,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     const newValue = [...editingField.value];
     newValue[columnIndex].value = e.target.value;
 
-    console.log('newValue: ',  newValue)
+    //console.log('newValue: ',  newValue)
   
     setEditingField({ ...editingField, value: newValue });
   };
@@ -163,7 +161,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   
     const newValue = [...editingField.value];
     newValue[sectionIndex].options = newOptions;
-    console.log('newValue: ',  newValue)
+    //console.log('newValue: ',  newValue)
   
     setEditingField({ ...editingField, value: newValue });
   };
@@ -193,7 +191,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
           setRgbColor(convert.hex.rgb(hex));
           setCmykColor(convert.hex.cmyk(hex));
   
-          console.log('Converted RGBA to HEX:', hex);
+          //console.log('Converted RGBA to HEX:', hex);
         } else {
           setColor(editingField.color);
           setHexColor(editingField.color);
@@ -221,7 +219,6 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   }, [color]);
   
   const toggleColorPicker = (index, startColor) => {
-    //console.log('startColor : ',startColor)
     if(startColor){
       if (startColor.includes('rgba')) {
         const rgbaValues = startColor.match(/rgba?\((\d+), (\d+), (\d+),? (\d+\.?\d*)?\)/);
@@ -262,48 +259,35 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     setHexColor(newHexColor);
     const rgb = convert.hex.rgb(newHexColor);
     const cmyk = convert.rgb.cmyk(rgb);
-  
     setRgbColor(rgb);
     setCmykColor(cmyk);
-  
     changeTitleColorHandler(newHexColor);
   };
-  
   const handleTitleHexChange = (e) => {
     const hex = e.target.value;
     setHexColor(hex);
-  
     const rgb = convert.hex.rgb(hex);
-    const cmyk = convert.hex.cmyk(hex);  
-  
+    const cmyk = convert.hex.cmyk(hex);
     setRgbColor(rgb);
     setCmykColor(cmyk);
     changeTitleColorHandler(hex);
   };
-  
   const handleTitleRgbChange = (e) => {
     const rgb = e.target.value.split(',').map(Number);
     setRgbColor(rgb);
-  
     const hex = convert.rgb.hex(rgb);
     const cmyk = convert.rgb.cmyk(rgb);
-  
     setHexColor('#'+hex);
     setCmykColor(cmyk);
-  
     changeTitleColorHandler('#'+convert.rgb.hex(rgb));
   };
-  
   const handleTitleCmykChange = (e) => {
     const cmyk = e.target.value.split(',').map(Number);
     setCmykColor(cmyk);
-  
     const rgb = convert.cmyk.rgb(cmyk); 
     const hex = convert.cmyk.hex(cmyk);
-  
     setRgbColor(rgb);
     setHexColor('#'+hex);
-  
     changeTitleColorHandler('#'+convert.cmyk.hex(cmyk));
   };
   
@@ -317,43 +301,88 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   
     changeOptionColorHandler(newHexColor, index);
   };
-  
   const handleHexChange = (e, index) => {
     const hex = e.target.value;
     setHexColor(hex);
-  
     const rgb = convert.hex.rgb(hex);
     const cmyk = convert.hex.cmyk(hex);  
-  
     setRgbColor(rgb);
     setCmykColor(cmyk);
     changeOptionColorHandler(hex, index);
   };
-  
   const handleRgbChange = (e, index) => {
     const rgb = e.target.value.split(',').map(Number);
     setRgbColor(rgb);
-  
     const hex = convert.rgb.hex(rgb);
     const cmyk = convert.rgb.cmyk(rgb);
-  
     setHexColor('#'+hex);
     setCmykColor(cmyk);
-  
     changeOptionColorHandler('#'+convert.rgb.hex(rgb), index);
   };
-  
   const handleCmykChange = (e, index) => {
     const cmyk = e.target.value.split(',').map(Number);
     setCmykColor(cmyk);
-  
     const rgb = convert.cmyk.rgb(cmyk); 
     const hex = convert.cmyk.hex(cmyk);
-  
     setRgbColor(rgb);
     setHexColor('#'+hex);
-  
     changeOptionColorHandler('#'+convert.cmyk.hex(cmyk), index);
+  };
+
+  const handleColumnsColorChange = (newHexColor, index, optionIndex) => {
+    setHexColor(newHexColor);
+    const rgb = convert.hex.rgb(newHexColor);
+    const cmyk = convert.rgb.cmyk(rgb);
+  
+    setRgbColor(rgb);
+    setCmykColor(cmyk);
+    changeColumnsColorHandler(newHexColor, index, optionIndex);
+  };
+  const changeColumnsColorHandler = (color, index, optionIndex) => {
+    const updatedEditingField = { ...editingField };
+
+    // Navigate to the specific option and update the color
+    updatedEditingField.value = updatedEditingField.value.map((section, secIndex) => {
+      if (secIndex === index) {
+        return {
+          ...section,
+          options: section.options.map((option, optIndex) => 
+            optIndex === optionIndex 
+              ? { ...option, color: color } 
+              : option
+          )
+        };
+      }
+      return section;
+    });
+    setEditingField(updatedEditingField);
+  };
+  const handleColumnsHexChange = (e, index, optionIndex) => {
+    const hex = e.target.value;
+    setHexColor(hex);
+    const rgb = convert.hex.rgb(hex);
+    const cmyk = convert.hex.cmyk(hex);  
+    setRgbColor(rgb);
+    setCmykColor(cmyk);
+    changeColumnsColorHandler(hex, index, optionIndex);
+  };
+  const handleColumnsRgbChange = (e, index, optionIndex) => {
+    const rgb = e.target.value.split(',').map(Number);
+    setRgbColor(rgb);
+    const hex = convert.rgb.hex(rgb);
+    const cmyk = convert.rgb.cmyk(rgb);
+    setHexColor('#'+hex);
+    setCmykColor(cmyk);
+    changeColumnsColorHandler('#'+convert.rgb.hex(rgb), index, optionIndex);
+  };
+  const handleColumnsCmykChange = (e, index, optionIndex) => {
+    const cmyk = e.target.value.split(',').map(Number);
+    setCmykColor(cmyk);
+    const rgb = convert.cmyk.rgb(cmyk); 
+    const hex = convert.cmyk.hex(cmyk);
+    setRgbColor(rgb);
+    setHexColor('#'+hex);
+    changeColumnsColorHandler('#'+convert.cmyk.hex(cmyk), index, optionIndex);
   };
   
   // Handler for changing the color of the option
@@ -422,7 +451,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       };
     }
   
-    console.log('updatedValues : ', updatedValues);
+    //console.log('updatedValues : ', updatedValues);
     setEditingField({ ...editingField, value: updatedValues });
   };
   
@@ -876,12 +905,12 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
             </div>
           }
           {editingField.dropdown && 
-          <DropdownOptions editingField={editingField} changeListOptionHandler={changeFieldListOptionHandlerNew} 
+          <DropdownOptions editingField={editingField} changeListOptionHandler={changeFieldListOptionHandler} 
           handleColorChange={handleColorChange} toggleColorPicker={toggleColorPicker}
           colorPickerVisible={colorPickerVisible} hexColor={hexColor} rgbColor={rgbColor} cmykColor={cmykColor}
           handleRgbChange={handleRgbChange} handleHexChange={handleHexChange} handleCmykChange={handleCmykChange}
           addListOptionHandler={addFieldListOptionHandler} deleteListOptionHandler={deleteFieldListOptionHandler}
-          handleOptionsSaving={handleOptionsSaving} setIsOptionsChoosingWindow={setIsOptionsChoosingWindow}/>
+          handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange}/>
           }
           <LegacyComponentsOptions editingField={editingField} changeFieldListOptionHandler={changeFieldListOptionHandler} 
           addFieldListOptionHandlerNew={addFieldListOptionHandlerNew} deleteFieldListOptionHandlerNew={deleteFieldListOptionHandlerNew}
@@ -901,12 +930,14 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                     : value.type === 'dropdown' ?
                     <div key={index} className="option-group">
                       <label>
-                        OPTIONS for dropdown 
-                        <div onClick={() => setIsOptionsChoosingWindow(true)}>
-                          Choose
+                        OPTIONS for {editingField.labels[index]} 
+                        <div className="option-group-features">
+                          <div className='choose-option-button' onClick={() => chooseOptionsToChange(editingField.id, index)}>
+                            <img className="option-group-img" src={chooser_options_icon} alt='choose'/>
+                          </div>
+                          <img className="option-group-img" src={save_icon} 
+                          onClick={()=> handleOptionsSaving(value.options)} alt='save'/>
                         </div>
-                        <img className="option-group-img" src={save_icon} 
-                        onClick={()=> handleOptionsSaving(value.options)} alt='save'/>
                       </label>
                       {value.options.map((option, optionIndex) => (
                         <div key={optionIndex} className="option-input">
@@ -915,7 +946,51 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                             onChange={(e) => changeFieldListOptionHandlerNew(e, optionIndex, index)}
                             value={option.title}
                           />
-    
+                          <div className="color-picker-container">
+                            <div
+                              className="color-preview"
+                              onClick={() => toggleColorPicker(index+'_'+optionIndex, option.color || '#FFFFFF')}
+                              style={ !option.color ? {backgroundColor: '#FFFFFF'} : option.color.includes('rgba') ? 
+                              {backgroundColor: '#FFFFFF'} : {backgroundColor: option.color}}
+                            />
+                            { (hexColor && rgbColor && cmykColor) && colorPickerVisible === index+'_'+optionIndex && (
+                              <div className="color-preview-container">
+                                <HexColorPicker  color={option.color} onChange={(color) => handleColumnsColorChange(color, index, optionIndex)} />
+                                <div className="color-format-inputs">
+                                  <div className="rgb-input-container">
+                                    <label htmlFor="rgb-input">HEX</label>
+                                    <input
+                                      type="text"
+                                      className="color-preview-input"
+                                      value={hexColor}
+                                      onChange={e => handleColumnsHexChange(e, index, optionIndex)}
+                                      placeholder="HEX"
+                                    />
+                                  </div>
+                                  <div className="rgb-input-container">
+                                    <label htmlFor="rgb-input">RGB</label>
+                                    <input
+                                      type="text"
+                                      className="color-preview-input"
+                                      value={rgbColor.join(',')}
+                                      onChange={e => handleColumnsRgbChange(e, index, optionIndex)}
+                                      placeholder="RGB (r,g,b)"
+                                    />
+                                  </div>
+                                  <div className="rgb-input-container">
+                                    <label htmlFor="rgb-input">CMYK</label>
+                                    <input
+                                      type="text"
+                                      className="color-preview-input"
+                                      value={cmykColor.join(',')}
+                                      onChange={e => handleColumnsCmykChange(e, index, optionIndex)}
+                                      placeholder="CMYK (c,m,y,k)"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                           <div className="option-buttons">
                             <button
                               className="field-editor-add-button"
