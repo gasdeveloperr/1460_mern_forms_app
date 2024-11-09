@@ -2,6 +2,7 @@ import PDFViewerComponent from "../PDFViewerComponent";
 import FormResultsComponent from "./FormResultsComponent";
 
 const FormResultView = ({form}) => {
+  console.log(' FormResultView form : ', form)
   return ( 
     <div className="form-live-container">
       {

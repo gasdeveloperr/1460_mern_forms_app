@@ -196,10 +196,12 @@ const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
 
         {files && 
         files.map((file, fileIndex) => (
+          file && 
           <li className='file-title' key={fileIndex} onClick={(e) => { e.stopPropagation(); handleDocumentClick(file); }}>
             <img src={file_icon} className='size20-icon' alt="file icon" />
             <span>{file.fileName}</span>
-          </li>)
+          </li>
+          )
         )}
           {/* <ul>
             {documents.map((category, categoryIndex) => (

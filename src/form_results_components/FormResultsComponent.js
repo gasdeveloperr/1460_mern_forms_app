@@ -4,7 +4,7 @@ import '../FormLiveStyles.css';
 const FormResultsComponent = ({ field, data }) => {
   // Get the submitted data for this field
   let fieldData = {};
-  if (data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) {
+  if ((data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) || field.type === 'title') {
     console.log(data[field.id]);
     fieldData = data[field.id];
   } else {
@@ -265,7 +265,7 @@ const FormResultsComponent = ({ field, data }) => {
           <div className="form-results-component-title">
             {field.title}
           </div>
-          <div className="form-component-triple-section-container">
+          <div className="form-component-dynamic-columns-container" style={{gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`}}>
             {field.labels.map((label, index) => (
               <div className="form-component-column" key={index}>
                 <div className="form-results-section-label">
