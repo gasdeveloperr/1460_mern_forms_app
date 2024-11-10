@@ -26,10 +26,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       }
       return field;
     });
-    setEditingSectionField({
-      ...editingSectionField,
-      title: e.target.value,
-    })
+    setEditingSectionField({...editingSectionField, title: e.target.value})
     setEditingField({...editingField, components: updatedComponents})
   }
   const changeFieldLabelHandler = (e, index) => {
@@ -49,7 +46,6 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
     setEditingField({ ...editingField, components: updatedComponents });
   };
   
-  // Toggle the 'required' property on the specific component
   const changeFieldRequiredHandler = () => {
     const updatedComponents = editingField.components.map((field) => {
       if (field.id === editingSectionField.id) {
@@ -58,10 +54,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       return field;
     });
   
-    setEditingSectionField({
-      ...editingSectionField,
-      required: !editingSectionField.required,
-    });
+    setEditingSectionField({...editingSectionField, required: !editingSectionField.required});
     setEditingField({ ...editingField, components: updatedComponents });
   };
   
@@ -74,10 +67,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       return field;
     });
   
-    setEditingSectionField({
-      ...editingSectionField,
-      read_only: !editingSectionField.read_only,
-    });
+    setEditingSectionField({...editingSectionField, read_only: !editingSectionField.read_only});
     setEditingField({ ...editingField, components: updatedComponents });
   };
   
@@ -90,10 +80,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       return field;
     });
   
-    setEditingSectionField({
-      ...editingSectionField,
-      value: e.target.value,
-    });
+    setEditingSectionField({ ...editingSectionField, value: e.target.value});
     setEditingField({ ...editingField, components: updatedComponents });
   };
   
@@ -113,6 +100,21 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
     });
     setEditingField({ ...editingField, components: updatedComponents });
   };
+  const changeColumnsStyleHandler = (e) => {
+    let newStyle = 'tabular'
+    if(editingSectionField.style && editingSectionField.style === 'tabular'){
+      newStyle = ''
+    }
+  
+    const updatedComponents = editingField.components.map((field) => {
+      if (field.id === editingSectionField.id) {
+        return { ...field, style: newStyle };
+      }
+      return field;
+    });
+    setEditingSectionField({...editingSectionField, style: newStyle,});
+    setEditingField({ ...editingField, components: updatedComponents });
+  }  
   
   // Add a checkbox option at a specific index within a component
   const addFieldCheckOptionHandler = (index) => {
@@ -870,7 +872,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
               <input type="text" value={editingSectionField.title} onChange={e => changeFieldTitleHandler(e)} className="field-editor__input" />
             </div>
             {
-              editingSectionField.type !== 'title' &&
+              editingSectionField.type !== 'title' && editingSectionField.type !== 'columns' &&
               <div className="field-editor_checkbox-group">
                 <div className='field-editor_checkbox_container'>
                   <label htmlFor="required" className="field-editor-label">
@@ -892,6 +894,19 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                     <label htmlFor="hide-label">Hide Label</label>
                   </label>
                 </div> */}
+              </div>
+            }
+            {
+              editingSectionField.type === 'columns' &&
+              <div className="field-editor__field">
+                <label className="field-editor__label">COLUMNS STYLE</label>
+                <div className='field-editor_checkbox_container'>
+                  <label htmlFor="column_style" className="field-editor-label">
+                    <input type="checkbox" id="column_style" className='field-editor_checkbox' 
+                    checked={editingSectionField.style === 'tabular'} onChange={changeColumnsStyleHandler}/>
+                    Tabular
+                  </label>
+                </div>
               </div>
             }
           </div>)

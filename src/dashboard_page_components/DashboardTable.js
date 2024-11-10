@@ -20,6 +20,7 @@ const DashboardTable = ({ forms, deleteFormHandler }) => {
             <th>Fill</th>
             <th>Results</th>
             <th>Last changed</th>
+            <th>Group</th>
             <th></th>
             {/* <th>Facility</th>
             <th>Address</th>
@@ -54,6 +55,9 @@ const DashboardTable = ({ forms, deleteFormHandler }) => {
                 </td>
                 <td className="client-index">
                   {formatDate(form.last_changed)}
+                </td>
+                <td className="client-index">
+                  {form.groupId}
                 </td>
                 <td className='forms-action' align="center"> 
                   {(userRole === 'editor' || userRole ==='admin') &&

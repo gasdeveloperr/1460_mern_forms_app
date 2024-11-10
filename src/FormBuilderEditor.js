@@ -54,11 +54,16 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     
     const newValue = [...editingField.value];
     newValue[columnIndex].value = e.target.value;
-
     //console.log('newValue: ',  newValue)
-  
     setEditingField({ ...editingField, value: newValue });
   };
+  const changeColumnsStyleHandler = (e) => {
+    let newStyle = 'tabular'
+    if(editingField.style && editingField.style === 'tabular'){
+      newStyle = ''
+    }
+    setEditingField({...editingField, style: newStyle})
+  }  
 
 
   const addFieldCheckOptionHandler = (index) => {
@@ -624,7 +629,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                 )
               }
               {
-                editingField.type !== 'title' &&
+                editingField.type !== 'title' && editingField.type !== 'columns' &&
                 <div className="field-editor_checkbox-group">
                   <div className='field-editor_checkbox_container'>
                     <label htmlFor="required" className="field-editor-label">
@@ -646,6 +651,19 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                       <label htmlFor="hide-label">Hide Label</label>
                     </label>
                   </div> */}
+                </div>
+              }
+              {
+                editingField.type === 'columns' &&
+                <div className="field-editor__field">
+                  <label className="field-editor__label">COLUMNS STYLE</label>
+                  <div className='field-editor_checkbox_container'>
+                    <label htmlFor="column_style" className="field-editor-label">
+                      <input type="checkbox" id="column_style" className='field-editor_checkbox' 
+                      checked={editingField.style === 'tabular'} onChange={changeColumnsStyleHandler}/>
+                      Tabular
+                    </label>
+                  </div>
                 </div>
               }
             </div>)

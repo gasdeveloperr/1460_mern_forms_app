@@ -71,11 +71,21 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
  
   drag(ref);
 
-  const [columnsStyle, setColumnsStyle] = useState({ gridTemplateColumns: 'repeat(3, 1fr)'});
+  const [columnsStyle, setColumnsStyle] = useState();
+  const [columnStyle, setColumnStyle] = useState({ borderRadius: '4px'});
+  const [columnLabelStyle, setColumnLabelStyle] = useState({ border: '1px solid rgb(211, 221, 225)', height: '38px', padding: '8px'});
 
   useEffect(() =>{
     if(field && field.labels){
-      setColumnsStyle({...columnsStyle, gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+      if(field && field.style && field.style === 'tabular'){
+        setColumnsStyle({...columnsStyle, gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+        setColumnStyle({...columnStyle, borderRadius: '0px'})
+        setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', height: '38px', padding: '8px'})
+      }else{
+        setColumnsStyle({...columnsStyle, gap: '20px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+        setColumnStyle({...columnStyle, borderRadius: '4px'})
+        setColumnLabelStyle({...columnLabelStyle, border: 'none', height: 'fit-content', padding: '0'})
+      }
     }
   }, [field])
 
@@ -422,7 +432,7 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
                 <div className={"form-component-dynamic-columns-container"} style={columnsStyle}>
                   {field.labels.map((label, index) => (
                     <div key={index} className="form-component-double-section">
-                      <div className='form-component-label'>
+                      <div className='form-component-label' style={columnLabelStyle}>
                         {label}
                       </div>
                       {
@@ -432,7 +442,7 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
                           <img src={selector_icon} />
                         </div>
                         :
-                        <div className='form-component-input-div short'>
+                        <div className='form-component-input-div short' style={columnStyle}>
                         </div>
                       }
                     </div>

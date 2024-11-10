@@ -24,6 +24,7 @@
 
 .form-live-content{
   padding: calc(20px);
+  min-width: 640px;
 }
 .form-live-component-container{
   direction: ltr;
@@ -47,14 +48,14 @@
   background-color: rgb(255, 255, 255);
   border-style: solid;
   border-width: 1px;
-  border-color: rgb(69, 85, 96);
+  border-color: rgb(211, 221, 225);
   border-radius: 0px;
   box-sizing: border-box;
   font-family: inherit;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  height: calc(42px);
+  height: calc(44px);
   line-height: 14px;
   max-width: 100%;
   padding: calc(7px);

@@ -199,7 +199,9 @@
 .custom-dropdown-option:hover {
   background-color: #f0f0f0;
 }
-
+.field-editor_checkbox{
+  cursor: pointer;
+}
 .field-editor_checkbox-group{
   flex-wrap: wrap;
   display: flex;

@@ -51,6 +51,7 @@ const FormBuilder = () => {
       updateForm(formId);
       console.log('Form fields updated:', prevFormFields, formFields, formType);
     }
+    console.log('formFields : ', formFields)
   }, [formFields]);
   
 
@@ -137,28 +138,25 @@ const FormBuilder = () => {
         // Find the section and add the new component to its 'components' array
         const updatedFormFields = formFields.map((field) => {
           if (field.id === sectionId && field.type === 'section') {
-            console.log('finded section : ', field)
             return {
               ...field,
-              components: [...field.components, newField],
+              //components: [...field.components, newField],
+              components: [...field.components.slice(0, dropIndex), newField, ...field.components.slice(dropIndex)],
             };
           }
           return field;
         });
         setFormFields(updatedFormFields);
-        console.log('new field into section:', newField);
+        //console.log('new field into section:', newField);
 
       }else{
         setFormFields([...formFields.slice(0, dropIndex), newField, ...formFields.slice(dropIndex)]);
-        console.log('new field :', newField)
+        //console.log('new field :', newField)
       }
     }else{
       if(sectionId){
         const updatedFormFields = formFields.map((field) => {
           if (field.id === sectionId && field.type === 'section') {
-            console.log('found section:', field);
-      
-            // Find the current index of the component to be moved
             const itemIndex = field.components.findIndex(component => component.id === item.id);
       
             // Remove the component from its current position and insert it into the new position
@@ -185,8 +183,7 @@ const FormBuilder = () => {
         });
         
         setFormFields(updatedFormFields);
-        console.log('moved component within section:', updatedFormFields);
-
+        //console.log('moved component within section:', updatedFormFields);
       }else{
         const itemIndex = formFields.findIndex(field => field.id === item.id)
         const newField = {...item, id: Date.now()}
@@ -317,14 +314,26 @@ const FormBuilder = () => {
     const fieldToDuplicate = formFields.find((field) => field.id === id);
   
     if (fieldToDuplicate) {
-      const duplicatedField = { ...fieldToDuplicate };
+      const duplicatedField = JSON.parse(JSON.stringify(fieldToDuplicate));
       
-      // Generate a new unique ID (e.g., using current timestamp)
       duplicatedField.id = new Date().getTime();
+      
+      // Check if the field is a section with inner components
+      if (duplicatedField.type === "section" && Array.isArray(duplicatedField.components)) {
+        // Assign a unique ID to each inner component
+        duplicatedField.components = duplicatedField.components.map((component) => {
+          return {
+            ...component,
+            id: new Date().getTime() + Math.floor(Math.random() * 1000) // Unique ID for each component
+          };
+        });
+      }
   
+      // Update formFields with the duplicated field
       setFormFields([...formFields, duplicatedField]);
     }
-  }
+  };
+  
   const [, drop] = useDrop({
     accept: accept_types_array,
     drop: handleDrop,

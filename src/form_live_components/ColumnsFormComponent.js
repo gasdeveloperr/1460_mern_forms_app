@@ -27,10 +27,20 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange 
   };
 
   const [columnsStyle, setColumnsStyle] = useState({ gridTemplateColumns: 'repeat(3, 1fr)'});
+  const [columnStyle, setColumnStyle] = useState({ borderRadius: '4px'});
+  const [columnLabelStyle, setColumnLabelStyle] = useState({ border: '1px solid rgb(211, 221, 225)', height: '44px', padding: '12px 8px'});
 
   useEffect(() =>{
     if(field && field.labels){
-      setColumnsStyle({...columnsStyle, gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+      if(field && field.style && field.style === 'tabular'){
+        setColumnsStyle({...columnsStyle, gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+        setColumnStyle({...columnStyle, borderRadius: '0px'})
+        setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', height: '44px', padding: '12px 8px'})
+      }else{
+        setColumnsStyle({...columnsStyle, gap: '20px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+        setColumnStyle({...columnStyle, borderRadius: '4px'})
+        setColumnLabelStyle({...columnLabelStyle, border: 'none', height: 'fit-content', padding: '8px'})
+      }
     }
   }, [field])
 
@@ -38,7 +48,7 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange 
     <div className={"form-component-dynamic-columns-container"} style={columnsStyle}>
       {field.labels.map((label, index) => (
         <div className="form-component-column" key={index}>
-          <div className="form-section-label">
+          <div className="form-section-label" style={columnLabelStyle}>
             {label}
           </div>
           
@@ -64,6 +74,7 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange 
           ) : (
             <input
               className="form-live-input"
+              style={columnStyle}
               id={field.id}
               fieldtype={field.type}
               columnType={field.type}

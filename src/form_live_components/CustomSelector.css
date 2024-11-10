@@ -13,7 +13,7 @@
 
 .custom-select-display {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid rgb(211, 221, 225);;
   cursor: pointer;
   border-radius: 4px;
   display: flex;
@@ -21,6 +21,7 @@
   justify-content: space-between;
   font-size: 14px;
   white-space: nowrap;
+  height: 44px;
 }
 .custom-select-display img{
   width: 20px;

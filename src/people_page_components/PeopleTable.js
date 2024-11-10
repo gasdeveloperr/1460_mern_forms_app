@@ -93,7 +93,7 @@ const PeopleTable = ({ users, setChosenUser }) => {
                 <td>{user.role && user.role.toUpperCase().substring(0, 1)+user.role.slice(1)}</td>
                 <td>{user.status && user.status.toUpperCase().substring(0, 1)+user.status.slice(1)}</td>
                 <td>{user.details}</td>
-                <td onClick={() => sendInvitationEmail(user.email, user.name)} style={{cursor:'pointer'}}>
+                <td onClick={() => sendInvitationEmail(user.email, user.name)} style={{width: '100px',cursor:'pointer'}}>
                   Send invite
                 </td>
               </tr>
