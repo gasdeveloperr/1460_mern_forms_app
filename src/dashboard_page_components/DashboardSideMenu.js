@@ -5,6 +5,7 @@ import clients_icon from '../icons/clients-icon.svg'
 import client_add_icon from '../icons/client-add-icon.svg'
 import home_page_icon from '../icons/home-page-icon.svg'
 import configuration_icon from '../icons/configuration-icon.svg'
+import add_form_group_icon from '../icons/add-form-group-icon.svg'
 import arrow_menu_icon from '../icons/arrow-side-menu-icon.svg'
 import position_case_icon from '../icons/positions-case-icon.svg'
 import data_sheet_icon from '../icons/data-sheet-icon.svg'
@@ -13,7 +14,7 @@ import '../clients_page_components/ClientsSideMenu.css';
 
 
 
-const DashboardSideMenu = ({ activeOption, handleAddingForm, onItemClick}) => {
+const DashboardSideMenu = ({ activeOption, handleAddingForm, handleCreatingFormGroup, onItemClick}) => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -62,6 +63,13 @@ const DashboardSideMenu = ({ activeOption, handleAddingForm, onItemClick}) => {
               
             </div>
             <div className="side-menu-separator"/>
+              <div
+                className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
+                onClick={() => handleCreatingFormGroup()}
+              >
+                <img src={add_form_group_icon} className="menu-item-icon"/>
+                <span className="menu-item__label">Create forms group </span>
+              </div>
             </>
           }
           

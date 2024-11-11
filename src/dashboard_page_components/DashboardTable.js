@@ -6,7 +6,7 @@ import trash_icon from '../icons/trash-can-white.svg'
 import open_icon from '../icons/open-form-icon.svg'
 import edit_icon from '../icons/edit-form-icon.svg'
 
-const DashboardTable = ({ forms, deleteFormHandler }) => {
+const DashboardTable = ({ forms, formGroups, deleteFormHandler, chooseFormToAddIntoGroup, chooseFormToRemoveFromGroup }) => {
   const userRole = getUserRole();
 
   return (
@@ -56,8 +56,23 @@ const DashboardTable = ({ forms, deleteFormHandler }) => {
                 <td className="client-index">
                   {formatDate(form.last_changed)}
                 </td>
-                <td className="client-index">
-                  {form.groupId}
+                <td className="forms-action" align="center">
+                  {(userRole === 'editor' || userRole === 'admin') && (
+                    form.groupId ? (
+                      <div style={{display:'flex', gap: '12px', alignItems:'center', justifyContent:'flex-start'}}>
+                        <span style={{fontWeight: '600'}}>
+                          {formGroups.find(formGroup => formGroup._id === form.groupId)?.title || "Group Not Found"}
+                        </span>
+                        <div className="table-action-button" onClick={() => chooseFormToRemoveFromGroup(form._id, form.groupId)}>
+                          Remove from group
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="table-action-button" onClick={() => chooseFormToAddIntoGroup(form._id)}>
+                        Add into the group
+                      </div>
+                    )
+                  )}
                 </td>
                 <td className='forms-action' align="center"> 
                   {(userRole === 'editor' || userRole ==='admin') &&

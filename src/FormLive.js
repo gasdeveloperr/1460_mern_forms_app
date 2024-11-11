@@ -167,7 +167,7 @@ const FormLive = () => {
           }
         }
         const elementBack = formFields[j];
-        if (toString(element.id) == elementBack.id ) {
+        if (element.id == elementBack.id ) {
           initializeFieldData({
             element,
             elementBack,
@@ -218,11 +218,12 @@ const FormLive = () => {
   };
 
   
-  const handleAddingComponent = (componentData) => {
-    const addingIndex = componentData.index;
+  const handleAddingComponent = (componentData, addingIndex) => {
     const newField = addingNewComponent(componentData.adding_component);
     console.log('handleAddingComponent : ', addingIndex, newField)
-    setFormFields([...formFields.slice(0, addingIndex), newField, ...formFields.slice(addingIndex+1)])
+    console.log('formFields.slice(0, addingIndex) : ', formFields.slice(0, addingIndex))
+    console.log('formFields.slice(addingIndex) : ', formFields.slice(addingIndex))
+    setFormFields([...formFields.slice(0, addingIndex), newField, ...formFields.slice(addingIndex)])
   };
 
   return (

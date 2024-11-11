@@ -1153,3 +1153,14 @@ body {
   width: 28px;
   height: 28px;
 }
+.table-action-button{
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  padding: 2px 8px;
+  width: fit-content;
+  background: #fff;
+  cursor: pointer;
+}
+.table-action-button:hover{
+  opacity: 0.7;
+}

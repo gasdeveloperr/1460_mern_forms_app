@@ -8,12 +8,15 @@ import { backend_point } from './consts';
 import { getAuthToken, getCurrentOrganization, getUserId, getUserRole } from './utils';
 import DashboardSideMenu from './dashboard_page_components/DashboardSideMenu';
 import DashboardTable from './dashboard_page_components/DashboardTable';
+import FormGroupSavingWindow from './form_group_components/FormGroupSavingWindow';
+import FormGroupChoosingWindow from './form_group_components/FormGroupChoosingWindow';
 
 function DashboardPage() {
 
   const navigate = useNavigate();
 
   const [forms, setForms] = useState([]);
+  const [formGroups, setFormGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState('')
 
@@ -37,7 +40,7 @@ function DashboardPage() {
 
     try {
       const response = await axios.get(`${backend_point}/api/forms/all`, config);
-      setIsLoading(false);
+      console.log('forms taked successfully:', response.data);
       setForms(response.data);
     } catch (err) {
       if(err.response && err.response.status === 401){
@@ -53,6 +56,7 @@ function DashboardPage() {
   useEffect(() => {
     setIsLoading(true);
     fetchForms();
+    getFormGroupsHandler();
     
   }, []);
 
@@ -108,11 +112,106 @@ function DashboardPage() {
     }
   };
 
+  
+  const getFormGroupsHandler = async(e) => {
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+    try {
+      const response = await axios.get(`${backend_point}/api/formGroups/all`, config);
+      console.log('FormGroups taked successfully:', response.data);
+      setIsLoading(false);
+      setFormGroups(response.data);
+    } catch (error) {
+      if (error.response) {
+        console.error('Error saving formGroups:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received from the server');
+      } else {
+        console.error('Error:', error.message);
+      }
+    }
+  }
+
+  const [chosenFormToAddIntoGroup, setChosenFormToAddIntoGroup] = useState('');
+  
+  const [isFormGroupChanging, setIsFormGroupChanging] = useState(false);
+
+  const [isFormGroupCreatingWindow, setIsFormGroupCreatingWindow] = useState(false);
+  const [isFormGroupChoosingWindow, setIsFormGroupChoosingWindow] = useState(false);
+
+  const handleCreatingFormGroup = () => {
+    setIsFormGroupCreatingWindow(true);
+  }
+  const closeFormGroupCreatingWindow = () => {
+    setIsFormGroupCreatingWindow(false);
+  }
+  const closeFormGroupChoosingWindow = () => {
+    setIsFormGroupChoosingWindow(false);
+    setIsFormGroupChoosingWindow('');
+  }
+  const chooseFormToAddIntoGroup = (formId) => {
+    setIsFormGroupChoosingWindow(true);
+    setChosenFormToAddIntoGroup(formId);
+  }
+  const addFormIntoGroupHandler = async(formGroupId) => {
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+    setIsLoading(true);
+    try {
+      await axios.put(`${backend_point}/api/formGroups/addForm/${formGroupId}`, 
+        {newForm: chosenFormToAddIntoGroup}, config);
+        closeFormGroupChoosingWindow();
+        fetchForms();
+        getFormGroupsHandler();
+    } catch (error) {
+      if (error.response) {
+        console.error('Error saving formGroups:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received from the server');
+      } else {
+        console.error('Error:', error.message);
+      }
+    }
+  }
+  const handleRemoveFromGroup = async(formId, formGroupId) => {
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        'Authorization': `${token}`,
+      },
+    };
+    setIsLoading(true);
+    try {
+      await axios.put(`${backend_point}/api/formGroups/removeForm/${formGroupId}`, 
+        {formId: formId}, config);
+      fetchForms();
+      getFormGroupsHandler();
+    } catch (error) {
+      if (error.response) {
+        console.error('Error removing from formGroup:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received from the server');
+      } else {
+        console.error('Error:', error.message);
+      }
+    }
+  }
+
   return (
     <div>
       <Header />
       <div className='page-container'>
-        <DashboardSideMenu activeOption={activeOption} handleAddingForm={() => createFormHandler()}/>
+        <DashboardSideMenu activeOption={activeOption} 
+        handleAddingForm={() => createFormHandler()}
+        handleCreatingFormGroup={handleCreatingFormGroup}/>
         <div className="table-page-body">
           <div className="table-page-heading">
             <div className="dashboard-page-title">
@@ -124,6 +223,12 @@ function DashboardPage() {
             /> */}
           </div>
           <div className="table-page-content">
+            <FormGroupSavingWindow isOpen={isFormGroupCreatingWindow}
+            onClose={closeFormGroupCreatingWindow} handleSaving={handleCreatingFormGroup}/>
+            <FormGroupChoosingWindow isOpen={isFormGroupChoosingWindow} choseOption={()=>{}} 
+            formGroups={formGroups} isFormGroupChanging={isFormGroupChanging}
+            chosenFormToAddIntoGroup={chosenFormToAddIntoGroup} addFormIntoGroupHandler={addFormIntoGroupHandler}
+            onClose={closeFormGroupChoosingWindow}/>
             {
               isLoading ?
                 <Spinner/>
@@ -133,27 +238,9 @@ function DashboardPage() {
                 {isError}
               </div>
               :
-              <DashboardTable forms={forms} deleteFormHandler={deleteFormHandler}/>
-              // forms.map((form) => (
-              //   <div className="form-list-item" key={form._id}>
-              //     {form.title}
-              //     <div className="form-actions">
-              //       {(userRole === 'editor' || userRole ==='admin') &&
-              //         <a href={`/forms/builder/${form._id}`} className="edit">
-              //           Edit
-              //         </a>
-              //       }
-              //       <a href={`/forms/live/${form._id}`} className="fill">
-              //         Use
-              //       </a>
-              //       {(userRole === 'editor' || userRole ==='admin') &&
-              //         <div className="delete" onClick={() => deleteFormHandler(form._id)}>
-              //           <img src={trash_icon} className="remove-icon"/>
-              //         </div>
-              //       }
-              //     </div>
-              //   </div>
-              // ))
+              <DashboardTable forms={forms} formGroups={formGroups} 
+              deleteFormHandler={deleteFormHandler} 
+              chooseFormToAddIntoGroup={chooseFormToAddIntoGroup} chooseFormToRemoveFromGroup={handleRemoveFromGroup}/>
             }
           </div>
         </div>

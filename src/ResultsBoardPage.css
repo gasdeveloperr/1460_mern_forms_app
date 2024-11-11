@@ -23,5 +23,16 @@
   display: flex;
   justify-content: space-between;
   margin: 22px 42px 0px;
+}
+.results-page-heading-title {
+  display: flex;
   flex-direction: column;
+}
+.results-page-heading-action-button{
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+}
+.results-page-heading-action-button:hover{
+  opacity: 0.8;
 }

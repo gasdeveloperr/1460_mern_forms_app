@@ -7,7 +7,9 @@ import { backend_point } from './consts';
 import { formatDate, getAuthToken } from './utils';
 import FormResultView from './form_results_components/FormResultView';
 import arrow_menu_icon from './icons/arrow-side-menu-icon.svg';
-import './ResultsBoardPage.css'
+import pdf_icon from './icons/file-pdf-icon.svg';
+import './ResultsBoardPage.css';
+import jsPDF from 'jspdf';
 
 function ResultsBoard() {
   // const [forms, setForms] = useState([]);
@@ -17,14 +19,11 @@ function ResultsBoard() {
 
   const [detailResult, setDetailResult] = useState()
 
-  
   const toMainBoardHandler = () => {
     setDetailResult()
   }
-
   
   const { formId } = useParams();
-
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -68,6 +67,82 @@ function ResultsBoard() {
     fetchData();
   }, []);
 
+  const handleImportPDF = () => {
+    const form = currentSubmForms[0];
+    const data = detailResult.data;
+    const formTitle = form.title
+    const doc = new jsPDF();
+
+    doc.setFontSize(14);
+    doc.setTextColor(69, 85, 96);
+
+    const paragraphTab = 24;
+    const componentMargin = 8;
+    const fieldsMargin = 10;
+    const titleMargin = 12;
+  
+    let y = 12; // Y position to start printing the fields
+    const labelWidth = 70; // Width of label cells
+    const answerWidth = 100; // Width of answer cells
+    const cellHeight = 10; // Height for each cell row
+
+    let fieldData = {};
+    doc.setFillColor('#cf3f3f')
+
+    form.fields.map((field, index) => {
+      if(field.type === 'section') {
+        field.components.map((sectionComp, indexComp) => {
+          if (data && data.hasOwnProperty(sectionComp.id) && data[sectionComp.id] !== undefined) {
+            //console.log(data[sectionComp.id]);
+            fieldData = data[sectionComp.id];
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(14);
+            doc.text(`${sectionComp.title}: `, paragraphTab, y);
+            y += componentMargin;
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(12);
+            doc.text(fieldData.value || 'N/A', paragraphTab, y);
+            y += fieldsMargin;
+          } else {
+            if(sectionComp.type === 'title'){
+              doc.setFontSize(16);
+              doc.setFont(undefined, 'bold');
+              const titleColor = sectionComp.color || '#FFFFFF'
+              doc.setFillColor(titleColor)
+              doc.text(`${sectionComp.title}`, paragraphTab, y);
+              doc.setFillColor('#FFFFFF')
+              y += titleMargin;
+            }
+          }
+        })
+      } else if(data && data.hasOwnProperty(field.id) && data[field.id] !== undefined){
+        fieldData = data[field.id]
+        doc.setFont(undefined, 'bold');
+        doc.setFontSize(14);
+        //doc.rect(paragraphTab, y, labelWidth, cellHeight, 'FD'); 
+        doc.text(`${field.title} :`, paragraphTab, y);
+        y += componentMargin;
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(12);
+        doc.text(fieldData.value || 'N/A', paragraphTab, y);
+        y += fieldsMargin;
+      }else{
+        if(field.type === 'title'){
+          doc.setFontSize(16);
+          doc.setFont(undefined, 'bold');
+          const titleColor = field.color || '#FFFFFF'
+          //console.log('titleColor : ', field, titleColor)
+          doc.setFillColor(titleColor)
+          doc.text(`${field.title}`, paragraphTab, y);
+          doc.setFillColor(196, 74, 137, 0.8)
+          y += titleMargin;
+        }
+      }
+    })
+  
+    doc.save(formTitle+'.pdf');
+  };
+
   // useEffect(() => {
   //   if(submForms && forms){
   //     // Create a map of formId to subm_forms for efficient lookup
@@ -102,21 +177,30 @@ function ResultsBoard() {
         : 
         <div className="dashboard-body">
           <div className="results-page-heading">
-            <div className="dashboard-page-title">
-            {detailResult ? 
-              <div className="go-back-button" onClick={toMainBoardHandler} >
-                <img src={arrow_menu_icon} alt="Go Back" />
+            <div className="results-page-heading-title">
+              <div className="dashboard-page-title">
+              {detailResult ? 
+                <div className="go-back-button" onClick={toMainBoardHandler} >
+                  <img src={arrow_menu_icon} alt="Go Back" />
+                </div>
+              :
+                <a href='/forms/dashboard' className="go-back-button" >
+                  <img src={arrow_menu_icon} alt="Go Back" />
+                </a>
+              }
+                {currentSubmFormName} results
               </div>
-            :
-              <a href='/forms/dashboard' className="go-back-button" >
-                <img src={arrow_menu_icon} alt="Go Back" />
-              </a>
+              <div className="results-sub-title">
+                {detailResult ? `by ${detailResult.submittedBy.email} at ${formatDate(detailResult.submittedAt)}` : ''}
+              </div>
+            </div>
+            {
+            detailResult &&
+              <div onClick={() => handleImportPDF()} className='results-page-heading-action-button'>
+                <img className="size24-icon" src={pdf_icon}/>
+                Import PDF
+              </div>
             }
-              {currentSubmFormName} results
-            </div>
-            <div className="results-sub-title">
-              {detailResult ? `by ${detailResult.submittedBy.email} at ${formatDate(detailResult.submittedAt)}` : ''}
-            </div>
           </div>
           {detailResult ? 
           <FormResultView form={detailResult}/>
@@ -160,25 +244,3 @@ function ResultsBoard() {
 }
 
 export default ResultsBoard;
-
- {/* // <div className="results-dashboard-list">
-              //   {currentSubmForms.length !== 0 ?
-              //       currentSubmForms.map((formResult) => (
-              //         <div className="results-list-item" key={formResult.formId}>
-              //           <div className="results-list-item-title">
-              //             {formResult.title}
-              //           </div>
-              //           <div className="results-list-item-propety">
-              //             Amount of submit: {formResult.subm_forms.length}
-              //           </div>
-              //           <div className="form-actions">
-              //             <a href={`/forms/builder/${formResult.formId}`} className="edit">
-              //               Edit form
-              //             </a>
-              //           </div>
-              //         </div>
-              //       ))
-              //     :
-              //     <div>There are no results yet</div>
-              //   }
-              // </div> */}

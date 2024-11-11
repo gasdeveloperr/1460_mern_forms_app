@@ -2,19 +2,42 @@ import './FormResultsStyles.css';
 import '../FormLiveStyles.css';
 
 const FormResultsComponent = ({ field, data }) => {
-  // Get the submitted data for this field
+  
   let fieldData = {};
-  if ((data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) || field.type === 'title') {
-    console.log(data[field.id]);
+  if (data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) {
     fieldData = data[field.id];
-  } else {
-    console.log(`No data found for field ID: ${field.id}`);
+  } else if(field.type !== 'title'){
+    //console.log(`No data found for field ID: ${field.id}`);
     return null;
   }
 
   return (
     <>
       {field.type === 'short_answer' && (
+        <div className="form-live-component-container">
+          <div className='form-results-component-title'>
+            {field.title}:
+          </div>
+          {!field.read_only &&
+            <div className="form-live-component-value">
+              {fieldData ? fieldData.value : 'No response'}
+            </div>
+          }
+        </div>
+      )}
+      {field.type === 'email' && (
+        <div className="form-live-component-container">
+          <div className='form-results-component-title'>
+            {field.title}:
+          </div>
+          {!field.read_only &&
+            <div className="form-live-component-value">
+              {fieldData ? fieldData.value : 'No response'}
+            </div>
+          }
+        </div>
+      )}
+      {field.type === 'number' && (
         <div className="form-live-component-container">
           <div className='form-results-component-title'>
             {field.title}:

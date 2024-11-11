@@ -5,7 +5,6 @@ import { backend_point } from './consts';
 import Spinner from './Spinner';
 import { getAuthToken } from './utils';
 import './OptionsChoosingWindow.css';
-import trash_icon from './icons/trash-can.svg';
 
 
 const OptionsChoosingWindow = ({isOpen, choseOption, onClose}) => {

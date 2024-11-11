@@ -135,7 +135,8 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </label>
         )}
         {field.type === 'long_answer' && 
-        <AutoResizingTextareaComponent field={field} handleInputChange={handleInputChange}/>}
+        <AutoResizingTextareaComponent field={field} handleInputChange={handleInputChange}/>
+        }
         {field.type === 'title' && (
           <div className="form-short-answer">
             <div className='form-title-component-title' style={{backgroundColor: field.color || '#FFFFFF'}}>
@@ -143,7 +144,29 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
             </div>
           </div>
         )}
-        {field.type === 'email' || field.type === 'number'  && (
+        {field.type === 'email'  && (
+          <label key={field.id} className="form-live-component-container">
+            <div className="form-short-answer">
+              <div className='form-component-title'>
+                {field.required && <span>*</span>}
+                {field.title}
+              </div>
+              {errorMessage && (
+                <div className="error-message">
+                  <i className="fas fa-exclamation-circle"></i>
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+              <input className='form-live-input' id={field.id} 
+                fieldtype={field.type}
+                name={field.title}
+                onChange={e => handleInputChange(e, field.type)} 
+                required={field.required} 
+                disabled={field.read_only}/>
+            </div>
+          </label>
+        )}
+        {field.type === 'number'  && (
           <label key={field.id} className="form-live-component-container">
             <div className="form-short-answer">
               <div className='form-component-title'>
@@ -362,7 +385,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
         )}
         {field.type === 'add_component_button' && (
           <div className="form-live-component-container">
-            <AddButtonComponent field={field} handleAddingComponent={handleAddingComponent}/>
+            <AddButtonComponent field={field} index={index} handleAddingComponent={handleAddingComponent}/>
           </div>
         )}
         {field.type === 'date_time' && (
