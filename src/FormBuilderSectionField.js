@@ -91,7 +91,8 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
 
     return (
       <div key={field.id}  style={{ opacity }} className="form-field-container">
-        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'top'} sectionId={sectionId}/>
+        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'top'} 
+        sectionId={sectionId} parentId={sectionId}/>
         <div className={`form-field ${field.id === editingSectionField.id ? 'chosen-field' : '' }`} ref={formFieldRef} 
         onClick={(e) => onClickEditorHandler(e, field)}>
           <div ref={ref}>
@@ -466,7 +467,8 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
           )}
         </div>
         </div>
-        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'bottom'} sectionId={sectionId}/>
+        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'bottom'} 
+        sectionId={sectionId} parentId={sectionId}/>
       </div>
     );
 };

@@ -288,22 +288,34 @@ const FormResultsComponent = ({ field, data }) => {
           <div className="form-results-component-title">
             {field.title}
           </div>
+  
+          {
+            field.style && field.style === 'tabular' ? 
+            <table className="form-results-table">
+              <tr>
+                {field.labels.map((label, index) => (
+                  <td className="form-results-td">
+                    {label}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                {field.labels.map((label, index) => (
+                  <td className="form-results-td">
+                    {fieldData.value[index]}
+                  </td>
+                ))}
+              </tr>
+            </table>
+          :
           <div className="form-component-dynamic-columns-container" 
-            style={field.style && field.style === 'tabular' ? 
-            {gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`} 
-            :
-            {gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`}}>
+            style={{gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`}}>
             {field.labels.map((label, index) => (
               <div className="form-component-column" key={index}>
-                <div className="form-results-section-label" 
-                style={field.style && field.style === 'tabular' ? 
-                { border: '1px solid rgb(211, 221, 225)', height: '38px', padding: '8px'} : ''}>
+                <div className="form-results-section-label">
                   {label}
                 </div>
-                <div 
-                style={field.style && field.style === 'tabular' ? 
-                  {borderRadius: '0px', height: '38px', border: '1px solid rgb(211, 221, 225)', padding: '6px'} 
-                  : '' }
+                <div className="form-results-section-result"
                 // style={{color: fieldData.value[index]==='Monthly'? '#7bb163' :
                 // fieldData.value[index]==='Quarterly'? '#f1c336':
                 // (fieldData.value[index]==='Annually' || fieldData.value[index]==='Not Reviewed')? '#ff0909':
@@ -314,6 +326,7 @@ const FormResultsComponent = ({ field, data }) => {
               </div>
             ))}
           </div>
+          }
         </div>
       )}
 
@@ -332,3 +345,32 @@ const FormResultsComponent = ({ field, data }) => {
 };
 
 export default FormResultsComponent;
+
+
+{/* <div className="form-component-dynamic-columns-container" 
+style={field.style && field.style === 'tabular' ? 
+{gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`} 
+:
+{gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`}}>
+{field.labels.map((label, index) => (
+  <div className="form-component-column" key={index}>
+    <div className="form-results-section-label" 
+    // style={field.style && field.style === 'tabular' ? 
+    // { border: '1px solid rgb(211, 221, 225)', height: '38px', padding: '8px'} : ''}
+    >
+      {label}
+    </div>
+    <div className="form-results-section-result"
+    // style={field.style && field.style === 'tabular' ? 
+    //   {borderRadius: '0px', height: '48px', border: '1px solid rgb(211, 221, 225)', padding: '6px'} 
+    //   : '' }
+    // style={{color: fieldData.value[index]==='Monthly'? '#7bb163' :
+    // fieldData.value[index]==='Quarterly'? '#f1c336':
+    // (fieldData.value[index]==='Annually' || fieldData.value[index]==='Not Reviewed')? '#ff0909':
+    // ''}}
+    >
+      {fieldData.value[index]}
+    </div>
+  </div>
+))}
+</div> */}

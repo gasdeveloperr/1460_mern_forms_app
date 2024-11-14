@@ -131,7 +131,7 @@ const FormBuilder = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dropAreaPositions, setDropAreaPositions] = useState([]);
 
-  const handleDrop = (item, dropIndex, sectionId) => {
+  const handleDrop = (item, dropIndex, sectionId, parentId) => {
     if(item.index === 'bar_component'){
       const newField = addingNewComponent(item);
       if(sectionId){
@@ -155,35 +155,40 @@ const FormBuilder = () => {
       }
     }else{
       if(sectionId){
-        const updatedFormFields = formFields.map((field) => {
-          if (field.id === sectionId && field.type === 'section') {
-            const itemIndex = field.components.findIndex(component => component.id === item.id);
-      
-            // Remove the component from its current position and insert it into the new position
-            const newComponentsArray = [
-              ...field.components.slice(0, itemIndex),
-              ...field.components.slice(itemIndex + 1)
-            ];
-            const newField = { ...item}; // Assign a new ID if needed
-            setEditingField({ ...field, components: [
-                ...newComponentsArray.slice(0, dropIndex),
-                newField,
-                ...newComponentsArray.slice(dropIndex)
-              ]})
-            return {
-              ...field,
-              components: [
-                ...newComponentsArray.slice(0, dropIndex),
-                newField,
-                ...newComponentsArray.slice(dropIndex)
-              ],
-            };
-          }
-          return field;
-        });
+        if(sectionId === parentId){
+          //console.log('section to section drop: ',sectionId)
+          const updatedFormFields = formFields.map((field) => {
+            if (field.id === sectionId && field.type === 'section') {
+              const itemIndex = field.components.findIndex(component => component.id === item.id);
         
-        setFormFields(updatedFormFields);
-        //console.log('moved component within section:', updatedFormFields);
+              // Remove the component from its current position and insert it into the new position
+              const newComponentsArray = [
+                ...field.components.slice(0, itemIndex),
+                ...field.components.slice(itemIndex + 1)
+              ];
+              const newField = { ...item}; // Assign a new ID if needed
+              setEditingField({ ...field, components: [
+                  ...newComponentsArray.slice(0, dropIndex),
+                  newField,
+                  ...newComponentsArray.slice(dropIndex)
+                ]})
+              return {
+                ...field,
+                components: [
+                  ...newComponentsArray.slice(0, dropIndex),
+                  newField,
+                  ...newComponentsArray.slice(dropIndex)
+                ],
+              };
+            }
+            return field;
+          });
+          
+          setFormFields(updatedFormFields);
+          //console.log('moved component within section:', updatedFormFields);
+        }else{
+
+        }
       }else{
         const itemIndex = formFields.findIndex(field => field.id === item.id)
         const newField = {...item, id: Date.now()}

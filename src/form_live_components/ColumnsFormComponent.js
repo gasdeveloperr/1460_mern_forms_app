@@ -25,19 +25,20 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange 
       handleInputsChange(value, index);
     }
   };
+  const minMaxValue = '1fr'
 
-  const [columnsStyle, setColumnsStyle] = useState({ gridTemplateColumns: 'repeat(3, 1fr)'});
+  const [columnsStyle, setColumnsStyle] = useState({ gridTemplateColumns: 'repeat(3, '+minMaxValue+')'});
   const [columnStyle, setColumnStyle] = useState({ borderRadius: '4px'});
-  const [columnLabelStyle, setColumnLabelStyle] = useState({ border: '1px solid rgb(211, 221, 225)', height: '44px', padding: '12px 8px'});
+  const [columnLabelStyle, setColumnLabelStyle] = useState({ border: '1px solid rgb(211, 221, 225)', height: '44px', padding: '10px 6px', whiteSpace:'nowrap'});
 
   useEffect(() =>{
     if(field && field.labels){
       if(field && field.style && field.style === 'tabular'){
-        setColumnsStyle({...columnsStyle, gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+        setColumnsStyle({...columnsStyle, gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
         setColumnStyle({...columnStyle, borderRadius: '0px'})
-        setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', height: '44px', padding: '12px 8px'})
+        setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', height: '44px', padding: '10px 6px', whiteSpace:'nowrap'})
       }else{
-        setColumnsStyle({...columnsStyle, gap: '20px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+        setColumnsStyle({...columnsStyle, gap: '20px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
         setColumnStyle({...columnStyle, borderRadius: '4px'})
         setColumnLabelStyle({...columnLabelStyle, border: 'none', height: 'fit-content', padding: '8px'})
       }

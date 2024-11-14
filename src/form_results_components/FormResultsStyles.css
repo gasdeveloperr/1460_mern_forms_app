@@ -32,8 +32,26 @@
 }
 .form-results-section-label{
   align-items: center;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   display: flex;
   color: rgb(69, 85, 96);
   font-size: 13px;
+  white-space: nowrap;
+  padding: 10px 4px;
+}
+.form-results-section-result{
+  font-size: 13px;
+  padding: 10px 4px;
+}
+.form-results-table{
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+}
+.form-results-td{
+  border: 1px solid rgb(211, 221, 225);
+  font-size: 13px;
+  padding: 10px 6px;
 }

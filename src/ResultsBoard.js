@@ -175,7 +175,7 @@ function ResultsBoard() {
         isLoading ?
           <Spinner/>
         : 
-        <div className="dashboard-body">
+        <div className="dashboard-results-body">
           <div className="results-page-heading">
             <div className="results-page-heading-title">
               <div className="dashboard-page-title">

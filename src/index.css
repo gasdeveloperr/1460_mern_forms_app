@@ -214,6 +214,13 @@ body {
   border: 1px solid #d8d8d8;
   max-width: 1300px;
 }
+.dashboard-results-body{
+  background: #FFF;
+  border-radius: 18px;
+  margin: 40px auto;
+  border: 1px solid #d8d8d8;
+  max-width: 1600px;
+}
 
 .table-page-heading{
   display: flex;
@@ -759,7 +766,7 @@ body {
   gap: 20px;
 }
 .form-component-column {
-  min-width: 100px;
+  /* min-width: 30px; */
 }
 .form-component-double-section-container{
   display: grid;
