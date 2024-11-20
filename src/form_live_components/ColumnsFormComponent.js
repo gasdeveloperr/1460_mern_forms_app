@@ -29,30 +29,31 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange 
 
   const [columnsStyle, setColumnsStyle] = useState({ gridTemplateColumns: 'repeat(3, '+minMaxValue+')'});
   const [columnStyle, setColumnStyle] = useState({ borderRadius: '4px'});
-  const [columnLabelStyle, setColumnLabelStyle] = useState({ border: '1px solid rgb(211, 221, 225)', height: '44px', padding: '10px 6px', whiteSpace:'nowrap'});
+  const [columnLabelStyle, setColumnLabelStyle] = useState({ border: '1px solid rgb(211, 221, 225)',  padding: '10px 6px'});
 
   useEffect(() =>{
     if(field && field.labels){
       if(field && field.style && field.style === 'tabular'){
         setColumnsStyle({...columnsStyle, gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
         setColumnStyle({...columnStyle, borderRadius: '0px'})
-        setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', height: '44px', padding: '10px 6px', whiteSpace:'nowrap'})
+        setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', padding: '10px 6px'})
       }else{
-        setColumnsStyle({...columnsStyle, gap: '20px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
+        setColumnsStyle({...columnsStyle, gap: '10px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
         setColumnStyle({...columnStyle, borderRadius: '4px'})
-        setColumnLabelStyle({...columnLabelStyle, border: 'none', height: 'fit-content', padding: '8px'})
+        setColumnLabelStyle({...columnLabelStyle, border: 'none', padding: '8px'})
       }
     }
   }, [field])
 
   return (
-    <div className={"form-component-dynamic-columns-container"} style={columnsStyle}>
+    <table className={"form-component-dynamic-columns-table"} style={columnsStyle}>
       {field.labels.map((label, index) => (
-        <div className="form-component-column" key={index}>
-          <div className="form-section-label" style={columnLabelStyle}>
-            {label}
-          </div>
-          
+        <td className="form-section-table-label" style={columnLabelStyle}>
+          {label}
+        </td>
+      ))}
+      {field.labels.map((label, index) => (
+        <td className="form-component-column" key={index}>    
           {field.value[index].type === 'dropdown' ? (
             <>
               <CustomSelector
@@ -86,9 +87,9 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange 
               disabled={field.read_only}
             />
           )}
-        </div>
+        </td>
       ))}
-    </div>
+    </table>
   );
 };
 

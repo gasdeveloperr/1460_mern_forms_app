@@ -73,24 +73,24 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
 
   const [columnsStyle, setColumnsStyle] = useState();
   const [columnStyle, setColumnStyle] = useState({ borderRadius: '4px'});
-  const [columnLabelStyle, setColumnLabelStyle] = useState({ border: '1px solid rgb(211, 221, 225)', height: '38px', padding: '8px'});
+  const [columnLabelStyle, setColumnLabelStyle] = useState({ border: '1px solid rgb(211, 221, 225)', padding: '8px'});
 
   useEffect(() =>{
     if(field && field.labels){
       if(field && field.style && field.style === 'tabular'){
         setColumnsStyle({...columnsStyle, gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
         setColumnStyle({...columnStyle, borderRadius: '0px'})
-        setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', height: '38px', padding: '8px'})
+        setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', padding: '8px'})
       }else{
-        setColumnsStyle({...columnsStyle, gap: '20px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+        setColumnsStyle({...columnsStyle, gap: '10px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
         setColumnStyle({...columnStyle, borderRadius: '4px'})
-        setColumnLabelStyle({...columnLabelStyle, border: 'none', height: 'fit-content', padding: '0'})
+        setColumnLabelStyle({...columnLabelStyle, border: 'none', padding: '0'})
       }
     }
   }, [field])
 
     return (
-      <div key={field.id}  style={{ opacity }} className="form-field-container">
+      <div key={field.id}  style={{ opacity }} className="form-section-field-container">
         <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'top'} 
         sectionId={sectionId} parentId={sectionId}/>
         <div className={`form-field ${field.id === editingSectionField.id ? 'chosen-field' : '' }`} ref={formFieldRef} 
@@ -430,25 +430,23 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
                   {field.required && <span className='required_sign'>*</span>}
                   {field.title}
                 </div>
-                <div className={"form-component-dynamic-columns-container"} style={columnsStyle}>
+                <table className={"form-component-dynamic-columns-table"} style={columnsStyle}>
                   {field.labels.map((label, index) => (
-                    <div key={index} className="form-component-double-section">
-                      <div className='form-component-label' style={columnLabelStyle}>
-                        {label}
-                      </div>
-                      {
-                        field.value[index].type === 'dropdown' ?
-                        <div className='form-component-dropdown-div' style={{backgroundColor: field.value[index].options[0].color ? field.value[1].color : ''}}>
-                          {field.value[index].options[0].title|| '⠀'}
-                          <img src={selector_icon} />
-                        </div>
-                        :
-                        <div className='form-component-input-div short' style={columnStyle}>
-                        </div>
-                      }
-                    </div>
+                    <td className='form-component-table-label' key={index} style={columnLabelStyle}>
+                      {label}
+                    </td>
                   ))}
-                </div>
+                  {field.labels.map((label, index) => (
+                    field.value[index].type === 'dropdown' ?
+                    <td className='form-component-dropdown-div' style={{backgroundColor: field.value[index].options[0].color ? field.value[1].color : ''}}>
+                      {field.value[index].options[0].title|| '⠀'}
+                      <img src={selector_icon} />
+                    </td>
+                    :
+                    <td className='form-component-input-div short' style={columnStyle}>
+                    </td>
+                  ))}
+                </table>
               </div>
             )}
           {field.type === 'add_component_button' && (

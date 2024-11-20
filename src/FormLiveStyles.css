@@ -13,6 +13,7 @@
   box-sizing: border-box;
   margin: calc(40px) auto;
   width: fit-content;
+  max-width: 1620px;
   float: none;
 }
 .form-live-title{

@@ -465,6 +465,7 @@ body {
   flex-direction: column;
   display: flex;
   width: 349px;
+  min-width: 260px;
   height: calc(-105px + 100vh);
   box-sizing: border-box;
   overflow-y: auto;
@@ -511,6 +512,7 @@ body {
   flex-direction: column;
   background: #FFF;
   height: 100%;
+  max-width: 1440px;
   padding: 20px 0px;
 }
 
@@ -630,6 +632,13 @@ body {
   flex-direction: column;
   flex: 0 1 auto;
   margin: 0px calc(18.5px);
+}
+.form-section-field-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  margin: 0px;
 }
 .form-field {
   position: relative;
@@ -764,6 +773,16 @@ body {
 .form-component-dynamic-columns-container {
   display: grid;
   gap: 20px;
+}
+.form-component-dynamic-columns-table{
+  display: grid;
+}
+.form-component-dynamic-columns-table td{
+  
+}
+.form-component-table-label {
+  font-size: 13px;
+  min-height: 20.8px;
 }
 .form-component-column {
   /* min-width: 30px; */
