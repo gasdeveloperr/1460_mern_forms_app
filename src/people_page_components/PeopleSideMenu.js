@@ -42,7 +42,7 @@ const PeopleSideMenu = ({ activeOption, handleAddingUser, onItemClick}) => {
             </div>
             <div className="side-menu-separator"/>
             <div className="side-menu-list">
-              <a className='side-menu-list-header'  href="/clients">
+              <a className='side-menu-list-header'  href="/people">
                 <img src={client_icon} className="side-menu-list-header-icon" alt='>'/>
                   People
               </a>

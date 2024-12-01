@@ -37,6 +37,16 @@
 .client-name:hover {
   text-decoration: underline;
 }
+.group-title{
+  vertical-align: top;
+  padding-right: 66px !important;
+  width: 240px;
+  color: #0066cc;
+  text-decoration: none;
+}
+.group-title:hover {
+  text-decoration: underline;
+}
 .user-name{
   color: #0066cc;
   text-decoration: none;

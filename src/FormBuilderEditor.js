@@ -701,12 +701,13 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                           </div>
                           <label className="field-editor__label">Column`s type: </label>
                           <div className="field-editor-column">
-                            <div className={`field-editor-column-type${editingField.value[index].type === 'dropdown' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('dropdown', index)}>
+                          <ComponentTypeSelector selectedType={editingField.value[index].type} index={index} onChange={changeColumnTypeHandler} />
+                            {/* <div className={`field-editor-column-type${editingField.value[index].type === 'dropdown' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('dropdown', index)}>
                               Dropdown
                             </div> 
                             <div className={`field-editor-column-type${editingField.value[index].type === 'short_answer' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('short_answer', index)}>
                               Short answer
-                            </div> 
+                            </div>  */}
                           </div>
                           <div className="field-editor_checkbox-group">
                             <div className='field-editor_checkbox_container'>
@@ -938,9 +939,9 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
               <div className="option-content">
                 {
                   editingField.value.map((value, index) => (
-                    value.type === 'input' ?
+                    value.type === 'short_answer' ?
                     <div key={index} className="option-group">
-                      <label>Pre-filled value for input</label>
+                      <label>Pre-filled value for {editingField.labels[index]}</label>
                       <div className="option-input">
                         <input type="text" onChange={(e) => changeColumnFieldPreFilledHandler(e, index)} value={value.value}/>
                       </div>

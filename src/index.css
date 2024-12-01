@@ -1190,3 +1190,30 @@ body {
 .table-action-button:hover{
   opacity: 0.7;
 }
+.draggable-td{
+  /* display: flex; */
+  position: relative;
+}
+.draggable-td span{
+  color: rgb(147, 147, 147);
+  margin-right: 4px;
+  cursor: grab;
+}
+.table-trash-icon{
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+}
+.table-trash-icon:hover{
+  opacity: 0.8;
+}
+.client-name img,
+.draggable-td img{
+  width: 20px;
+  margin-right: 8px;
+}
+.group-title img{
+  width: 18px;
+  margin-left: 8px;
+  cursor: pointer;
+}

@@ -3,11 +3,12 @@ import { component_types_array } from './consts';
 import selector_icon from './icons/selector-icon.svg'
 
 
-const ComponentTypeSelector = ({ selectedType, onChange }) => {
+const ComponentTypeSelector = ({ selectedType, index, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (type) => {
-    onChange(type);
+    console.log(type, index)
+    onChange(type, index);
     setIsOpen(false);
   };
 

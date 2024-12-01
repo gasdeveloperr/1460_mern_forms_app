@@ -1178,9 +1178,9 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
             <div className="option-content">
               {
                 editingSectionField.value.map((value, index) => (
-                  value.type === 'input' ?
+                  value.type === 'short_answer' ?
                   <div key={index} className="option-group">
-                    <label>Pre-filled value for input</label>
+                    <label>Pre-filled value for {editingSectionField.labels[index]}</label>
                     <div className="option-input">
                       <input type="text" onChange={(e) => changeColumnFieldPreFilledHandler(e, index)} value={value.value}/>
                     </div>

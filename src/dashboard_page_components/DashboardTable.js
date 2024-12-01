@@ -6,7 +6,7 @@ import trash_icon from '../icons/trash-can-white.svg'
 import open_icon from '../icons/open-form-icon.svg'
 import edit_icon from '../icons/edit-form-icon.svg'
 
-const DashboardTable = ({ forms, formGroups, deleteFormHandler, chooseFormToAddIntoGroup, chooseFormToRemoveFromGroup }) => {
+const DashboardTable = ({ forms, formGroups, deleteFormHandler, chooseFormToAddIntoGroup }) => {
   const userRole = getUserRole();
 
   return (
@@ -63,9 +63,6 @@ const DashboardTable = ({ forms, formGroups, deleteFormHandler, chooseFormToAddI
                         <span style={{fontWeight: '600'}}>
                           {formGroups.find(formGroup => formGroup._id === form.groupId)?.title || "Group Not Found"}
                         </span>
-                        <div className="table-action-button" onClick={() => chooseFormToRemoveFromGroup(form._id, form.groupId)}>
-                          Remove from group
-                        </div>
                       </div>
                     ) : (
                       <div className="table-action-button" onClick={() => chooseFormToAddIntoGroup(form._id)}>

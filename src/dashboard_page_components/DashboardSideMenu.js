@@ -1,26 +1,17 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import client_icon from '../icons/client-icon.svg'
-import clients_icon from '../icons/clients-icon.svg'
 import client_add_icon from '../icons/client-add-icon.svg'
 import home_page_icon from '../icons/home-page-icon.svg'
 import configuration_icon from '../icons/configuration-icon.svg'
+import form_icon from '../icons/form-icon.svg'
+import form_groups_icon from '../icons/form-groups-icon.svg'
 import add_form_group_icon from '../icons/add-form-group-icon.svg'
 import arrow_menu_icon from '../icons/arrow-side-menu-icon.svg'
-import position_case_icon from '../icons/positions-case-icon.svg'
-import data_sheet_icon from '../icons/data-sheet-icon.svg'
 import '../clients_page_components/ClientsSideMenu.css';
 
 
+const DashboardSideMenu = ({ activeOption, handleAddingForm, handleCreatingFormGroup, changeActiveOptionHandler}) => {
 
-
-const DashboardSideMenu = ({ activeOption, handleAddingForm, handleCreatingFormGroup, onItemClick}) => {
-  const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false)
-
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
 
   return (
     <div className="side-menu-component">
@@ -42,37 +33,47 @@ const DashboardSideMenu = ({ activeOption, handleAddingForm, handleCreatingFormG
             </div>
             <div className="side-menu-separator"/>
             <div className="side-menu-list">
-              <a className='side-menu-list-header'  href="/clients">
-                <img src={client_icon} className="side-menu-list-header-icon"/>
+              <a className='side-menu-list-header'  href="/forms/dashboard">
+                <img src={form_icon} className="side-menu-list-header-icon"/>
                   Forms
               </a>
               <div
-                className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
-                onClick={onItemClick}
+                className={`menu-item${activeOption === 'forms' ? '-active' : ''}`}
+                onClick={() => changeActiveOptionHandler('forms')}
               >
-                <img src={clients_icon} className="menu-item-icon"/>
+                <img src={form_icon} className="menu-item-icon"/>
                 <span className="menu-item__label">Forms </span>
               </div>
-              <div
-                className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
+              <div className={'menu-item'}
                 onClick={() => handleAddingForm()}
               >
                 <img src={client_add_icon} className="menu-item-icon"/>
                 <span className="menu-item__label">Create form </span>
               </div>
-              
             </div>
             <div className="side-menu-separator"/>
+            <div className="side-menu-list">
+              <a className='side-menu-list-header'  href="/forms/dashboard">
+                <img src={form_groups_icon} className="side-menu-list-header-icon"/>
+                  Form's Groups
+              </a>
               <div
-                className={`menu-item ${isActive ? 'menu-item--active' : 'menu-item--inactive'}`}
+                className={`menu-item${activeOption === 'formsGroups' ? '-active' : ''}`}
+                onClick={() => changeActiveOptionHandler('formsGroups')}
+              >
+                <img src={form_groups_icon} className="menu-item-icon"/>
+                <span className="menu-item__label">Groups</span>
+              </div>
+              <div
+                className={`menu-item${activeOption === 'addingformsGroup' ? '-active' : ''}`}
                 onClick={() => handleCreatingFormGroup()}
               >
                 <img src={add_form_group_icon} className="menu-item-icon"/>
                 <span className="menu-item__label">Create forms group </span>
               </div>
+            </div>
             </>
           }
-          
         </nav>
       </div>
       <div className={`side-menu-backside${isCollapsed ? '-collapsed' : ''}`}/>

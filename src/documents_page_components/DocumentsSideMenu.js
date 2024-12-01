@@ -43,7 +43,7 @@ const DocumentsSideMenu = ({ activeOption, handleAddingClient, onItemClick}) => 
             </div>
             <div className="side-menu-separator"/>
             <div className="side-menu-list">
-              <a className='side-menu-list-header'  href="/clients">
+              <a className='side-menu-list-header'  href="/documents">
                 <img src={files_icon} className="side-menu-list-header-icon" alt='docs'/>
                   Documents
               </a>

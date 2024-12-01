@@ -444,6 +444,7 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
                     </td>
                     :
                     <td className='form-component-input-div short' style={columnStyle}>
+                      {field.value[index].value}
                     </td>
                   ))}
                 </table>

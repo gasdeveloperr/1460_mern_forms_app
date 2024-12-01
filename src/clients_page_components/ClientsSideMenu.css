@@ -76,7 +76,8 @@
   font-weight: 600;
   margin-bottom: 8px;
 }
-.menu-item {
+.menu-item,
+.menu-item-active {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -121,12 +122,7 @@
 }
 
 .menu-item-active {
-  background-color: #4caf50;
-  color: white;
-}
-
-.menu-item-inactive:hover {
-  background-color: #c8e6c9;
+  background-color: #739f6d;
 }
 
 .menu-item-label {

@@ -22,7 +22,7 @@ const FormGroupChoosingWindow = ({isOpen, formGroups, chosenFormToAddIntoGroup, 
     <div className="window-overlay" id='choosing-formGroups-window'>
       <div className="window-content">
         <h2>Choose a form group: </h2>
-        <div className='formGroups-chooser-body'>
+        <div className='options-chooser-body'>
           {formGroups && formGroups.length !== 0 ?
             formGroups.map((formGroup, formGroupIndex) => (
               <div key={formGroupIndex} className='option-chooser-container'>
