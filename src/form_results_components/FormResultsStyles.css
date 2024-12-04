@@ -1,3 +1,32 @@
+.form-result-container{
+  display: block;
+  background-color: rgb(255, 255, 255);
+  border: 0px solid transparent;
+  border-radius: 0px;
+  box-sizing: border-box;
+  margin: calc(20px) auto;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 1620px;
+  float: none;
+}
+.form-result-content {
+  padding: calc(12px);
+  min-width: 640px;
+}
+
+.form-result-title-component{
+  display: flex;
+  -moz-box-align: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: -5px;
+  margin-bottom: 8px;
+  color: rgb(69, 85, 96);
+  font-size: 16px;
+  font-weight: 600;
+  min-height: 6px;
+}
 .form-live-component-value{
   color: rgb(89, 93, 100);
   background-color: rgb(255, 255, 255);
@@ -37,21 +66,21 @@
   color: rgb(69, 85, 96);
   font-size: 13px;
   white-space: nowrap;
-  padding: 10px 4px;
+  padding: 8px 4px;
 }
 .form-results-section-result{
   font-size: 13px;
-  padding: 10px 4px;
+  padding: 8px 4px;
 }
 .form-results-table{
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
   font-size: 16px;
   text-align: left;
 }
 .form-results-td{
   border: 1px solid rgb(211, 221, 225);
   font-size: 13px;
-  padding: 10px 6px;
+  padding: 8px 6px;
+  max-width: 300px
 }

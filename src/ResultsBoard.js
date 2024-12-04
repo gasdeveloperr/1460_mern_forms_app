@@ -67,106 +67,157 @@ function ResultsBoard() {
     fetchData();
   }, []);
 
-  const handleImportPDF = () => {
-    const form = currentSubmForms[0];
-    const data = detailResult.data;
-    const formTitle = form.title
-    const doc = new jsPDF();
+  // const handleImportPDF = (resultsData) => {
+  //   const form = resultsData;
+  //   const data = detailResult.data;
+  //   const formTitle = form.title
+  //   const doc = new jsPDF();
 
-    doc.setFontSize(14);
-    doc.setTextColor(69, 85, 96);
+  //   doc.setFontSize(14);
+  //   doc.setTextColor(69, 85, 96);
 
-    const paragraphTab = 24;
-    const componentMargin = 8;
-    const fieldsMargin = 10;
-    const titleMargin = 12;
+  //   const paragraphTab = 24;
+  //   const cellMargin = 6;
+  //   const componentMargin = 8;
+  //   const fieldsMargin = 10;
+  //   const titleMargin = 12;
   
-    let y = 12; // Y position to start printing the fields
-    const labelWidth = 70; // Width of label cells
-    const answerWidth = 100; // Width of answer cells
-    const cellHeight = 10; // Height for each cell row
+  //   let y = 12; // Y position to start printing the fields
+  //   const labelWidth = 70; // Width of label cells
+  //   const answerWidth = 100; // Width of answer cells
+  //   const cellHeight = 10; // Height for each cell row
 
-    let fieldData = {};
-    doc.setFillColor('#cf3f3f')
+  //   let fieldData = {};
+  //   doc.setFillColor('#cf3f3f')
 
-    form.fields.map((field, index) => {
-      if(field.type === 'section') {
-        field.components.map((sectionComp, indexComp) => {
-          if (data && data.hasOwnProperty(sectionComp.id) && data[sectionComp.id] !== undefined) {
-            //console.log(data[sectionComp.id]);
-            fieldData = data[sectionComp.id];
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(14);
-            doc.text(`${sectionComp.title}: `, paragraphTab, y);
-            y += componentMargin;
-            doc.setFont(undefined, 'normal');
-            doc.setFontSize(12);
-            doc.text(fieldData.value || 'N/A', paragraphTab, y);
-            y += fieldsMargin;
-          } else {
-            if(sectionComp.type === 'title'){
-              doc.setFontSize(16);
-              doc.setFont(undefined, 'bold');
-              const titleColor = sectionComp.color || '#FFFFFF'
-              doc.setFillColor(titleColor)
-              doc.text(`${sectionComp.title}`, paragraphTab, y);
-              doc.setFillColor('#FFFFFF')
-              y += titleMargin;
-            }
-          }
-        })
-      } else if(data && data.hasOwnProperty(field.id) && data[field.id] !== undefined){
-        fieldData = data[field.id]
-        doc.setFont(undefined, 'bold');
-        doc.setFontSize(14);
-        //doc.rect(paragraphTab, y, labelWidth, cellHeight, 'FD'); 
-        doc.text(`${field.title} :`, paragraphTab, y);
-        y += componentMargin;
-        doc.setFont(undefined, 'normal');
-        doc.setFontSize(12);
-        doc.text(fieldData.value || 'N/A', paragraphTab, y);
-        y += fieldsMargin;
-      }else{
-        if(field.type === 'title'){
-          doc.setFontSize(16);
-          doc.setFont(undefined, 'bold');
-          const titleColor = field.color || '#FFFFFF'
-          //console.log('titleColor : ', field, titleColor)
-          doc.setFillColor(titleColor)
-          doc.text(`${field.title}`, paragraphTab, y);
-          doc.setFillColor(196, 74, 137, 0.8)
-          y += titleMargin;
-        }
-      }
-    })
-  
-    doc.save(formTitle+'.pdf');
-  };
-
-  // useEffect(() => {
-  //   if(submForms && forms){
-  //     // Create a map of formId to subm_forms for efficient lookup
-  //     const submFormsMap = submForms.reduce((map, submForm) => {
-  //       const { formId } = submForm;
-  //       if (!map[formId]) {
-  //         map[formId] = [];
+  //   form.fields.map((field, index) => {
+  //     if(field.type === 'section') {
+  //       field.components.map((sectionComp, indexComp) => {
+  //         if(sectionComp.type === 'columns'){
+  //           doc.setFont(undefined, 'bold');
+  //           doc.setFontSize(14);
+  //           doc.text(`${sectionComp.title}: `, paragraphTab, y);
+  //           y += componentMargin;
+  //           sectionComp.labels.map((label, columnIndex) => {
+  //             if (data && data.hasOwnProperty(sectionComp.id) && data[sectionComp.id] !== undefined) {
+  //               fieldData = data[sectionComp.id];
+  //               doc.setFont(undefined, 'bold');
+  //               doc.setFontSize(14);
+  //               doc.text(label, paragraphTab*(columnIndex+1), y);
+  //               doc.setFont(undefined, 'normal');
+  //               doc.setFontSize(12);
+  //               doc.text(fieldData.value[columnIndex] || 'N/A', paragraphTab*(columnIndex+1), y+cellMargin);
+  //               console.log('text in doc section : ', fieldData)
+  //             }
+  //           })
+  //           y += fieldsMargin;
+  //         }else{
+  //           if (data && data.hasOwnProperty(sectionComp.id) && data[sectionComp.id] !== undefined) {
+  //             //console.log(data[sectionComp.id]);
+  //             fieldData = data[sectionComp.id];
+  //             doc.setFont(undefined, 'bold');
+  //             doc.setFontSize(14);
+  //             doc.text(`${sectionComp.title}: `, paragraphTab, y);
+  //             y += componentMargin;
+  //             doc.setFont(undefined, 'normal');
+  //             doc.setFontSize(12);
+  //             doc.text(fieldData.value || 'N/A', paragraphTab, y);
+  //             y += componentMargin;
+  //             console.log('text in doc section : ', fieldData)
+  //           } else {
+  //             if(sectionComp.type === 'title'){
+  //               doc.setFontSize(16);
+  //               doc.setFont(undefined, 'bold');
+  //               const titleColor = sectionComp.color || '#FFFFFF'
+  //               doc.setFillColor(titleColor)
+  //               doc.text(`${sectionComp.title}`, paragraphTab, y);
+  //               doc.setFillColor('#FFFFFF');
+  //               y += titleMargin;
+  //             }
+  //           }
+  //         }
+  //       })
+  //       y += fieldsMargin;
+  //     } else 
+  //     if(field.type === 'columns'){
+  //       doc.setFont(undefined, 'bold');
+  //       doc.setFontSize(14);
+  //       doc.text(`${field.title} :`, paragraphTab, y);
+  //       y += componentMargin;
+  //       field.labels.map((label, columnIndex) => {
+  //         if (data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) {
+  //           //console.log(data[sectionComp.id]);
+  //           fieldData = data[field.id];
+  //           doc.setFont(undefined, 'bold');
+  //           doc.setFontSize(14);
+  //           doc.text(label, paragraphTab*(columnIndex+1), y);
+  //           doc.setFont(undefined, 'normal');
+  //           doc.setFontSize(12);
+  //           doc.text(fieldData.value[columnIndex] || 'N/A', paragraphTab*(columnIndex+1), y+cellMargin);
+  //           console.log('text in doc section : ', fieldData)
+  //         }
+  //       })
+  //       y += fieldsMargin;
+  //     } else 
+  //     if(data && data.hasOwnProperty(field.id) && data[field.id] !== undefined){
+  //       fieldData = data[field.id]
+  //       doc.setFont(undefined, 'bold');
+  //       doc.setFontSize(14);
+  //       //doc.rect(paragraphTab, y, labelWidth, cellHeight, 'FD'); 
+  //       doc.text(`${field.title} :`, paragraphTab, y);
+  //       y += componentMargin;
+  //       doc.setFont(undefined, 'normal');
+  //       doc.setFontSize(12);
+  //       doc.text(fieldData.value || 'N/A', paragraphTab, y);
+  //       y += fieldsMargin;
+  //       console.log('text in doc  : ', fieldData)
+  //     }else{
+  //       if(field.type === 'title'){
+  //         doc.setFontSize(16);
+  //         doc.setFont(undefined, 'bold');
+  //         const titleColor = field.color || '#FFFFFF'
+  //         console.log('titleColor : ', field, titleColor)
+  //         doc.setFillColor(titleColor)
+  //         doc.text(`${field.title}`, paragraphTab, y);
+  //         doc.setFillColor(196, 74, 137, 0.8)
+  //         y += titleMargin;
   //       }
-  //       map[formId].push(submForm);
-  //       return map;
-  //     }, {});
-  
-  //     // Build the results array
-  //     const resultsData = forms.map((form) => ({
-  //       title: form.title,
-  //       formId: form._id,
-  //       subm_forms: submFormsMap[form._id] || [],
-  //     }));
-  //     console.log('resultsData: ', resultsData)
-  //     setResults(resultsData);
-  //     setIsLoading(false);
-  //   }
-  // }, [submForms, forms])
+  //     }
+  //   })
+  //   doc.save(formTitle+'.pdf');
+  // };
 
+  // const handleDownloadPDF = () => {
+  //   const formTitle = detailResult.title
+  //   const input = document.getElementById("result-to-convert"); // The div or section to convert
+  //   html2canvas(input).then((canvas) => {
+  //     const imgData = canvas.toDataURL("image/png");
+  //     const pdf = new jsPDF("p", "mm", "a4");
+  //     const pdfWidth = pdf.internal.pageSize.getWidth();
+  //     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+  //     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  //     pdf.save(formTitle+'.pdf');
+  //   });
+  // };
+  const handleDownloadPDF = () => {
+    const formTitle = detailResult.title;
+    const input = document.getElementById("result-to-convert");
+  
+    const elementWidth = input.offsetWidth;
+    const elementHeight = input.offsetHeight;
+  
+    const orientation = elementWidth > '700' ? "l" : "p";
+  
+    const pdf = new jsPDF(orientation, "mm", "a4");
+    pdf.html(input, {
+      callback: function (pdf) {
+        pdf.save(`${formTitle}.pdf`);
+      },
+      x: 6,
+      y: 4,
+      html2canvas: { scale: 0.315 },
+    });
+  };
 
   return (
     <div>
@@ -196,7 +247,7 @@ function ResultsBoard() {
             </div>
             {
             detailResult &&
-              <div onClick={() => handleImportPDF()} className='results-page-heading-action-button'>
+              <div onClick={() => handleDownloadPDF()} className='results-page-heading-action-button'>
                 <img className="size24-icon" src={pdf_icon}/>
                 Import PDF
               </div>

@@ -7,6 +7,7 @@ export const section_accept_types_array = ['short_answer', 'long_answer', 'title
 export const component_types_array = ['short_answer', 'long_answer', 'title', 'name', 'address', 'email', 'phone',
   'number', 'dropdown', 'radio', 'checkbox', 'date_time', 'file_upload', 
   'columns', 'add_component_button', 'double_section', 'triple_section', 'two_inputs_section', 'triple_inputs_section', 'four_inputs_section', 'five_inputs_section', 'multi_section',];
+export const readonly_types_array = ['short_answer', 'long_answer', 'title', 'address', 'email', 'phone'];
      
 export const titles_to_types_object = {
   'short_answer': 'Short answer',

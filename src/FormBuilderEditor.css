@@ -183,7 +183,7 @@
   position: absolute;
   top: 100%;
   left: 0;
-  width: 100%;
+  width: fit-content;
   border: 1px solid #ccc;
   background-color: #fff;
   z-index: 1000;

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import '../FormBuilderEditor.css';
 import { OutsideClickContext } from '../OutsideClickContext';
-import { titles_to_types_object } from '../consts';
+import { readonly_types_array, titles_to_types_object } from '../consts';
 import trash_icon from '../icons/trash-can.svg'
 import plus_icon from '../icons/plus-icon.svg';
 import save_icon from '../icons/save-icon.svg';
@@ -944,12 +944,13 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                         </div>
                         <label className="field-editor__label">Column`s type: </label>
                         <div className="field-editor-column">
-                          <div className={`field-editor-column-type${editingSectionField.value[index].type === 'dropdown' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('dropdown', index)}>
+                        <ComponentTypeSelector selectedType={editingSectionField.value[index].type} index={index} onChange={changeColumnTypeHandler} />
+                          {/* <div className={`field-editor-column-type${editingSectionField.value[index].type === 'dropdown' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('dropdown', index)}>
                             Dropdown
                           </div> 
                           <div className={`field-editor-column-type${editingSectionField.value[index].type === 'short_answer' ? '-selected' : ''}`} onClick={() => changeColumnTypeHandler('short_answer', index)}>
                             Short answer
-                          </div> 
+                          </div>  */}
                         </div>
                         <div className="field-editor_checkbox-group">
                           <div className='field-editor_checkbox_container'>
@@ -959,13 +960,15 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                               Required
                             </label>
                           </div>
-                          <div className='field-editor_checkbox_container'>
-                            <label className="field-editor-label">
-                              <input type="checkbox" id="read-only" className='field-editor_checkbox' 
-                              checked={editingSectionField.read_only} onChange={changeFieldReadOnlyHandler}/>
-                              <label htmlFor="read-only">Read-only</label>
-                            </label>
-                          </div>
+                          { readonly_types_array.includes(editingSectionField.value[index].type) &&
+                            <div className='field-editor_checkbox_container'>
+                              <label className="field-editor-label">
+                                <input type="checkbox" id="read-only" className='field-editor_checkbox' 
+                                checked={editingSectionField.read_only} onChange={changeFieldReadOnlyHandler}/>
+                                <label htmlFor="read-only">Read-only</label>
+                              </label>
+                            </div>
+                          }
                         </div>
                       </div>
                     ))}

@@ -63,7 +63,7 @@ const FormResultsComponent = ({ field, data }) => {
 
       {field.type === 'title' && (
         <div className="form-short-answer">
-          <div className='form-title-component-title' style={{backgroundColor: field.color || '#FFFFFF'}}>
+          <div className='form-result-title-component' style={{backgroundColor: field.color || '#FFFFFF'}}>
             {field.title}
           </div>
         </div>

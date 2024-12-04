@@ -4,12 +4,12 @@ import FormResultsComponent from "./FormResultsComponent";
 const FormResultView = ({form}) => {
   console.log(' FormResultView form : ', form)
   return ( 
-    <div className="form-live-container">
+    <div className="form-result-container">
       {
         form.fileData ?
         <PDFViewerComponent form={form} />
         :
-        <form className="form-live-content">
+        <form className="form-result-content" id="result-to-convert">
          {form.fields.map((field, index) => (
           field.type === 'section' ? 
             field.components.map((sectionComp, indexComp) => (
