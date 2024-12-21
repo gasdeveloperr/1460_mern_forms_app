@@ -256,7 +256,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               {field.title}
             </div>
             <div className={`form-component-container ${field.layout}`}>
-              { field.checkbox.map((option, index)=> (
+              { field.options.map((option, index)=> (
                 <label key={index} className={`form-component-checkbox-container ${field.layout}`}>
                   <input type="checkbox" 
                     fieldtype={field.type}
@@ -277,7 +277,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               {field.title}
             </div>
             <div className={`form-component-container ${field.layout}`}>
-              { field.radio.map((option, index)=> (
+              { field.options.map((option, index)=> (
                 <label key={index} className='form-component-radio-container'>
                   <input
                     type="radio"
@@ -380,7 +380,8 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               {field.required && <span>*</span>}
               {field.title} 
             </div>
-            <ColumnsFormComponent field={field} handleInputsChange={handleColumnInputsChange} handleSelectorChange={handleColumnSelectorChange}/>
+            <ColumnsFormComponent field={field} handleInputsChange={handleColumnInputsChange} 
+            handleSelectorChange={handleColumnSelectorChange} onFileChange={onFileChange}/>
           </div>
         )}
         {field.type === 'add_component_button' && (
@@ -395,7 +396,6 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               {field.title}
             </div>
             <div className='form-live-date-time-container'>
-              
               <label key={field._id} className="form-live-component-container">
                 <div className="form-date-time-answer">
                   <input className='form-live-input' id={field.id} fieldtype={field.type} customtype='date' name={field.title+'_date'} placeholder={field.dateFormat}
@@ -414,7 +414,8 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'file_upload' && 
-        <FileUploadFormComponent field={field} onFileChange={onFileChange}/>}
+        <FileUploadFormComponent field={field} onFileChange={onFileChange}/>
+        }
       </>
     );
 };

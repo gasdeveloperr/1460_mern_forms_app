@@ -1,5 +1,6 @@
 import './FormResultsStyles.css';
 import '../FormLiveStyles.css';
+import UltimateResultColumnComponent from './UltimateResultColumnComponent';
 
 const FormResultsComponent = ({ field, data }) => {
   
@@ -85,22 +86,23 @@ const FormResultsComponent = ({ field, data }) => {
             {field.title}:
           </div>
             <div className={`form-component-container ${field.layout}`}>
-              { field.checkbox.map((option, index)=> (
+              { fieldData && fieldData.value.length !== 0 ?
+               fieldData.value.map((value, index)=> (
                 <label key={index} className={`form-component-checkbox-container ${field.layout}`}>
                   <input type="checkbox" 
-                    fieldtype={field.type}
-                    id={field.id} 
-                    name={option.title} 
-                    disabled={field.read_only}/>
+                    name={value} 
+                    checked={true}
+                    disabled={true}/>
                   <span className="form-component-checkmark"></span>
-                  {option.title}
+                  {value}
                 </label>
                 ))
+                :
+                <div className="form-live-component-value">
+                  No selection
+                </div>
               }
             </div>
-          <div className="form-live-component-value">
-            {fieldData && fieldData.value.length > 0 ? fieldData.value.join(', ') : 'No selection'}
-          </div>
         </div>
       )}
 
@@ -300,9 +302,12 @@ const FormResultsComponent = ({ field, data }) => {
                 ))}
               </tr>
               <tr>
-                {field.labels.map((label, index) => (
+                {field.value.map((value, index) => (
                   <td className="form-results-td">
-                    {fieldData.value[index]}
+                    {
+                      fieldData.value && fieldData.value[index] &&
+                      <UltimateResultColumnComponent fieldValue={fieldData.value[index]} field={value}/>
+                    }
                   </td>
                 ))}
               </tr>
@@ -321,7 +326,10 @@ const FormResultsComponent = ({ field, data }) => {
                 // (fieldData.value[index]==='Annually' || fieldData.value[index]==='Not Reviewed')? '#ff0909':
                 // ''}}
                 >
-                  {fieldData.value[index]}
+                  {
+                    fieldData.value && fieldData.value[index] &&
+                    <UltimateResultColumnComponent fieldValue={fieldData.value[index]} field={field.value[index]}/>
+                  }
                 </div>
               </div>
             ))}
@@ -345,32 +353,3 @@ const FormResultsComponent = ({ field, data }) => {
 };
 
 export default FormResultsComponent;
-
-
-{/* <div className="form-component-dynamic-columns-container" 
-style={field.style && field.style === 'tabular' ? 
-{gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`} 
-:
-{gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`}}>
-{field.labels.map((label, index) => (
-  <div className="form-component-column" key={index}>
-    <div className="form-results-section-label" 
-    // style={field.style && field.style === 'tabular' ? 
-    // { border: '1px solid rgb(211, 221, 225)', height: '38px', padding: '8px'} : ''}
-    >
-      {label}
-    </div>
-    <div className="form-results-section-result"
-    // style={field.style && field.style === 'tabular' ? 
-    //   {borderRadius: '0px', height: '48px', border: '1px solid rgb(211, 221, 225)', padding: '6px'} 
-    //   : '' }
-    // style={{color: fieldData.value[index]==='Monthly'? '#7bb163' :
-    // fieldData.value[index]==='Quarterly'? '#f1c336':
-    // (fieldData.value[index]==='Annually' || fieldData.value[index]==='Not Reviewed')? '#ff0909':
-    // ''}}
-    >
-      {fieldData.value[index]}
-    </div>
-  </div>
-))}
-</div> */}

@@ -39,39 +39,6 @@
   margin: 0 !important;
   padding: 0 !important;
 }
-[help-title] {
-  position: relative;
-}
-
-[help-title]:after {
-  content: attr(help-title); /* Display the content of the custom attribute */
-  background-color: #332F2E;
-  width: max-content;
-  max-width: 300px;
-  color: #fff;
-  font-size: 12px;
-  position: absolute;
-  padding: 1px 5px 2px 5px;
-  right: 2px;
-  top: 26px;
-  white-space: nowrap;
-  box-shadow: 1px 1px 3px #222222;
-  opacity: 0;
-  border-radius: .3rem;
-  z-index: 12000;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-}
-
-[help-title]:hover:after {
-  opacity: 0.8;
-  visibility: visible;
-}
-
-#remove_icon:hover,
-#duplicate_icon:hover{
-  content: attr(help-title);
-}
 
 .field-editor__actions{
   display: flex;
@@ -303,8 +270,10 @@
 
 
 .option-input {
-  display: flex;
+  display: grid;
   align-items: center;
+  grid-template-columns: 4fr 1fr;
+  gap: 2px;
   margin-bottom: 5px;
 }
 
@@ -319,12 +288,12 @@
 }
 
 .color-preview {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border: 1px solid #ccc;
   cursor: pointer;
   display: inline-block;
-  margin-left: 10px;
+  margin: 4px 8px 0px;
 }
 .color-preview-container{
   display: flex;
@@ -338,17 +307,48 @@
   border: 1px solid #ccc; */
   border-radius: 4px;
 }
-.option-input {
+.option-buttons {
   display: flex;
   align-items: center;
+  margin-left: 8px;
 }
 
-.option-buttons {
-  margin-left: 10px;
-}
-.option-buttons {
+.field-editor-option-corrective-action{
   display: flex;
-  margin-left: 5px;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: #eaa69d;
+}
+.field-editor-option-corrective-action-remove{
+  border-radius: 2px;
+  height: 14px;
+  width: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: #eaa69d;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+
+}
+.field-editor-add-corrective-action-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  color: #fff;
+  background-color: #a7d39f;
+  padding: 4px;
+  height: fit-content;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  margin: 4px 0px;
+}
+.field-editor-add-corrective-action-button:hover{
+  opacity: 0.8;
 }
 
 .field-editor-add-button,

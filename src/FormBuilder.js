@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { addingNewComponent, getAuthToken } from './utils';
 import OptionsSavingWindow from './OptionsSavingWindow';
 import OptionsChoosingWindow from './OptionsChoosingWindow';
+import AddCorrectiveActionWindow from './form_builder_editor_components/AddCorrectiveActionWindow';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
@@ -51,7 +52,7 @@ const FormBuilder = () => {
       updateForm(formId);
       console.log('Form fields updated:', prevFormFields, formFields, formType);
     }
-    console.log('formFields : ', formFields)
+    //console.log('formFields : ', formFields)
   }, [formFields]);
   
 
@@ -205,6 +206,8 @@ const FormBuilder = () => {
   const [chosenOptionsColumnToUpdate, setChosenOptionsColumnToUpdate] = useState('');
   const [isOptionsSavingWindow, setIsOptionsSavingWindow] = useState(false);
   const [isOptionsChoosingWindow, setIsOptionsChoosingWindow] = useState(false);
+  const [isCorrectiveActionWindow, setIsCorrectiveActionWindow] = useState(false);
+  const [chosenOptionToAddCorrective, setChosenOptionToAddCorrective] = useState('');
 
   const handleOptionsSaving = (optionsData) => {
     setOptions(optionsData);
@@ -276,6 +279,192 @@ const FormBuilder = () => {
     console.log('updatedFields ', updatedFields)
     setFormFields(updatedFields);
     closeOptionsChoosingWindow();
+  }
+
+  const chooseOptionToAddCorrectiveAction = (fieldId, columnIndex, optionIndex) => {
+    setIsCorrectiveActionWindow(true);
+    setChosenOptionToAddCorrective({fieldId: fieldId, optionIndex: optionIndex, columnIndex:columnIndex});
+  }
+  const closeCorrectiveActionWindow = () => {
+    setIsCorrectiveActionWindow(false);
+    setChosenOptionsToUpdate('');
+  }
+  const handleAddingCorrectiveAction = (actionData) => { 
+    //console.log('chosen Option ToAddCorrective ', chosenOptionToAddCorrective)
+    const updatedFields = formFields.map(field => {
+      if (field.id === chosenOptionToAddCorrective.fieldId && field.type === 'columns') {
+        const updatedValues = field.value.map((component, index) => {
+          if(index === chosenOptionToAddCorrective.columnIndex){
+            const updatedOptions = component.options.map((option, optionIndex) => {
+              if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                console.log('found option to change in columns: ', { ...option, correctiveAction: actionData } )
+                return { ...option, correctiveAction: actionData } 
+              }
+              return option
+            });
+            return { ...component, options: updatedOptions } 
+          }
+          return component
+        });
+        return { ...field, value: updatedValues };
+      }else{
+        if (field.id === chosenOptionToAddCorrective.fieldId) {
+          if(field.type === 'dropdown'){
+            const updatedOptions = field.dropdown.map((option, optionIndex) => {
+              if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                return { ...option, correctiveAction: actionData } 
+              }
+              return option
+            });
+            return { ...field, dropdown: updatedOptions };
+          }else {
+            console.log('found not dropdown', field)
+            const updatedOptions = field.options.map((option, optionIndex) => {
+              if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                return { ...option, correctiveAction: actionData } 
+              }
+              return option
+            });
+            return { ...field, options: updatedOptions };
+          }
+        } else if (field.components) {
+          const updatedComponents = field.components.map(componentObj => {
+            if (componentObj.id === chosenOptionToAddCorrective.fieldId && componentObj.type === 'columns') {
+              const updatedValues = field.value.map((component, index) => {
+                if(index === chosenOptionToAddCorrective.columnIndex){
+                  const updatedOptions = component.options.map((option, optionIndex) => {
+                    if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                      console.log('found option to change : ', { ...option, correctiveAction: actionData } )
+                      return { ...option, correctiveAction: actionData } 
+                    }
+                    return option
+                  });
+                  return { ...component, options: updatedOptions } 
+                }
+                return component
+              });
+              return { ...componentObj, value: updatedValues };
+            }else{
+              if (componentObj.id === chosenOptionToAddCorrective.fieldId) {
+                if(componentObj.type === 'dropdown'){
+                  const updatedOptions = componentObj.dropdown.map((option, optionIndex) => {
+                    if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                      return { ...option, correctiveAction: actionData } 
+                    }
+                    return option
+                  });
+                  return { ...componentObj, dropdown: updatedOptions };
+                }else {
+                  console.log('found not dropdown', componentObj)
+                  const updatedOptions = componentObj.options.map((option, optionIndex) => {
+                    if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                      return { ...option, correctiveAction: actionData } 
+                    }
+                    return option
+                  });
+                  return { ...componentObj, options: updatedOptions };
+                }
+              } 
+              return componentObj;
+            }
+          });
+          console.log('updatedComponents   : ', updatedComponents)
+          return { ...field, components: updatedComponents };
+        }
+        return field;
+      }
+    });
+    const updatedCurrentField = updatedFields.find(field => field.id === chosenOptionToAddCorrective.fieldId)
+    console.log('updatedCurrentField ', updatedCurrentField)
+    setEditingField(updatedCurrentField)
+    setFormFields(updatedFields);
+    setChosenOptionToAddCorrective({fieldId: '', optionIndex: '', columnIndex:''});
+    closeCorrectiveActionWindow();
+  }
+  const handleRemoveCorrectiveAction = (fieldId, columnIndexRemove, optionIndexRemove) => { 
+    const updatedFields = formFields.map(field => {
+      if (field.id === fieldId && field.type === 'columns') {
+        const updatedValues = field.value.map((component, index) => {
+          if(index === columnIndexRemove){
+            const updatedOptions = component.options.map((option, optionIndex) => {
+              if(optionIndex === optionIndexRemove){
+                return { ...option, correctiveAction: {} } 
+              }
+              return option
+            });
+            return { ...component, options: updatedOptions } 
+          }
+          return component
+        });
+        return { ...field, value: updatedValues };
+      }else{
+        if (field.id === fieldId) {
+          if(field.type === 'dropdown'){
+            const updatedOptions = field.dropdown.map((option, optionIndex) => {
+              if(optionIndex === optionIndexRemove){
+                return { ...option, correctiveAction: {} } 
+              }
+              return option
+            });
+            return { ...field, dropdown: updatedOptions };
+          }else {
+            const updatedOptions = field.options.map((option, optionIndex) => {
+              if(optionIndex === optionIndexRemove){
+                return { ...option, correctiveAction: {} } 
+              }
+              return option
+            });
+            return { ...field, options: updatedOptions };
+          }
+        } else if (field.components) {
+          const updatedComponents = field.components.map(componentObj => {
+            if (componentObj.id === fieldId && componentObj.type === 'columns') {
+              const updatedValues = field.value.map((component, index) => {
+                if(index === columnIndexRemove){
+                  const updatedOptions = component.options.map((option, optionIndex) => {
+                    if(optionIndex === optionIndexRemove){
+                      return { ...option, correctiveAction: {} } 
+                    }
+                    return option
+                  });
+                  return { ...component, options: updatedOptions } 
+                }
+                return component
+              });
+              return { ...componentObj, value: updatedValues };
+            }else{
+              if (componentObj.id === fieldId) {
+                if(componentObj.type === 'dropdown'){
+                  const updatedOptions = componentObj.dropdown.map((option, optionIndex) => {
+                    if(optionIndex === optionIndexRemove){
+                      return { ...option, correctiveAction: {} } 
+                    }
+                    return option
+                  });
+                  return { ...componentObj, dropdown: updatedOptions };
+                }else {
+                  console.log('found not dropdown', componentObj)
+                  const updatedOptions = componentObj.options.map((option, optionIndex) => {
+                    if(optionIndex === optionIndexRemove){
+                      return { ...option, correctiveAction: {} } 
+                    }
+                    return option
+                  });
+                  return { ...componentObj, options: updatedOptions };
+                }
+              } 
+              return componentObj;
+            }
+          });
+          return { ...field, components: updatedComponents };
+        }
+        return field;
+      }
+    });
+    const updatedCurrentField = updatedFields.find(field => field.id === fieldId)
+    setEditingField(updatedCurrentField)
+    setFormFields(updatedFields);
+    closeCorrectiveActionWindow();
   }
 
   const updateFormTitleHandler = (e) => {
@@ -380,6 +569,8 @@ const FormBuilder = () => {
         onClose={closeOptionsSavingWindow} handleSaving={handleOptionsSaving}/>
         <OptionsChoosingWindow isOpen={isOptionsChoosingWindow} choseOption={updateChosenOptions} 
         onClose={closeOptionsChoosingWindow}/>
+        <AddCorrectiveActionWindow  isOpen={isCorrectiveActionWindow} handleAdding={handleAddingCorrectiveAction} 
+        onClose={closeCorrectiveActionWindow}/>
     
         <div className="form-builder-page-content">
           <FormBuilderSideBar setIsDragging={setIsDragging} setDropAreaPositions ={setDropAreaPositions} 
@@ -387,7 +578,9 @@ const FormBuilder = () => {
           updateFormTypeHandler={updateFormTypeHandler} formType={formType}
           editingField={editingField} setEditingField={setEditingField}
           editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField} 
-          handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange}/>
+          handleOptionsSaving={handleOptionsSaving} 
+          chooseOptionsToChange={chooseOptionsToChange} 
+          chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={handleRemoveCorrectiveAction}/>
           <div className='form-builder-part'>
            {formFields && 
            <div className='form-constructor' >

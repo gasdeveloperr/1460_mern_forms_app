@@ -26,7 +26,6 @@ const FormLive = () => {
 
   const [isSubmited, setIsSubmited] = useState(false)
 
-
   const usePrevious = (value) => {
     const ref = useRef();
   
@@ -49,7 +48,6 @@ const FormLive = () => {
   useEffect(() => {
 
     const token = getAuthToken();
-
     const config = {
       headers: {
         'Authorization': `${token}`,
@@ -80,43 +78,30 @@ const FormLive = () => {
     getForm();
   }, []);
 
-  const submitButtonComponent = {
-    id: 'submit_button',
-    type: 'submit_button',
-    title: 'Submit form',
-    value: 'Submit form',
-    options: [],
-    required: false,
-  };
-
   const [file, setFile] = useState(null);
 
   // Handle file selection from child component
   const handleFileChange = (selectedFile) => {
     setFile(selectedFile);
   };
+  // fileData.append('folderName', formTitle);
+  // console.log('fileData : ', fileData)
 
-  const uploadFile = async (file) => {
+  const uploadFile = async (file, folderName) => {
     if (!file) return null;
   
     const fileData = new FormData();
     fileData.append('document', file);
-
+    fileData.append('folderName', folderName);
     const token = getAuthToken();
-    const config = {
-      headers: {
-        'Authorization': `${token}`,
-      },
-    };
   
     try {
-      const response = await axios.post(`${backend_point}/upload`, fileData, {
+      const response = await axios.post(`${backend_point}/api/awsFiles/upload`, fileData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `${token}`,
         },
       });
-  
-      // File uploaded successfully, return file data
       return response.data.fileData;
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -131,7 +116,7 @@ const FormLive = () => {
     
     let fileData = null;
     if (file) {
-      fileData = await uploadFile(file);
+      fileData = await uploadFile(file, formTitle);
       if (!fileData) {
         setIsLoading(false);
         return;
@@ -146,35 +131,34 @@ const FormLive = () => {
       const customType = element.getAttribute('customtype'); 
       const sectionName = element.getAttribute('sectionName'); 
       const fieldType = element.getAttribute('fieldtype'); 
-      const columnType = element.getAttribute('columntype'); 
+      const columnType = element.getAttribute('columntype');
+      const columnIndex = element.getAttribute('columnindex'); 
 
-      console.log(' saving results  : ', fieldType, element)
+      //console.log(' saving results  : ', fieldType, element)
       for(let j = 0; j < formFields.length; j++){
         if(formFields[j].type === 'section'){
           for (let k = 0; k < formFields[j].components.length; k++) {
             const elementBack = formFields[j].components[k];
             console.log(element.id, elementBack.id)
             if (element.id == elementBack.id) {
-              initializeFieldData({
-                element,
-                elementBack,
+              initializeFieldData({element, columnIndex, elementBack,
                 formData,
                 fieldType,
                 customType,
                 sectionName,
+                columnType,
               });
             }
           }
         }
         const elementBack = formFields[j];
         if (element.id == elementBack.id ) {
-          initializeFieldData({
-            element,
-            elementBack,
+          initializeFieldData({element, columnIndex, elementBack,
             formData,
             fieldType,
             customType,
             sectionName,
+            columnType,
           });
         }
       }
@@ -189,7 +173,7 @@ const FormLive = () => {
       userData: {id: userId, email: userEmail},
       submittedAt: submittedTime
     }
-    console.log('data from the submit : ',formSubmsn);
+    //console.log('data from the submit : ',formSubmsn);
 
     const token = getAuthToken();
     const config = {
@@ -204,7 +188,6 @@ const FormLive = () => {
       setIsLoading(false);
       setIsSubmited(true);
       setFile(null)
-      //if(response.)
     } catch (error) {
       if (error.response) {
         console.error('Error saving form:', error.response.data);

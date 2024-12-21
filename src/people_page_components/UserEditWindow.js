@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../clients_page_components/ClientAddingWindow.css';
+import '../AddingWindowStyles.css';
 
 const UserEditWindow = ({ onClose, chosenUser, editUserHandler, changeStatusHandler }) => {
   // State for the form fields
@@ -126,12 +126,12 @@ const UserEditWindow = ({ onClose, chosenUser, editUserHandler, changeStatusHand
             <button className='modal-button' type="submit">Save User</button>
             {
             chosenUser.status === 'inactive' ? 
-              <button type="usual" onClick={() => changeStatusHandler('active')}>Activate User</button>
+              <button className='usual-button' type="usual" onClick={() => changeStatusHandler('active')}>Activate User</button>
             : 
-              <button type="usual" onClick={() => changeStatusHandler('inactive')}>Inactivate User</button>
+              <button className='usual-button' type="usual" onClick={() => changeStatusHandler('inactive')}>Inactivate User</button>
             }
            
-            <button type="cancel" onClick={onClose}>Cancel</button>
+            <button className='usual-button' type="cancel" onClick={onClose}>Cancel</button>
           </div>
         </form>
       </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './CustomSelector.css';
 import dropdown_icon from '../icons/dropdown-icon.svg';
 
-const CustomSelector = ({ options, selectedValue, setSelectorValue }) => {
+const CustomSelector = ({ options, selectedValue, columnStyle, isTabular, setSelectorValue }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const selectRef = useRef(null);
@@ -39,10 +39,12 @@ const CustomSelector = ({ options, selectedValue, setSelectorValue }) => {
   }, []);
 
   return (
-    <div ref={selectRef} className="custom-select-container">
+    <div ref={selectRef} className="custom-select-container" 
+    style={{height: isTabular ? '100%' : ''}} >
       <div 
         className="custom-select-display" 
-        style={{ backgroundColor: selectedOption ? selectedOption.color : '#fff' }} 
+        style={{borderRadius: isTabular ? '0px' : '', border: isTabular ? 'none' : '', 
+          backgroundColor: selectedOption ? selectedOption.color : '#fff'}} 
         onClick={toggleDropdown}
       >
         {selectedOption ? selectedOption.title : 'Select an option'} 

@@ -1,20 +1,23 @@
 import { useContext, useEffect, useState } from 'react';
 import './FormBuilderEditor.css';
 import { OutsideClickContext } from './OutsideClickContext';
-import { readonly_types_array, titles_to_types_object } from './consts';
+import { ordinalArray, readonly_types_array, titles_to_types_object } from './consts';
 import trash_icon from './icons/trash-can.svg'
 import plus_icon from './icons/plus-icon.svg'
 import save_icon from './icons/save-icon.svg'
+import add_corrective_action_icon from './icons/add-corrective-action-icon.svg'
 import chooser_options_icon from './icons/chooser-options.svg'
 import duplicate_icon from './icons/duplicate-icon.svg'
 import { HexColorPicker  } from "react-colorful";
 import convert from "color-convert"; 
 import ComponentTypeSelector from './ComponentTypeSelector';
 import LegacyComponentsOptions from './form_builder_editor_components/LegacyComponentsOptions';
+import ColumnsTypeSelector from './form_builder_editor_components/ColumnsTypeSelector';
 import DropdownOptions from './form_builder_editor_components/DropdownOptions';
 
 const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setEditingField,
-  handleDuplicateClick, handleOptionsSaving, chooseOptionsToChange}) => {
+  handleDuplicateClick, handleOptionsSaving, chooseOptionsToChange, 
+  chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction}) => {
 
   const changeFieldTitleHandler = (e) => {
     setEditingField({...editingField, title: e.target.value})
@@ -66,16 +69,16 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   }  
 
 
-  const addFieldCheckOptionHandler = (index) => {
-    const newCheckboxes = [...editingField.checkbox.slice(0, index+1),{title: 'Option', checked: false}, ...editingField.checkbox.slice(index+1, editingField.checkbox.length+1)]
-    setEditingField({...editingField, checkbox: newCheckboxes})
+  const addFieldBoxOptionHandler = (index) => {
+    const newCheckboxes = [...editingField.options.slice(0, index+1),{title: 'Option', checked: false}, ...editingField.options.slice(index+1, editingField.options.length+1)]
+    setEditingField({...editingField, options: newCheckboxes})
   } 
-  const deleteFieldCheckOptionHandler = (index) => {
-    const newCheckboxes = [...editingField.checkbox.slice(0, index), ...editingField.checkbox.slice(index+1, editingField.checkbox.length+1)]
-    setEditingField({...editingField, checkbox: newCheckboxes})
+  const deleteFieldBoxOptionHandler = (index) => {
+    const newCheckboxes = [...editingField.options.slice(0, index), ...editingField.options.slice(index+1, editingField.options.length+1)]
+    setEditingField({...editingField, options: newCheckboxes})
   } 
-  const changeFieldCheckOptionHandler = (e, index) => {
-    const newCheckboxes = editingField.checkbox.map((option, opt_index) => {
+  const changeFieldBoxOptionHandler = (e, index) => {
+    const newCheckboxes = editingField.options.map((option, opt_index) => {
       if(opt_index === index){
         option.title = e.target.value
         return option
@@ -83,33 +86,9 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
         return option
       }
     })
-    setEditingField({...editingField, checkbox: newCheckboxes})
+    setEditingField({...editingField, options: newCheckboxes})
   } 
-  const changeFieldCheckboxLayoutHandler = (e) => {
-    setEditingField({...editingField, layout: e.target.value})
-    //console.log('change editingField : ', editingField)
-  } 
-
-  const addFieldRadioOptionHandler = (index) => {
-    const newRadio = [...editingField.radio.slice(0, index+1),{title: 'Option', checked: false}, ...editingField.radio.slice(index+1, editingField.radio.length+1)]
-    setEditingField({...editingField, radio: newRadio})
-  } 
-  const deleteFieldRadioOptionHandler = (index) => {
-    const newRadio = [...editingField.radio.slice(0, index), ...editingField.radio.slice(index+1, editingField.radio.length+1)]
-    setEditingField({...editingField, radio: newRadio})
-  } 
-  const changeFieldRadioOptionHandler = (e, index) => {
-    const newRadio = editingField.radio.map((option, opt_index) => {
-      if(opt_index === index){
-        option.title = e.target.value
-        return option
-      }else{
-        return option
-      }
-    })
-    setEditingField({...editingField, radio: newRadio})
-  } 
-  const changeFieldRadioLayoutHandler = (e) => {
+  const changeFieldBoxLayoutHandler = (e) => {
     setEditingField({...editingField, layout: e.target.value})
     //console.log('change editingField : ', editingField)
   } 
@@ -133,7 +112,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     })
     setEditingField({...editingField, dropdown: newOptions})
   } 
-  const addFieldListOptionHandlerNew = (index, sectionIndex) => {
+  const addListOptionHandlerInColumns = (index, sectionIndex) => {
     const newOptions = [
       ...editingField.value[sectionIndex].options.slice(0, index + 1),
       { title: 'Option', selected: false }, // Default new option
@@ -145,7 +124,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   
     setEditingField({ ...editingField, value: newValue });
   };
-  const deleteFieldListOptionHandlerNew = (index, sectionIndex) => {
+  const deleteListOptionHandlerInColumns = (index, sectionIndex) => {
     const newOptions = [
       ...editingField.value[sectionIndex].options.slice(0, index),
       ...editingField.value[sectionIndex].options.slice(index + 1),
@@ -156,21 +135,70 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   
     setEditingField({ ...editingField, value: newValue });
   };
-  const changeFieldListOptionHandlerNew = (e, index, sectionIndex) => {
+  const changeListOptionHandlerInColumns = (e, index, sectionIndex) => {
     const newOptions = editingField.value[sectionIndex].options.map((option, opt_index) => {
       if (opt_index === index) {
         return { ...option, title: e.target.value };
       }
       return option;
     });
-  
     const newValue = [...editingField.value];
     newValue[sectionIndex].options = newOptions;
-    //console.log('newValue: ',  newValue)
   
     setEditingField({ ...editingField, value: newValue });
   };
+
+  const addBoxOptionHandlerInColumns = (index, sectionIndex) => {
+    const newOptions = [
+      ...editingField.value[sectionIndex].options.slice(0, index+1),
+      {title: 'Option', checked: false}, 
+      ...editingField.value[sectionIndex].options.slice(index+1)]
+      
+    const newValue = [...editingField.value];
+    newValue[sectionIndex].options = newOptions;
+    setEditingField({ ...editingField, value: newValue });
+  };
+
+  const deleteBoxOptionHandlerInColumns = (index, sectionIndex) => {
+    const newOptions = [
+      ...editingField.value[sectionIndex].options?.slice(0, index),
+      ...editingField.value[sectionIndex].options?.slice(index+1)
+    ]
+      
+    const newValue = [...editingField.value];
+    newValue[sectionIndex].options = newOptions;
+    setEditingField({ ...editingField, value: newValue });
+  } 
+  const changeBoxOptionHandlerInColumns = (e, index, sectionIndex) => {
+    const newOptions = editingField.value[sectionIndex].options.map((option, opt_index) => {
+      if(opt_index === index){
+        return { ...option, title: e.target.value };
+      }else{
+        return option
+      }
+    })
+    const newValue = [...editingField.value];
+    newValue[sectionIndex].options = newOptions;
   
+    setEditingField({ ...editingField, value: newValue });
+  }
+  const changeBoxLayoutHandlerInColumns = (e, columnIndex) => {
+    const newValue = [...editingField.value];
+    newValue[columnIndex].layout = e.target.value;
+    setEditingField({ ...editingField, value: newValue });
+  } 
+
+  const changeFieldReadOnlyHandlerInColumn = (columnIndex) => {
+    const newValues = editingField.value.map((column, column_index) => {
+      if(column_index === columnIndex){
+        return { ...column, read_only: !column.read_only };
+      }else{
+        return column
+      }
+    })
+    setEditingField({ ...editingField, value: newValues });
+  } 
+
   const [colorPickerVisible, setColorPickerVisible] = useState(null);
   const [color, setColor] = useState(editingField.color);
 
@@ -436,28 +464,56 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   const changeColumnTypeHandler = (type, index) => {
     const updatedValues = [...editingField.value];
   
-    // If the type is 'dropdown', add default options
-    if (type === 'dropdown') {
-      updatedValues[index] = {
-        ...updatedValues[index],
-        type: type,
-        options: [
+    let newField = {
+      ...updatedValues[index],
+      type: type,
+    };
+  
+    // Handle specific types and add default properties
+    switch (type) {
+      case 'dropdown':
+        newField.options = [
           { title: 'Option 1', selected: true },
           { title: 'Option 2', selected: false },
-          { title: 'Option 3', selected: false }
-        ]
-      };
-    } else {
-      // For other types, just update the type without adding options
-      updatedValues[index] = {
-        ...updatedValues[index],
-        type: type,
-        options: undefined, // Clear options for non-dropdown types if needed
-      };
+          { title: 'Option 3', selected: false },
+        ];
+        break;
+      case 'name':
+        newField.labels = ['First name', 'Last name'];
+        break;
+      case 'checkbox':
+      case 'radio':
+        newField.options = [
+          { title: 'Option 1', checked: true },
+          { title: 'Option 2', checked: false },
+          { title: 'Option 3', checked: false },
+        ];
+        newField.layout = 'vertical';
+        break;
+      case 'date_time':
+        newField.dateFormat = 'MM/DD/YYYY';
+        newField.timeFormat = '12';
+        newField.value = {
+          date: '',
+          time: '',
+        };
+        break;
+  
+      default:
+        newField.options = undefined;
+        break;
     }
   
-    //console.log('updatedValues : ', updatedValues);
-    setEditingField({ ...editingField, value: updatedValues });
+    updatedValues[index] = newField;
+  
+    console.log('updatedValues : ', updatedValues);
+
+    // Set the updated values back to the field
+    setEditingField((prev) => ({
+      ...prev,
+      value: updatedValues,
+    }));
+  
   };
   
   const handleRemovingColumn = (columnIndex) => {
@@ -467,7 +523,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   };
   const handleAddingNewColumn = () => {
     const newValue = [...editingField.value, {
-      type: 'input',
+      type: 'short_answer',
       value: ''
     }]
     const newLabels = [...editingField.labels, 'label']
@@ -503,7 +559,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       case 'radio':
         newComponent = {
           ...newComponent,
-          radio: [
+          options: [
             { title: 'Option 1', checked: true },
             { title: 'Option 2', checked: false },
             { title: 'Option 3', checked: false },
@@ -515,7 +571,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       case 'checkbox':
         newComponent = {
           ...newComponent,
-          checkbox: [
+          options: [
             { title: 'Option 1', checked: true },
             { title: 'Option 2', checked: false },
             { title: 'Option 3', checked: false },
@@ -606,7 +662,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                   <>
                     {editingField.labels.map((label, index) => (
                       <div key={index} className="field-editor__field">
-                        <label className="field-editor__label">{`${['First', 'Second', 'Third', 'Fourth', 'Fifth'][index]} label`}</label>
+                        <label className="field-editor__label">{`${ordinalArray[index]} label`}</label>
                         <input
                           type="text"
                           value={label}
@@ -687,7 +743,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                     <>
                       {editingField.labels.map((label, index) => (
                         <div key={index} className="field-editor__field">
-                          <label className="field-editor__label">{`${['First', 'Second', 'Third', 'Fourth', 'Fifth'][index]} label`}</label>
+                          <label className="field-editor__label">{`${ordinalArray[index]} label`}</label>
                           <div className="field-editor-column">
                             <input
                               type="text"
@@ -701,13 +757,13 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                           </div>
                           <label className="field-editor__label">Column`s type: </label>
                           <div className="field-editor-column">
-                          <ComponentTypeSelector selectedType={editingField.value[index].type} index={index} onChange={changeColumnTypeHandler} />
+                            <ColumnsTypeSelector selectedType={editingField.value[index].type} index={index} onChange={changeColumnTypeHandler} />
                           </div>
                           <div className="field-editor_checkbox-group">
                             <div className='field-editor_checkbox_container'>
                               <label htmlFor="required" className="field-editor-label">
                                 <input type="checkbox" id="required" className='field-editor_checkbox' 
-                                checked={editingField.required} onChange={changeFieldRequiredHandler}/>
+                                checked={editingField.value[index].required} onChange={changeFieldRequiredHandler}/>
                                 Required
                               </label>
                             </div>
@@ -715,7 +771,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                               <div className='field-editor_checkbox_container'>
                                 <label className="field-editor-label">
                                   <input type="checkbox" id="read-only" className='field-editor_checkbox' 
-                                  checked={editingField.read_only} onChange={changeFieldReadOnlyHandler}/>
+                                  checked={editingField.value[index].read_only} onChange={() => changeFieldReadOnlyHandlerInColumn(index)}/>
                                   <label htmlFor="read-only">Read-only</label>
                                 </label>
                               </div>
@@ -826,17 +882,33 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
               </div>
             </div>
           }
-          { editingField.checkbox && 
+          { editingField.type === 'checkbox' && 
             <div className="option-content">
               <div className="option-group">
                 <label>OPTIONS</label>
-                  {editingField.checkbox.map((option, index)=> (
-                    <div key={index} className="option-input">
-                      <input type="text" onChange={(e) => changeFieldCheckOptionHandler(e, index)} value={option.title}/>
+                  {editingField.options.map((option, optionIndex)=> (
+                    <div key={optionIndex} className="option-input">
+                      <input type="text" onChange={(e) => changeFieldBoxOptionHandler(e, optionIndex)} value={option.title}/>
                       <div className="option-buttons">
-                        <button className="field-editor-add-button" onClick={() => addFieldCheckOptionHandler(index)}>+</button>
-                        <button className="field-editor-remove-button" onClick={() => deleteFieldCheckOptionHandler(index)}>-</button>
+                        <button className="field-editor-add-button" onClick={() => addFieldBoxOptionHandler(optionIndex)}>+</button>
+                        <button className="field-editor-remove-button" onClick={() => deleteFieldBoxOptionHandler(optionIndex)}>-</button>
                       </div>
+                      {
+                        option.correctiveAction && option.correctiveAction.text ?
+                        <>
+                          <div className="field-editor-option-corrective-action">
+                            Corrective action: {option.correctiveAction.text}
+                            <button className="field-editor-option-corrective-action-remove" 
+                            onClick={() => chooseOptionToRemoveCorrectiveAction(editingField.id, "", optionIndex)}>-</button>
+                          </div>
+                        </>
+                        :
+                        <div className="field-editor-add-corrective-action-button" 
+                        onClick={() => chooseOptionToAddCorrectiveAction(editingField.id, "", optionIndex)}>
+                          {/* <img className='size20-icon' src={add_corrective_action_icon} alt='+'/> */}
+                          Add corrective action
+                        </div>
+                      }
                     </div>
                   ))}
               </div>
@@ -845,12 +917,12 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                 <div className="field-editor-radio-group">
                   <label>
                     <input type="radio" name="layout" value="vertical" 
-                    onChange={changeFieldCheckboxLayoutHandler} checked={editingField.layout === 'vertical'} />
+                    onChange={changeFieldBoxLayoutHandler} checked={editingField.layout === 'vertical'} />
                     Vertical
                   </label>
                   <label>
                     <input type="radio" name="layout" value="horizontal" 
-                    onChange={changeFieldCheckboxLayoutHandler} checked={editingField.layout === 'horizontal'}/>
+                    onChange={changeFieldBoxLayoutHandler} checked={editingField.layout === 'horizontal'}/>
                     Horizontal
                   </label>
                 </div>
@@ -861,17 +933,33 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
               </div> */}
             </div>
           }
-          { editingField.radio && 
+          { editingField.type === 'radio' && 
             <div className="option-content">
               <div className="option-group">
                 <label>OPTIONS</label>
-                  {editingField.radio.map((option, index)=> (
-                    <div key={index} className="option-input">
-                      <input type="text" onChange={(e) => changeFieldRadioOptionHandler(e, index)} value={option.title}/>
+                  {editingField.options.map((option, optionIndex)=> (
+                    <div key={optionIndex} className="option-input">
+                      <input type="text" onChange={(e) => changeFieldBoxOptionHandler(e, optionIndex)} value={option.title}/>
                       <div className="option-buttons">
-                        <button className="field-editor-add-button" onClick={() => addFieldRadioOptionHandler(index)}>+</button>
-                        <button className="field-editor-remove-button" onClick={() => deleteFieldRadioOptionHandler(index)}>-</button>
+                        <button className="field-editor-add-button" onClick={() => addFieldBoxOptionHandler(optionIndex)}>+</button>
+                        <button className="field-editor-remove-button" onClick={() => deleteFieldBoxOptionHandler(optionIndex)}>-</button>
                       </div>
+                      {
+                        option.correctiveAction && option.correctiveAction.text ?
+                        <>
+                          <div className="field-editor-option-corrective-action">
+                            Corrective action: {option.correctiveAction.text}
+                            <button className="field-editor-option-corrective-action-remove" 
+                            onClick={() => chooseOptionToRemoveCorrectiveAction(editingField.id, '', optionIndex)}>-</button>
+                          </div>
+                        </>
+                        :
+                        <div className="field-editor-add-corrective-action-button" 
+                        onClick={() => chooseOptionToAddCorrectiveAction(editingField.id, '', optionIndex)}>
+                          {/* <img className='size20-icon' src={add_corrective_action_icon} alt='+'/> */}
+                          Add corrective action
+                        </div>
+                      }
                     </div>
                   ))}
               </div>
@@ -880,12 +968,12 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                 <div className="field-editor-radio-group">
                   <label>
                     <input type="radio" name="layout" value="vertical" 
-                    onChange={changeFieldRadioLayoutHandler} checked={editingField.layout === 'vertical'} />
+                    onChange={changeFieldBoxLayoutHandler} checked={editingField.layout === 'vertical'} />
                     Vertical
                   </label>
                   <label>
                     <input type="radio" name="layout" value="horizontal" 
-                    onChange={changeFieldRadioLayoutHandler} checked={editingField.layout === 'horizontal'}/>
+                    onChange={changeFieldBoxLayoutHandler} checked={editingField.layout === 'horizontal'}/>
                     Horizontal
                   </label>
                 </div>
@@ -925,17 +1013,21 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
           colorPickerVisible={colorPickerVisible} hexColor={hexColor} rgbColor={rgbColor} cmykColor={cmykColor}
           handleRgbChange={handleRgbChange} handleHexChange={handleHexChange} handleCmykChange={handleCmykChange}
           addListOptionHandler={addFieldListOptionHandler} deleteListOptionHandler={deleteFieldListOptionHandler}
-          handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange}/>
+          handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange} 
+          chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction}
+          chooseOptionToRemoveCorrectiveAction={chooseOptionToRemoveCorrectiveAction}/>
           }
           <LegacyComponentsOptions editingField={editingField} changeFieldListOptionHandler={changeFieldListOptionHandler} 
-          addFieldListOptionHandlerNew={addFieldListOptionHandlerNew} deleteFieldListOptionHandlerNew={deleteFieldListOptionHandlerNew}
+          addFieldListOptionHandlerNew={addListOptionHandlerInColumns} deleteFieldListOptionHandlerNew={deleteListOptionHandlerInColumns}
           changeSectionFieldPreFilledHandler={changeSectionFieldPreFilledHandler}/>
           {
             editingField.type === 'columns' && (
               <div className="option-content">
                 {
                   editingField.value.map((value, index) => (
-                    value.type === 'short_answer' ?
+                    ( value.type === 'short_answer' || value.type === 'long_answer' ||
+                      value.type === 'address' || value.type === 'email' || value.type === 'number' 
+                    ) ?
                     <div key={index} className="option-group">
                       <label>Pre-filled value for {editingField.labels[index]}</label>
                       <div className="option-input">
@@ -958,9 +1050,10 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                         <div key={optionIndex} className="option-input">
                           <input
                             type="text"
-                            onChange={(e) => changeFieldListOptionHandlerNew(e, optionIndex, index)}
+                            onChange={(e) => changeListOptionHandlerInColumns(e, optionIndex, index)}
                             value={option.title}
                           />
+                          <div className="option-buttons">
                           <div className="color-picker-container">
                             <div
                               className="color-preview"
@@ -1006,23 +1099,114 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                               </div>
                             )}
                           </div>
-                          <div className="option-buttons">
                             <button
                               className="field-editor-add-button"
-                              onClick={() => addFieldListOptionHandlerNew(optionIndex, index)}
+                              onClick={() => addListOptionHandlerInColumns(optionIndex, index)}
                             >
                               +
                             </button>
                             <button
                               className="field-editor-remove-button"
-                              onClick={() => deleteFieldListOptionHandlerNew(optionIndex, index)}
+                              onClick={() => deleteListOptionHandlerInColumns(optionIndex, index)}
                             >
                               -
                             </button>
                           </div>
+                          {
+                            option.correctiveAction && option.correctiveAction.text ?
+                            <>
+                              <div className="field-editor-option-corrective-action">
+                                Corrective action: {option.correctiveAction.text}
+                                <button className="field-editor-option-corrective-action-remove" 
+                                onClick={() => chooseOptionToRemoveCorrectiveAction(editingField.id, index, optionIndex)}>-</button>
+                              </div>
+                            </>
+                            :
+                            <div className="field-editor-add-corrective-action-button" 
+                            onClick={() => chooseOptionToAddCorrectiveAction(editingField.id, index, optionIndex)}>
+                              {/* <img className='size20-icon' src={add_corrective_action_icon} alt='+'/> */}
+                              Add corrective action
+                            </div>
+                          }
                         </div>
                       ))}
                     </div>
+                    :
+                    (value.type === 'checkbox' || value.type === 'radio') ?
+                      <div className="column-option-content">
+                        <div className="option-group">
+                          <label>OPTIONS for {editingField.labels[index]} </label>
+                            {value.options?.map((option, optionIndex)=> (
+                              <>
+                              <div key={optionIndex} className="option-input">
+                                <input type="text" onChange={(e) => changeBoxOptionHandlerInColumns(e, optionIndex, index)} value={option.title}/>
+                                <div className="option-buttons">
+                                  <button className="field-editor-add-button" onClick={() => addBoxOptionHandlerInColumns(optionIndex, index)}>+</button>
+                                  <button className="field-editor-remove-button" onClick={() => deleteBoxOptionHandlerInColumns(optionIndex, index)}>-</button>
+                                </div>
+                                {
+                                  option.correctiveAction && option.correctiveAction.text ?
+                                  <>
+                                    <div className="field-editor-option-corrective-action">
+                                      Corrective action: {option.correctiveAction.text}
+                                      <button className="field-editor-option-corrective-action-remove" 
+                                      onClick={() => chooseOptionToRemoveCorrectiveAction(editingField.id, index, optionIndex)}>-</button>
+                                    </div>
+                                  </>
+                                  :
+                                  <div className="field-editor-add-corrective-action-button" 
+                                  onClick={() => chooseOptionToAddCorrectiveAction(editingField.id, index, optionIndex)}>
+                                    {/* <img className='size20-icon' src={add_corrective_action_icon} alt='+'/> */}
+                                    Add corrective action
+                                  </div>
+                                }
+                              </div>
+                              </>
+                            ))}
+                        </div>
+                        <div className="layout-group">
+                          <label>LAYOUT for {editingField.labels[index]}</label>
+                          <div className="field-editor-radio-group">
+                            <label>
+                              <input type="radio" name={`${index}_layout`} value="vertical" 
+                              onChange={(e) => changeBoxLayoutHandlerInColumns(e, index)} checked={value.layout === 'vertical'} />
+                              Vertical
+                            </label>
+                            <label>
+                              <input type="radio" name={`${index}_layout`} value="horizontal" 
+                              onChange={(e) => changeBoxLayoutHandlerInColumns(e, index)} checked={value.layout === 'horizontal'}/>
+                              Horizontal
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    :
+                    value.type === 'date_time' ?
+                      <div className="column-option-content">
+                        <div className="option-group">
+                          <label>Date Format for {editingField.labels[index]} </label>
+                          <select
+                            value={value.dateFormat}
+                            onChange={changeDateFormatHandler}
+                          >
+                            <option value="MMM D, YYYY">MMM D, YYYY</option>
+                            <option value="D/M/YYYY">D/M/YYYY</option>
+                            <option value="DD.MM.YYYY">DD.MM.YYYY</option>
+                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                          </select>
+                        </div>
+                      
+                        <div className="option-group">
+                          <label>Time Format</label>
+                          <select
+                            value={value.timeFormat}
+                            onChange={changeTimeFormatHandler}
+                          >
+                            <option value="h:mm A">12 Hour (h:mm A)</option>
+                            <option value="HH:mm">24 Hour (HH:mm)</option>
+                          </select>
+                        </div>
+                      </div>
                     : <></>
                   ))
                 }

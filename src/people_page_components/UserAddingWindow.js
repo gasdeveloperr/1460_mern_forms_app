@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../clients_page_components/ClientAddingWindow.css';
+import '../AddingWindowStyles.css';
 import { getAuthToken } from '../utils';
 import { backend_point } from '../consts';
 
@@ -150,7 +150,7 @@ const UserAddingWindow = ({ isOpen, onClose, onAddUser }) => {
           </div>
           <div className="form-actions">
             <button className='modal-button' type="submit">Add User</button>
-            <button type="button" onClick={onClose}>Cancel</button>
+            <button className='usual-button' type="button" onClick={onClose}>Cancel</button>
           </div>
         </form>
       </div>

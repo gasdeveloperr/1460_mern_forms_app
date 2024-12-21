@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './clients_page_components/ClientAddingWindow.css';
+import './AddingWindowStyles.css';
 import { backend_point } from './consts';
 import Spinner from './Spinner';
 import { getAuthToken } from './utils';
@@ -103,7 +103,7 @@ const OptionsChoosingWindow = ({isOpen, choseOption, onClose}) => {
                   <button className='modal-button' type="submit" onClick={() => choseOption(optionObject)}>
                     Use
                   </button>
-                  <button type="cancel" onClick={() => deleteOptionHandler(optionObject._id)}>
+                  <button className='usual-button' type="cancel" onClick={() => deleteOptionHandler(optionObject._id)}>
                     Delete
                   </button>
                 </div>
@@ -113,7 +113,7 @@ const OptionsChoosingWindow = ({isOpen, choseOption, onClose}) => {
           }
         </div>
         <div className="form-actions">
-          <button type="button" onClick={() => onClose()}>Cancel</button>
+          <button className='usual-button' type="button" onClick={() => onClose()}>Cancel</button>
         </div>
       </div>
     </div>

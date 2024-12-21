@@ -9,6 +9,7 @@ import plus_icon from './icons/plus-icon.svg'
 import file_upload_icon from './icons/file-upload-icon.svg'
 import calendar_icon from './icons/calendar-icon.svg'
 import FormBuilderSectionComponent from './FormBuilderSection';
+import UltimateColumnComponent from './form_builder_editor_components/UltimateColumnComponent';
 
 const FormBuilderSectionField = ({field, index, isDragging, setIsDragging, 
   handleDrop, sectionId,
@@ -79,11 +80,11 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
     if(field && field.labels){
       if(field && field.style && field.style === 'tabular'){
         setColumnsStyle({...columnsStyle, gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
-        setColumnStyle({...columnStyle, borderRadius: '0px'})
+        setColumnStyle({...columnStyle, borderRadius: '0px', border: '1px solid rgb(211, 221, 225)'})
         setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', padding: '8px'})
       }else{
         setColumnsStyle({...columnsStyle, gap: '10px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
-        setColumnStyle({...columnStyle, borderRadius: '4px'})
+        setColumnStyle({borderRadius: '4px'})
         setColumnLabelStyle({...columnLabelStyle, border: 'none', padding: '0'})
       }
     }
@@ -142,8 +143,8 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
                 {field.title}
               </div>
               <div className={`form-checkbox-answers-${field.layout}`}>
-                { field.checkbox &&
-                  field.checkbox.map((option, index)=> (
+                { field.options &&
+                  field.options.map((option, index)=> (
                     <div key={index} className='form-checkbox-option'>
                       <div className={`form-checkbox-option-checker${option.checked ? '-checked' : ''}`}/>
                       <div className='form-checkbox-option-title'>
@@ -162,8 +163,8 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
                 {field.title}
               </div>
               <div className={`form-checkbox-answers-${field.layout}`}>
-                { field.radio &&
-                  field.radio.map((option, index)=> (
+                { field.options &&
+                  field.options.map((option, index)=> (
                     <div key={index} className='form-checkbox-option'>
                       <div className={`form-checkbox-option-radio${option.checked ? '-checked' : ''}`}/>
                       <div className='form-checkbox-option-title'>
@@ -436,16 +437,8 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
                       {label}
                     </td>
                   ))}
-                  {field.labels.map((label, index) => (
-                    field.value[index].type === 'dropdown' ?
-                    <td className='form-component-dropdown-div' style={{backgroundColor: field.value[index].options[0].color ? field.value[1].color : ''}}>
-                      {field.value[index].options[0].title|| '⠀'}
-                      <img src={selector_icon} />
-                    </td>
-                    :
-                    <td className='form-component-input-div short' style={columnStyle}>
-                      {field.value[index].value}
-                    </td>
+                  {field.value.map((value, index) => (
+                    <UltimateColumnComponent key={index} field={value} columnStyle={columnStyle}/>
                   ))}
                 </table>
               </div>

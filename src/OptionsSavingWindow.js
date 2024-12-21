@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './clients_page_components/ClientAddingWindow.css';
+import './AddingWindowStyles.css';
 import { backend_point } from './consts';
 import Spinner from './Spinner';
 import { getAuthToken } from './utils';
@@ -70,7 +70,7 @@ const OptionsSavingWindow = ({isOpen, optionsData, onClose, handleSaving}) => {
           </div>
           <div className="form-actions">
             <button className='modal-button' type="submit">Save</button>
-            <button type="button" onClick={() => onClose()}>Cancel</button>
+            <button className='usual-button' type="button" onClick={() => onClose()}>Cancel</button>
           </div>
         </form>
       </div>

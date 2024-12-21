@@ -197,7 +197,7 @@ const CreateUserForm = ({isModalOpen, setIsModalOpen,
               }
               <div className="modal-footer">
                 <button className='modal-button' type="submit">Create</button>
-                <button type="cancel" onClick={closeModal}>
+                <button className='usual-button' type="cancel" onClick={closeModal}>
                   Cancel
                 </button>
               </div>

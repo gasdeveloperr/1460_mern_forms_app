@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import CustomSelector from './CustomSelector';
+import UltimateLiveColumnComponent from './UltimateLiveColumnComponent';
 
-const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange }) => {
+const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange, onFileChange }) => {
   const [sectionValues, setSectionValues] = useState([]);
 
   // Initialize values based on field structure
@@ -35,11 +35,11 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange 
     if(field && field.labels){
       if(field && field.style && field.style === 'tabular'){
         setColumnsStyle({...columnsStyle, gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
-        setColumnStyle({...columnStyle, borderRadius: '0px'})
+        setColumnStyle({...columnStyle, borderRadius: '0px', border: '1px solid rgb(211, 221, 225)'})
         setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', padding: '10px 6px'})
       }else{
         setColumnsStyle({...columnsStyle, gap: '10px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
-        setColumnStyle({...columnStyle, borderRadius: '4px'})
+        setColumnStyle({borderRadius: '4px'})
         setColumnLabelStyle({...columnLabelStyle, border: 'none', padding: '8px'})
       }
     }
@@ -52,41 +52,12 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange 
           {label}
         </td>
       ))}
-      {field.labels.map((label, index) => (
-        <td className="form-component-column" key={index}>    
-          {field.value[index].type === 'dropdown' ? (
-            <>
-              <CustomSelector
-                options={field.value[index].options}
-                selectedValue={sectionValues[index]}
-                setSelectorValue={(selectedOption) => handleValueChange(selectedOption, index)}
-              />
-              <input
-                fieldtype={field.type}
-                id={field.id}
-                name={field.id}
-                sectionName={field.labels[index]}
-                customtype="columns"
-                disabled={field.read_only}
-                value={sectionValues[index]}
-                onChange={() => {}}
-                hidden
-              />
-            </>
-          ) : (
-            <input
-              className="form-live-input"
-              style={columnStyle}
-              id={field.id}
-              fieldtype={field.type}
-              columnType={field.type}
-              value={sectionValues[index]}
-              name={`${field.id}-${index}`}
-              onChange={(e) => handleValueChange(e.target.value, index)}
-              required={field.required}
-              disabled={field.read_only}
-            />
-          )}
+      {field.value.map((value, index) => (
+        <td className="form-component-column" key={index} style={columnStyle}>
+          <UltimateLiveColumnComponent field={field} columnValue={value} labelName={field.labels[index]}
+          columnStyle={columnStyle} isTabular={field.style === "tabular"}
+          columnIndex={index} sectionValues={sectionValues}
+          handleValueChange={handleValueChange} onFileChange={onFileChange}/>
         </td>
       ))}
     </table>
@@ -94,3 +65,42 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange 
 };
 
 export default ColumnsFormComponent;
+
+
+
+// {field.labels.map((label, index) => (
+//   <td className="form-component-column" key={index}>    
+//     {field.value[index].type === 'dropdown' ? (
+//       <>
+//         <CustomSelector
+//           options={field.value[index].options}
+//           selectedValue={sectionValues[index]}
+//           setSelectorValue={(selectedOption) => handleValueChange(selectedOption, index)}
+//         />
+//         <input
+//           fieldtype={field.type}
+//           id={field.id}
+//           name={field.id}
+//           sectionName={field.labels[index]}
+//           customtype="columns"
+//           disabled={field.read_only}
+//           value={sectionValues[index]}
+//           onChange={() => {}}
+//           hidden
+//         />
+//       </>
+//     ) : (
+//       <input
+//         className="form-live-input"
+//         style={columnStyle}
+//         id={field.id}
+//         fieldtype={field.type}
+//         columnType={field.type}
+//         value={sectionValues[index]}
+//         name={`${field.id}-${index}`}
+//         onChange={(e) => handleValueChange(e.target.value, index)}
+//         required={field.required}
+//         disabled={field.read_only}
+//       />
+//     )}
+

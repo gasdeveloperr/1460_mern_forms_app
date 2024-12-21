@@ -5,7 +5,7 @@ import FormBuilderSectionComponentEditor from "./form_builder_editor_components/
 
 const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormField, removeFormSectionField, duplicateField,
     updateFormTypeHandler, formType, editingField, setEditingField, editingSectionField, setEditingSectionField,
-    handleOptionsSaving, chooseOptionsToChange}) => {
+    handleOptionsSaving, chooseOptionsToChange, chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction}) => {
 
   const handleDragStart = () => {
     setIsDragging(true);
@@ -37,12 +37,16 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
         <FieldBuilderEditor removeFormField={removeFormField} duplicateField={duplicateField}
         editingField={editingField} setEditingField={setEditingField}
         editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
-        handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange}/>
+        handleOptionsSaving={handleOptionsSaving} 
+        chooseOptionsToChange={chooseOptionsToChange} 
+        chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={chooseOptionToRemoveCorrectiveAction}/>
         : editingSectionField && editingSectionField.id !== '' ?
         <FormBuilderSectionComponentEditor removeFormSectionField={removeFormSectionField} duplicateField={duplicateField}
         editingField={editingField} setEditingField={setEditingField}
         editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
-        handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange}/>
+        handleOptionsSaving={handleOptionsSaving} 
+        chooseOptionsToChange={chooseOptionsToChange} 
+        chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={chooseOptionToRemoveCorrectiveAction}/>
         :
         <div className="form-builder-components">
           <div className="section-group">

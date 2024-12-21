@@ -52,8 +52,8 @@ const Header = () => {
                 </a>
               </li>
               <li>
-                <a href="/actions" className={isActive('/actions') ? 'active' : ''}>
-                  Corrective Action
+                <a href="/corrective_actions" className={isActive('/corrective_actions') ? 'active' : ''}>
+                  Corrective Actions
                 </a>
               </li>
               {/* <li>

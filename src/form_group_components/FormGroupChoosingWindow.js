@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../clients_page_components/ClientAddingWindow.css';
+import '../AddingWindowStyles.css';
 import Spinner from '../Spinner';
 import './FormGroupChoosingWindow.css';
 
@@ -41,7 +41,7 @@ const FormGroupChoosingWindow = ({isOpen, formGroups, chosenFormToAddIntoGroup, 
           }
         </div>
         <div className="form-actions">
-          <button type="button" onClick={() => onClose()}>Cancel</button>
+          <button className='usual-button' type="button" onClick={() => onClose()}>Cancel</button>
         </div>
       </div>
     </div>

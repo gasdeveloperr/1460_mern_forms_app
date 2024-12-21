@@ -3,6 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import HomePage from './HomePage';
 import FormBuilder from './FormBuilder';
+import CorrectiveActionsPage from './CorrectiveActionsPage';
 import DashboardPage from './DashboardPage';
 import { OutsideClickProvider } from './OutsideClickContext';
 import FormLive from './FormLive';
@@ -52,7 +53,7 @@ const App = () => {
                 <Route path="/account/settings" element={<UserSettingsPage />} />
                 <Route path="/administration" element={<AdminPage />} />
                 <Route path="/incidents" element={<InDevelopmentPage />} />
-                <Route path="/actions" element={<InDevelopmentPage />} />
+                <Route path="/corrective_actions" element={<CorrectiveActionsPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes >

@@ -7,7 +7,17 @@ export const section_accept_types_array = ['short_answer', 'long_answer', 'title
 export const component_types_array = ['short_answer', 'long_answer', 'title', 'name', 'address', 'email', 'phone',
   'number', 'dropdown', 'radio', 'checkbox', 'date_time', 'file_upload', 
   'columns', 'add_component_button', 'double_section', 'triple_section', 'two_inputs_section', 'triple_inputs_section', 'four_inputs_section', 'five_inputs_section', 'multi_section',];
+
+export const column_types_array = ['short_answer', 'long_answer', 'name', 'address', 'email', 'phone',
+  'number', 'dropdown', 'radio', 'checkbox', 'date_time', 'file_upload', 'add_component_button', ];
+
 export const readonly_types_array = ['short_answer', 'long_answer', 'title', 'address', 'email', 'phone'];
+
+export const ordinalArray = [
+  '1st', '2nd', '3rd', '4th', '5th', 
+  '6th', '7th', '8th', '9th', '10th', 
+  '11th', '12th'
+];
      
 export const titles_to_types_object = {
   'short_answer': 'Short answer',
@@ -35,7 +45,7 @@ export const titles_to_types_object = {
   'multi_section' : 'Multiple Section',
 };
 
-export const backend_point = 'https://one460-forms-backend.onrender.com'
+export const backend_point = 'http://localhost:5000'
 //'http://localhost:5000'
 //'https://one460-forms-backend.onrender.com'
 

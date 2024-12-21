@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './ClientAddingWindow.css';
+import '../AddingWindowStyles.css';
 
 const FacilityAddingWindow = ({ isOpen, onClose, onAddFacility  }) => {
   const [location, setLocation] = useState({

@@ -9,7 +9,7 @@ import { getAuthToken, getUserRole } from './utils';
 import ClientsSideMenu from './clients_page_components/ClientsSideMenu';
 import ClientsTable from './clients_page_components/ClientsTable';
 import FilterSearchBar from './clients_page_components/FilterSearchBar';
-import ClientAddingWindow from './clients_page_components/ClientAddingWindow';
+import AddingWindowStyles from './AddingWindowStyles.css';
 import FacilityAddingWindow from './clients_page_components/FacilityAddingWindow';
 
 function ClientsPage() {
@@ -205,7 +205,7 @@ function ClientsPage() {
               selectedClient={selectedClient} setSelectedClient={setSelectedClient} 
               editClientHandler={editClientHandler} goBack={toMainTableHandler}/>
             }
-            <ClientAddingWindow isOpen={isAddingWindowOpen} onClose={() => setIsAddingWindowOpen(false)}
+            <AddingWindowStyles isOpen={isAddingWindowOpen} onClose={() => setIsAddingWindowOpen(false)}
               onAddClient={handleAddClient}/>
             <FacilityAddingWindow isOpen={isAddingFacilityWindowOpen} onClose={() => setIsAddingFacilityWindowOpen(false)}
               onAddFacility={handleAddFacility} selectedClient={selectedClient} />

@@ -41,16 +41,8 @@ export const addingNewComponent = (componentData) => {
   if(componentData.type === 'name'){
     newField.labels = ['First name', 'Last name']
   }
-  if(componentData.type === 'checkbox'){
-    newField.checkbox = [
-      {title: 'Option 1', checked: true},
-      {title: 'Option 2', checked: false},
-      {title: 'Option 3', checked: false}
-    ];
-    newField.layout = 'vertical';
-  }
-  if(componentData.type === 'radio'){
-    newField.radio = [
+  if(componentData.type === 'checkbox' || componentData.type === 'radio'){
+    newField.options = [
       {title: 'Option 1', checked: true},
       {title: 'Option 2', checked: false},
       {title: 'Option 3', checked: false}
@@ -207,7 +199,7 @@ export const addingNewComponent = (componentData) => {
 };
 
   // Function to initialize and update formData based on fieldType
-  export function initializeFieldData({ element, elementBack, formData, fieldType, customType, sectionName }) {
+  export function initializeFieldData({ element, columnIndex, elementBack, formData, fieldType, customType, sectionName, columnType }) {
     if (!formData[element.id]) {
       switch(fieldType){
         case 'double_section' :
@@ -251,7 +243,7 @@ export const addingNewComponent = (componentData) => {
     //setting element type for subm data field
     formData[element.id].type = fieldType;
 
-    console.log('formData : ', formData[element.id])
+    //console.log('formData : ', formData)
 
     switch(fieldType){
       case 'double_section' :
@@ -276,7 +268,27 @@ export const addingNewComponent = (componentData) => {
         formData[element.id].value.push(element.value);
         break;
       case 'columns' :
-        formData[element.id].value.push(element.value);
+        switch(columnType){
+          case 'checkbox' :
+            if (element.checked) {
+              if (!Array.isArray(formData[element.id].value[columnIndex])) {
+                formData[element.id].value[columnIndex] = [];
+              }
+              formData[element.id].value[columnIndex].push(element.name);
+              break;
+            }
+            break;
+          case 'radio' :
+            formData[element.id].value[columnIndex] = ''
+            if (element.checked) {
+              formData[element.id].value[columnIndex] = element.value;
+              break;
+            } 
+            break;
+          default:
+            formData[element.id].value[columnIndex] = element.value;
+            break;
+        }
         break;
       case 'checkbox':
         if (element.checked) {

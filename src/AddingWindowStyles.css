@@ -55,7 +55,8 @@
   margin-top: 20px;
 }
 
-button {
+.modal-button,
+.usual-button{
   padding: 8px 12px;
   margin-left: 10px;
   border: none;
@@ -87,4 +88,8 @@ button[type="usual"]{
 }
 button[type="usual"]:hover{
   color: #0c414a;
+}
+
+.corrective-action-text{
+  display: flex;
 }

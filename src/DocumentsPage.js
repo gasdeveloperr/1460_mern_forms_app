@@ -38,6 +38,7 @@ function DocumentsPage() {
       const response = await axios.get(`${backend_point}/api/users/${userId}`, config);
       setIsLoading(false);
       setFiles(response.data.files);
+      console.log('user files ',response.data.files)
     } catch (err) {
       if(err.response && err.response.status === 401){
         localStorage.removeItem('token');

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import client_add_icon from '../icons/client-add-icon.svg'
 import home_page_icon from '../icons/home-page-icon.svg'
 import configuration_icon from '../icons/configuration-icon.svg'
 import form_icon from '../icons/form-icon.svg'
 import form_groups_icon from '../icons/form-groups-icon.svg'
+import add_form_icon from '../icons/add-form-icon.svg'
 import add_form_group_icon from '../icons/add-form-group-icon.svg'
 import arrow_menu_icon from '../icons/arrow-side-menu-icon.svg'
 import '../clients_page_components/ClientsSideMenu.css';
@@ -47,7 +47,7 @@ const DashboardSideMenu = ({ activeOption, handleAddingForm, handleCreatingFormG
               <div className={'menu-item'}
                 onClick={() => handleAddingForm()}
               >
-                <img src={client_add_icon} className="menu-item-icon"/>
+                <img src={add_form_icon} className="size26-icon"/>
                 <span className="menu-item__label">Create form </span>
               </div>
             </div>

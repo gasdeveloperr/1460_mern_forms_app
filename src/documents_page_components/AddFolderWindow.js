@@ -2,19 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../AddingWindowStyles.css';
 import { backend_point } from '../consts';
-import Spinner from '../Spinner';
 import { getAuthToken, getCurrentOrganization } from '../utils';
 
 
-const FormGroupSavingWindow = ({isOpen, onClose, handleSaving}) => {
-  const [title, setTitle] = useState('');
-  const [isFormGroupLoading, setIsFormGroupLoading] = useState(false);
-
-  const [isError, setIsError] = useState('')
+const AddFolderWindow = ({isOpen, onClose, currentPath}) => {
+  const [folderName, setFolderName] = useState('');
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    setIsFormGroupLoading(true);
     const token = getAuthToken();
     const organization = getCurrentOrganization()
     const config = {
@@ -24,12 +19,12 @@ const FormGroupSavingWindow = ({isOpen, onClose, handleSaving}) => {
     };
     
     try {
-      const response = await axios.post(`${backend_point}/api/formGroups/new`, {
-        title: title,
+      const response = await axios.post(`${backend_point}/api/awsFiles/createNewFolder`, {
+        folderName: folderName,
         organization: organization,
+        currentPath: currentPath,
       }, config);
       console.log('Form Group saved successfully:', response.data);
-      setIsFormGroupLoading(false);
       onClose();
     } catch (error) {
       if (error.response) {
@@ -43,31 +38,24 @@ const FormGroupSavingWindow = ({isOpen, onClose, handleSaving}) => {
   }
 
   if (!isOpen) return null;
-  if (isFormGroupLoading) return (
-    <div className="window-overlay">
-      <div className="window-content">
-        <Spinner />
-      </div>
-    </div>
-  )
 
   return (
     <div className="window-overlay" id='saving-options-window'>
       <div className="window-content">
-        <h2>Create new Group to unite Assessments</h2>
+        <h2>Create new folder</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Group title:</label>
+            <label htmlFor="name">Folder name:</label>
             <input
               type="text"
               id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={folderName}
+              onChange={(e) => setFolderName(e.target.value)}
               required
             />
           </div>
           <div className="form-actions">
-            <button className='modal-button' type="submit">Save</button>
+            <button className='modal-button' type="submit">Create</button>
             <button className='usual-button' type="button" onClick={() => onClose()}>Cancel</button>
           </div>
         </form>
@@ -76,4 +64,4 @@ const FormGroupSavingWindow = ({isOpen, onClose, handleSaving}) => {
   );
 }
  
-export default FormGroupSavingWindow;
+export default AddFolderWindow;
