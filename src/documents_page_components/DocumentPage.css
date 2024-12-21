@@ -27,6 +27,7 @@
 }
 .sidebar {
   width: fit-content;
+  min-width: 220px;
   max-width: 320px;
   background-color: #e2f0ff;
   color: rgb(0, 0, 0);
@@ -63,6 +64,8 @@
   align-items: center;
   margin-bottom: 8px;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden; 
   cursor: pointer;
 }
 .file-title:hover{
