@@ -9,8 +9,8 @@ import { getAuthToken, getUserRole } from './utils';
 import ClientsSideMenu from './clients_page_components/ClientsSideMenu';
 import ClientsTable from './clients_page_components/ClientsTable';
 import FilterSearchBar from './clients_page_components/FilterSearchBar';
-import AddingWindowStyles from './AddingWindowStyles.css';
 import FacilityAddingWindow from './clients_page_components/FacilityAddingWindow';
+import ClientAddingWindow from './clients_page_components/ClientAddingWindow';
 
 function ClientsPage() {
 
@@ -84,6 +84,12 @@ function ClientsPage() {
   const handleAddingClient = () => {
     setIsAddingWindowOpen(true);
   };
+  const closeAddingClient = () => {
+    setIsAddingWindowOpen(false)
+  }
+  const closeFacilityClient = () => {
+    setIsAddingFacilityWindowOpen(false)
+  }
 
   const handleAddClient = async(newClient) => {
 
@@ -205,9 +211,9 @@ function ClientsPage() {
               selectedClient={selectedClient} setSelectedClient={setSelectedClient} 
               editClientHandler={editClientHandler} goBack={toMainTableHandler}/>
             }
-            <AddingWindowStyles isOpen={isAddingWindowOpen} onClose={() => setIsAddingWindowOpen(false)}
+            <ClientAddingWindow isOpen={isAddingWindowOpen} onClose={closeAddingClient}
               onAddClient={handleAddClient}/>
-            <FacilityAddingWindow isOpen={isAddingFacilityWindowOpen} onClose={() => setIsAddingFacilityWindowOpen(false)}
+            <FacilityAddingWindow isOpen={isAddingFacilityWindowOpen} onClose={closeFacilityClient}
               onAddFacility={handleAddFacility} selectedClient={selectedClient} />
           </div>
         </div>

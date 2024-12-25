@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './AddingWindowStyles.css';
+import '../AddingWindowStyles.css';
 
-const AddingWindowStyles = ({ isOpen, onClose, onAddClient }) => {
+const ClientAddingWindow = ({ isOpen, onClose, onAddClient }) => {
   const [clientName, setClientName] = useState('');
   const [status, setStatus] = useState('active');
   const [locations, setLocations] = useState([{
@@ -91,11 +91,11 @@ const AddingWindowStyles = ({ isOpen, onClose, onAddClient }) => {
                 </div>
               ))}
               {locations.length > 1 && (
-                <button type="cancel" onClick={() => removeLocation(index)}>Remove Location</button>
+                <button className='modal-button' onClick={() => removeLocation(index)}>Remove Location</button>
               )}
             </div>
           ))}
-          <button type="cancel" onClick={addLocation}>Add Location</button>
+          <button className='modal-button' onClick={addLocation}>Add Location</button>
           <div className="form-actions">
             <button className='modal-button' type="submit">Add Client</button>
             <button className='usual-button' type="cancel" onClick={onClose}>Cancel</button>
@@ -106,4 +106,4 @@ const AddingWindowStyles = ({ isOpen, onClose, onAddClient }) => {
   );
 };
 
-export default AddingWindowStyles;
+export default ClientAddingWindow;
