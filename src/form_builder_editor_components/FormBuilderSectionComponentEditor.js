@@ -13,9 +13,10 @@ import ComponentTypeSelector from '../ComponentTypeSelector';
 import DropdownOptions from '../form_builder_editor_components/DropdownOptions';
 import ColumnsTypeSelector from './ColumnsTypeSelector';
 
-const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateField, editingField, setEditingField,
+const FormBuilderSectionComponentEditor = ({ updateFormFieldsFromSection, 
+  removeFormSectionField, duplicateField, editingField, setEditingField,
   editingSectionField, setEditingSectionField,  handleDuplicateClick, handleOptionsSaving,
-  chooseOptionsToChange, chooseOptionToAddCorrectiveAction}) => {
+  chooseOptionsToChange, chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction}) => {
 
   const changeFieldTitleHandler = (e) => {
     const updatedComponents = editingField.components.map((field) => {
@@ -29,6 +30,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
     });
     setEditingSectionField({...editingSectionField, title: e.target.value})
     setEditingField({...editingField, components: updatedComponents})
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   }
   const changeFieldLabelHandler = (e, index) => {
     const updatedComponents = editingField.components.map((field) => {
@@ -45,6 +47,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       labels: updatedComponents.find((field) => field.id === editingSectionField.id)?.labels || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents })
   };
   
   const changeFieldRequiredHandler = () => {
@@ -57,6 +60,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
   
     setEditingSectionField({...editingSectionField, required: !editingSectionField.required});
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
   // Toggle the 'read_only' property on the specific component
@@ -70,6 +74,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
   
     setEditingSectionField({...editingSectionField, read_only: !editingSectionField.read_only});
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
   // Change the pre-filled value on the specific component
@@ -83,6 +88,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
   
     setEditingSectionField({ ...editingSectionField, value: e.target.value});
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
   const changeColumnFieldPreFilledHandler = (e, columnIndex) => {
@@ -100,6 +106,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       value: updatedComponents.find((field) => field.id === editingSectionField.id)?.value || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   const changeColumnsStyleHandler = (e) => {
     let newStyle = 'tabular'
@@ -115,6 +122,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
     });
     setEditingSectionField({...editingSectionField, style: newStyle,});
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   }  
   
   // Add a checkbox option at a specific index within a component
@@ -136,6 +144,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       options: updatedComponents.find((field) => field.id === editingSectionField.id)?.options || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
   // Delete a checkbox option at a specific index within a component
@@ -156,6 +165,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       options: updatedComponents.find((field) => field.id === editingSectionField.id)?.options || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   // Update a checkbox option's title at a specific index within editingField
@@ -175,6 +185,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       options: updatedComponents.find((field) => field.id === editingSectionField.id)?.options || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   // Update the layout for checkboxes within editingField
@@ -188,46 +199,65 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       layout: e.target.value,
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   const addFieldListOptionHandler = (index) => {
     const updatedComponents = editingField.components.map((field) => {
       if (field.id === editingSectionField.id) {
+        Object.defineProperty(editingSectionField, 'dropdown', {
+          get() {
+            return this.options;
+          },
+          set(value) {
+            this.options = value;
+          }
+        });
         const newOptions = [
-          ...field.dropdown.slice(0, index + 1),
+          ...field.options?.slice(0, index + 1),
           { title: 'Option', checked: false },
-          ...field.dropdown.slice(index + 1)
+          ...field.options?.slice(index + 1)
         ];
-        return { ...field, dropdown: newOptions };
+        return { ...field, options: newOptions };
       }
       return field;
     });
 
     setEditingSectionField({
       ...editingSectionField,
-      dropdown: updatedComponents.find((field) => field.id === editingSectionField.id)?.dropdown || [],
+      options: updatedComponents.find((field) => field.id === editingSectionField.id)?.options || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   // Delete a dropdown option at a specific index within editingField
   const deleteFieldListOptionHandler = (index) => {
     const updatedComponents = editingField.components.map((field) => {
       if (field.id === editingSectionField.id) {
+        Object.defineProperty(editingSectionField, 'dropdown', {
+          get() {
+            return this.options;
+          },
+          set(value) {
+            this.options = value;
+          }
+        });
         const newOptions = [
-          ...field.dropdown.slice(0, index),
-          ...field.dropdown.slice(index + 1)
+          ...field.options?.slice(0, index),
+          ...field.options?.slice(index + 1)
         ];
-        return { ...field, dropdown: newOptions };
+        return { ...field, options: newOptions };
       }
       return field;
     });
 
     setEditingSectionField({
       ...editingSectionField,
-      dropdown: updatedComponents.find((field) => field.id === editingSectionField.id)?.dropdown || [],
+      options: updatedComponents.find((field) => field.id === editingSectionField.id)?.options || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   // Add a new option in a list inside a specific section
@@ -251,6 +281,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       value: updatedComponents.find((field) => field.id === editingSectionField.id)?.value || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   // Delete an option in a list inside a specific section
@@ -273,6 +304,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       value: updatedComponents.find((field) => field.id === editingSectionField.id)?.value || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   // Update the title of a list option in a specific section dropdown+checkbox+radio
@@ -287,7 +319,15 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
           newValue[sectionIndex].options = newOptions;
           return { ...field, value: newValue };
         }else{
-          const newOptions = editingSectionField.dropdown.map((option, opt_index) => {
+          Object.defineProperty(editingSectionField, 'dropdown', {
+            get() {
+              return this.options;
+            },
+            set(value) {
+              this.options = value;
+            }
+          });
+          const newOptions = editingSectionField.options?.map((option, opt_index) => {
             if(opt_index === index){
               option.title = e.target.value
               return option
@@ -296,8 +336,8 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
             }
           })
           const newValue = [...field.value];
-          newValue[sectionIndex].dropdown = newOptions;
-          return { ...field, dropdown: newValue };
+          newValue[sectionIndex].options = newOptions;
+          return { ...field, options: newValue };
         }
       }
       return field;
@@ -308,23 +348,33 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       value: updatedComponents.find((field) => field.id === editingSectionField.id)?.value || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   const changeFieldListOptionHandler = (e, index, sectionIndex) => {
     const updatedComponents = editingField.components.map((field) => {
       if (field.id === editingSectionField.id) {
-        const newOptions = field.dropdown.map((option, opt_index) => 
+        Object.defineProperty(editingSectionField, 'dropdown', {
+          get() {
+            return this.options;
+          },
+          set(value) {
+            this.options = value;
+          }
+        });
+        const newOptions = field.options?.map((option, opt_index) => 
           opt_index === index ? { ...option, title: e.target.value } : option
         );
-        return { ...field, dropdown: newOptions };
+        return { ...field, options: newOptions };
       }
       return field;
     });
 
     setEditingSectionField({
       ...editingSectionField,
-      dropdown: updatedComponents.find((field) => field.id === editingSectionField.id)?.dropdown || [],
+      options: updatedComponents.find((field) => field.id === editingSectionField.id)?.options || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   const changeBoxLayoutHandlerInColumns = (e, columnIndex) => {
@@ -340,6 +390,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       value: updatedComponents.find((field) => field.id === editingSectionField.id)?.value || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   } 
 
   const changeFieldReadOnlyHandlerInColumn = (columnIndex) => {
@@ -360,6 +411,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       value: updatedComponents.find((field) => field.id === editingSectionField.id)?.value || [],
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   } 
   
   const [colorPickerVisible, setColorPickerVisible] = useState(null);
@@ -453,8 +505,9 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
     });
 
     setColor(color);
-    setEditingField({ ...editingField, components: updatedComponents });
     setEditingSectionField({...editingSectionField, color: color});
+    setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   const handleTitleColorChange = (newHexColor) => {
@@ -537,7 +590,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
     let newOptions = [];
     const updatedComponents = editingField.components.map((field) => {
       if (field.id === editingSectionField.id) {
-        newOptions = field.dropdown.map((option, opt_index) => {
+        newOptions = field.options?.map((option, opt_index) => {
           if(opt_index === index){
             option.color = color;
           }
@@ -547,8 +600,9 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       return field;
     });
     setColor(color);
+    setEditingSectionField({...editingSectionField, options: newOptions});
     setEditingField({ ...editingField, components: updatedComponents });
-    setEditingSectionField({...editingSectionField, dropdown: newOptions});
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
   const handleColumnsColorChange = (newHexColor, index, optionIndex) => {
@@ -613,15 +667,18 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       return field;
     });
     setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
 
   const changeDateFormatHandler = (selectedFormat) => {
     setEditingField({...editingField, dateFormat: selectedFormat})
+    //updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
   const changeTimeFormatHandler = (selectedFormat) => {
     setEditingField({...editingField, timeFormat: selectedFormat})
+    //updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   const [showLogic, setShowLogic] = useState(false);
@@ -693,13 +750,14 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       return field;
     });
   
-    setEditingField({ ...editingField, components: updatedComponents });
     setEditingSectionField({
       ...editingSectionField,
       value: updatedComponents.find(
         (field) => field.id === editingSectionField.id
       )?.value,
     });
+    setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
   
@@ -715,8 +773,9 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       return field;
     });
   
-    setEditingField({ ...editingField, components: updatedComponents });
     setEditingSectionField({ ...editingSectionField, value: updatedValues, labels: updatedLabels });
+    setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
   const handleAddingNewColumn = () => {
@@ -734,8 +793,9 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       return field;
     });
   
-    setEditingField({ ...editingField, components: updatedComponents });
     setEditingSectionField({ ...editingSectionField, value: updatedValues, labels: updatedLabels });
+    setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
 
   const handleTypeChange = (type) => {
@@ -748,7 +808,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       case 'dropdown':
         newComponent = {
           ...newComponent,
-          dropdown: [
+          options: [
             { title: 'Option 1', selected: true },
             { title: 'Option 2', selected: false },
             { title: 'Option 3', selected: false },
@@ -807,6 +867,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
       ...prev,
       adding_component: newComponent,
     }));
+    //updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   };
   
   const dateFormatOptions=  [
@@ -1061,13 +1122,29 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
           <div className="option-content">
             <div className="option-group">
               <label>OPTIONS</label>
-                {editingSectionField.options.map((option, index)=> (
-                  <div key={index} className="option-input">
-                    <input type="text" onChange={(e) => changeFieldBoxOptionHandler(e, index)} value={option.title}/>
+                {editingSectionField.options.map((option, optionIndex)=> (
+                  <div key={optionIndex} className="option-input">
+                    <input type="text" onChange={(e) => changeFieldBoxOptionHandler(e, optionIndex)} value={option.title}/>
                     <div className="option-buttons">
-                      <button className="field-editor-add-button" onClick={() => addFieldBoxOptionHandler(index)}>+</button>
-                      <button className="field-editor-remove-button" onClick={() => deleteFieldBoxOptionHandler(index)}>-</button>
+                      <button className="field-editor-add-button" onClick={() => addFieldBoxOptionHandler(optionIndex)}>+</button>
+                      <button className="field-editor-remove-button" onClick={() => deleteFieldBoxOptionHandler(optionIndex)}>-</button>
                     </div>
+                    {
+                      option.correctiveAction && option.correctiveAction.text ?
+                      <>
+                        <div className="field-editor-option-corrective-action">
+                          Corrective action: {option.correctiveAction.text}
+                          <button className="field-editor-option-corrective-action-remove" 
+                          onClick={() => chooseOptionToRemoveCorrectiveAction(editingSectionField.id, '', optionIndex)}>-</button>
+                        </div>
+                      </>
+                      :
+                      <div className="field-editor-add-corrective-action-button" 
+                      onClick={() => chooseOptionToAddCorrectiveAction(editingSectionField.id, '', optionIndex)}>
+                        {/* <img className='size20-icon' src={add_corrective_action_icon} alt='+'/> */}
+                        Add corrective action
+                      </div>
+                    }
                   </div>
                 ))}
             </div>
@@ -1096,13 +1173,29 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
           <div className="option-content">
             <div className="option-group">
               <label>OPTIONS</label>
-                {editingSectionField.options.map((option, index)=> (
-                  <div key={index} className="option-input">
-                    <input type="text" onChange={(e) => changeFieldBoxOptionHandler(e, index)} value={option.title}/>
+                {editingSectionField.options.map((option, optionIndex)=> (
+                  <div key={optionIndex} className="option-input">
+                    <input type="text" onChange={(e) => changeFieldBoxOptionHandler(e, optionIndex)} value={option.title}/>
                     <div className="option-buttons">
-                      <button className="field-editor-add-button" onClick={() => addFieldBoxOptionHandler(index)}>+</button>
-                      <button className="field-editor-remove-button" onClick={() => deleteFieldBoxOptionHandler(index)}>-</button>
+                      <button className="field-editor-add-button" onClick={() => addFieldBoxOptionHandler(optionIndex)}>+</button>
+                      <button className="field-editor-remove-button" onClick={() => deleteFieldBoxOptionHandler(optionIndex)}>-</button>
                     </div>
+                    {
+                      option.correctiveAction && option.correctiveAction.text ?
+                      <>
+                        <div className="field-editor-option-corrective-action">
+                          Corrective action: {option.correctiveAction.text}
+                          <button className="field-editor-option-corrective-action-remove" 
+                          onClick={() => chooseOptionToRemoveCorrectiveAction(editingSectionField.id, '', optionIndex)}>-</button>
+                        </div>
+                      </>
+                      :
+                      <div className="field-editor-add-corrective-action-button" 
+                      onClick={() => chooseOptionToAddCorrectiveAction(editingSectionField.id, '', optionIndex)}>
+                        {/* <img className='size20-icon' src={add_corrective_action_icon} alt='+'/> */}
+                        Add corrective action
+                      </div>
+                    }
                   </div>
                 ))}
             </div>
@@ -1150,14 +1243,14 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
             </div>
           </div>
         }
-        {editingSectionField.dropdown && 
+        {editingSectionField.type === "dropdown" && 
         <DropdownOptions editingField={editingSectionField} changeListOptionHandler={changeFieldListOptionHandler} 
         handleColorChange={handleColorChange} toggleColorPicker={toggleColorPicker}
         colorPickerVisible={colorPickerVisible} hexColor={hexColor} rgbColor={rgbColor} cmykColor={cmykColor}
         handleRgbChange={handleRgbChange} handleHexChange={handleHexChange} handleCmykChange={handleCmykChange}
         addListOptionHandler={addFieldListOptionHandler} deleteListOptionHandler={deleteFieldListOptionHandler}
         handleOptionsSaving={handleOptionsSaving} chooseOptionsToChange={chooseOptionsToChange}
-        chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction}/>
+        chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={chooseOptionToRemoveCorrectiveAction}/>
         }
         {
           editingSectionField.type === 'columns' && (
@@ -1192,52 +1285,52 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                           onChange={(e) => changeFieldListOptionHandlerInColumns(e, optionIndex, index)}
                           value={option.title}
                         />
-                        <div className="color-picker-container">
-                          <div
-                            className="color-preview"
-                            onClick={() => toggleColorPicker(index+'_'+optionIndex, option.color || '#FFFFFF')}
-                            style={ !option.color ? {backgroundColor: '#FFFFFF'} : option.color.includes('rgba') ? 
-                            {backgroundColor: '#FFFFFF'} : {backgroundColor: option.color}}
-                          />
-                          { (hexColor && rgbColor && cmykColor) && colorPickerVisible === index+'_'+optionIndex && (
-                            <div className="color-preview-container">
-                              <HexColorPicker  color={option.color} onChange={(color) => handleColumnsColorChange(color, index, optionIndex)} />
-                              <div className="color-format-inputs">
-                                <div className="rgb-input-container">
-                                  <label htmlFor="rgb-input">HEX</label>
-                                  <input
-                                    type="text"
-                                    className="color-preview-input"
-                                    value={hexColor}
-                                    onChange={e => handleColumnsHexChange(e, index, optionIndex)}
-                                    placeholder="HEX"
-                                  />
-                                </div>
-                                <div className="rgb-input-container">
-                                  <label htmlFor="rgb-input">RGB</label>
-                                  <input
-                                    type="text"
-                                    className="color-preview-input"
-                                    value={rgbColor.join(',')}
-                                    onChange={e => handleColumnsRgbChange(e, index, optionIndex)}
-                                    placeholder="RGB (r,g,b)"
-                                  />
-                                </div>
-                                <div className="rgb-input-container">
-                                  <label htmlFor="rgb-input">CMYK</label>
-                                  <input
-                                    type="text"
-                                    className="color-preview-input"
-                                    value={cmykColor.join(',')}
-                                    onChange={e => handleColumnsCmykChange(e, index, optionIndex)}
-                                    placeholder="CMYK (c,m,y,k)"
-                                  />
+                        <div className="option-buttons">
+                          <div className="color-picker-container">
+                            <div
+                              className="color-preview"
+                              onClick={() => toggleColorPicker(index+'_'+optionIndex, option.color || '#FFFFFF')}
+                              style={ !option.color ? {backgroundColor: '#FFFFFF'} : option.color.includes('rgba') ? 
+                              {backgroundColor: '#FFFFFF'} : {backgroundColor: option.color}}
+                            />
+                            { (hexColor && rgbColor && cmykColor) && colorPickerVisible === index+'_'+optionIndex && (
+                              <div className="color-preview-container">
+                                <HexColorPicker  color={option.color} onChange={(color) => handleColumnsColorChange(color, index, optionIndex)} />
+                                <div className="color-format-inputs">
+                                  <div className="rgb-input-container">
+                                    <label htmlFor="rgb-input">HEX</label>
+                                    <input
+                                      type="text"
+                                      className="color-preview-input"
+                                      value={hexColor}
+                                      onChange={e => handleColumnsHexChange(e, index, optionIndex)}
+                                      placeholder="HEX"
+                                    />
+                                  </div>
+                                  <div className="rgb-input-container">
+                                    <label htmlFor="rgb-input">RGB</label>
+                                    <input
+                                      type="text"
+                                      className="color-preview-input"
+                                      value={rgbColor.join(',')}
+                                      onChange={e => handleColumnsRgbChange(e, index, optionIndex)}
+                                      placeholder="RGB (r,g,b)"
+                                    />
+                                  </div>
+                                  <div className="rgb-input-container">
+                                    <label htmlFor="rgb-input">CMYK</label>
+                                    <input
+                                      type="text"
+                                      className="color-preview-input"
+                                      value={cmykColor.join(',')}
+                                      onChange={e => handleColumnsCmykChange(e, index, optionIndex)}
+                                      placeholder="CMYK (c,m,y,k)"
+                                    />
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          )}
-                        </div>
-                        <div className="option-buttons">
+                            )}
+                          </div>
                           <button
                             className="field-editor-add-button"
                             onClick={() => addListOptionHandlerInColumns(optionIndex, index)}
@@ -1251,6 +1344,22 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                             -
                           </button>
                         </div>
+                        {
+                          option.correctiveAction && option.correctiveAction.text ?
+                          <>
+                            <div className="field-editor-option-corrective-action">
+                              Corrective action: {option.correctiveAction.text}
+                              <button className="field-editor-option-corrective-action-remove" 
+                              onClick={() => chooseOptionToRemoveCorrectiveAction(editingSectionField.id, index, optionIndex)}>-</button>
+                            </div>
+                          </>
+                          :
+                          <div className="field-editor-add-corrective-action-button" 
+                          onClick={() => chooseOptionToAddCorrectiveAction(editingSectionField.id, index, optionIndex)}>
+                            {/* <img className='size20-icon' src={add_corrective_action_icon} alt='+'/> */}
+                            Add corrective action
+                          </div>
+                        }
                       </div>
                     ))}
                   </div>
@@ -1267,11 +1376,22 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
                                 <button className="field-editor-add-button" onClick={() => addListOptionHandlerInColumns(optionIndex, index)}>+</button>
                                 <button className="field-editor-remove-button" onClick={() => deleteListOptionHandlerInColumns(optionIndex, index)}>-</button>
                               </div>
-                            </div>
-                            <div className="field-editor-add-corrective-action-button" 
-                            onClick={() => chooseOptionToAddCorrectiveAction(editingSectionField.id, index, optionIndex)}>
-                              {/* <img className='size20-icon' src={add_corrective_action_icon} alt='+'/> */}
-                              Add corrective action
+                              {
+                                option.correctiveAction && option.correctiveAction.text ?
+                                <>
+                                  <div className="field-editor-option-corrective-action">
+                                    Corrective action: {option.correctiveAction.text}
+                                    <button className="field-editor-option-corrective-action-remove" 
+                                    onClick={() => chooseOptionToRemoveCorrectiveAction(editingSectionField.id, index, optionIndex)}>-</button>
+                                  </div>
+                                </>
+                                :
+                                <div className="field-editor-add-corrective-action-button" 
+                                onClick={() => chooseOptionToAddCorrectiveAction(editingSectionField.id, index, optionIndex)}>
+                                  {/* <img className='size20-icon' src={add_corrective_action_icon} alt='+'/> */}
+                                  Add corrective action
+                                </div>
+                              }
                             </div>
                             </>
                           ))}
@@ -1340,7 +1460,7 @@ const FormBuilderSectionComponentEditor = ({removeFormSectionField, duplicateFie
         <></>
       }
     </div>
-  </div>
+    </div>
   </>
       : <></>
     }

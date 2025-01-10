@@ -243,8 +243,17 @@ function DashboardPage() {
     setFormGroups(updatedGroups);
     setGroupToSave(group);
   };
+  const changeTitle = (groupIndex, newTitle) => {
+    const updatedGroups = [...formGroups];
+    updatedGroups[groupIndex].title = newTitle;
+    const group = updatedGroups[groupIndex];
 
-  const saveFormsOrder = async() => {
+    setSaveMode(group._id);
+    setFormGroups(updatedGroups);
+    setGroupToSave(group);
+  };
+
+  const saveFormGroupChanges = async() => {
     console.log('group to save ',groupToSave)
     const token = getAuthToken();
     const config = {
@@ -255,8 +264,8 @@ function DashboardPage() {
 
     setIsLoading(true);
     try {
-      await axios.put(`${backend_point}/api/formGroups/updateOrder/${groupToSave._id}`, 
-        { formsOrder: groupToSave.forms }, config);
+      await axios.put(`${backend_point}/api/formGroups/updateFormGroup/${groupToSave._id}`, 
+        { groupTitle: groupToSave.title, formsOrder: groupToSave.forms }, config);
         setSaveMode('');
         setGroupToSave('');
         getFormGroupsHandler();
@@ -317,7 +326,8 @@ function DashboardPage() {
               <FormGroupsTable forms={forms} formGroups={formGroups} 
               deleteFormGroupHandler={deleteFormGroupHandler} 
               chooseFormToAddIntoGroup={chooseFormToAddIntoGroup} chooseFormToRemoveFromGroup={handleRemoveFromGroup}
-              moveForm={moveForm} isSaveMode={saveMode} saveFormsOrder={saveFormsOrder}/>
+              changeTitle={changeTitle} moveForm={moveForm} 
+              isSaveMode={saveMode} saveFormGroupChanges={saveFormGroupChanges}/>
               :
               <></>
             }

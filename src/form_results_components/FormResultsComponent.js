@@ -7,6 +7,7 @@ const FormResultsComponent = ({ field, data }) => {
   let fieldData = {};
   if (data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) {
     fieldData = data[field.id];
+    //console.log('field data :', fieldData, data[field.id])
   } else if(field.type !== 'title'){
     //console.log(`No data found for field ID: ${field.id}`);
     return null;
@@ -74,8 +75,35 @@ const FormResultsComponent = ({ field, data }) => {
           <div className='form-results-component-title'>
             {field.title}:
           </div>
-          <div className="form-live-component-value">
-            {fieldData ? fieldData.value : 'No selection'}
+          <div className="form-component-container">
+            {
+            fieldData.value && fieldData.value.result ? 
+              <>
+                <label className={`form-component-radio-container ${field.layout}`}>
+                  <input type="radio" 
+                    name={fieldData.value.result} 
+                    checked
+                    disabled={true}/>
+                  <span className="form-component-radiomark"></span>
+                  {fieldData.value.result}
+                </label>
+                {
+                  fieldData.value.correctiveActionData &&
+                <div className="field-result-option-corrective-action">
+                   Corrective action: {fieldData.value.correctiveActionData.text}
+                </div>
+                }
+              </>
+            : fieldData.value ? 
+            <label className={`form-component-radio-container ${field.layout}`}>
+              <input type="radio" 
+                name={fieldData.value} 
+                checked
+                disabled={true}/>
+              <span className="form-component-radiomark"></span>
+              {fieldData.value}
+            </label>
+            : 'No selection'}
           </div>
         </div>
       )}
@@ -88,6 +116,21 @@ const FormResultsComponent = ({ field, data }) => {
             <div className={`form-component-container ${field.layout}`}>
               { fieldData && fieldData.value.length !== 0 ?
                fieldData.value.map((value, index)=> (
+                value.result ?
+                <>
+                  <label key={index} className={`form-component-checkbox-container ${field.layout}`}>
+                    <input type="checkbox" 
+                      name={value.result} 
+                      checked={true}
+                      disabled={true}/>
+                    <span className="form-component-checkmark"></span>
+                    {value.result}
+                  </label>
+                  <div className="field-result-option-corrective-action">
+                    Corrective action: {value.correctiveActionData.text}
+                  </div>
+                </>
+                :
                 <label key={index} className={`form-component-checkbox-container ${field.layout}`}>
                   <input type="checkbox" 
                     name={value} 
@@ -127,7 +170,6 @@ const FormResultsComponent = ({ field, data }) => {
           </div>
         </div>
       )}
-
       {field.type === 'dropdown' && (
         <div className="form-live-component-container">
           <div className="form-results-component-title">
@@ -135,11 +177,30 @@ const FormResultsComponent = ({ field, data }) => {
           </div>
           <div className="form-live-component-dropdown-value">
             {/* Show the selected dropdown option and color */}
-            {fieldData ? (
-              <div
-                className="form-live-component-selected-option"
+            {
+              fieldData.value && fieldData.value.result ? 
+                <>
+                  <div className="form-live-component-selected-option"
+                    style={{
+                      backgroundColor: field.options?.find(option => option.title === fieldData.value)?.color || '#fff',
+                      padding: '5px',
+                      borderRadius: '5px',
+                      color: '#000'
+                    }}
+                  >
+                    {fieldData.value.result}
+                  </div>
+                  {
+                    fieldData.value.correctiveActionData &&
+                    <div className="field-result-option-corrective-action">
+                      Corrective action: {fieldData.value.correctiveActionData.text}
+                    </div>
+                  }
+                </>
+              : fieldData.value && !fieldData.value.result ?
+                <div className="form-live-component-selected-option"
                 style={{
-                  backgroundColor: field.dropdown.find(option => option.title === fieldData.value)?.color || '#fff',
+                  backgroundColor: field.options?.find(option => option.title === fieldData.value)?.color || '#fff',
                   padding: '5px',
                   borderRadius: '5px',
                   color: '#000'
@@ -147,9 +208,8 @@ const FormResultsComponent = ({ field, data }) => {
               >
                 {fieldData.value}
               </div>
-            ) : (
-              'No selection'
-            )}
+              : 'No selection'
+            }
           </div>
         </div>
       )}
@@ -290,7 +350,6 @@ const FormResultsComponent = ({ field, data }) => {
           <div className="form-results-component-title">
             {field.title}
           </div>
-  
           {
             field.style && field.style === 'tabular' ? 
             <table className="form-results-table">
@@ -313,27 +372,25 @@ const FormResultsComponent = ({ field, data }) => {
               </tr>
             </table>
           :
-          <div className="form-component-dynamic-columns-container" 
-            style={{gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`}}>
-            {field.labels.map((label, index) => (
-              <div className="form-component-column" key={index}>
-                <div className="form-results-section-label">
+          <table className="form-results-table">
+            <tr>
+              {field.labels.map((label, labelIndex) => (
+                <td key={labelIndex} className="form-results-td-bordless">
                   {label}
-                </div>
-                <div className="form-results-section-result"
-                // style={{color: fieldData.value[index]==='Monthly'? '#7bb163' :
-                // fieldData.value[index]==='Quarterly'? '#f1c336':
-                // (fieldData.value[index]==='Annually' || fieldData.value[index]==='Not Reviewed')? '#ff0909':
-                // ''}}
-                >
+                </td>
+              ))}
+            </tr>
+            <tr>
+              {field.value.map((value, valueIndex) => (
+                <td key={valueIndex} className="form-results-td-bordless">
                   {
-                    fieldData.value && fieldData.value[index] &&
-                    <UltimateResultColumnComponent fieldValue={fieldData.value[index]} field={field.value[index]}/>
+                    fieldData.value && fieldData.value[valueIndex] &&
+                    <UltimateResultColumnComponent fieldValue={fieldData.value[valueIndex]} field={value}/>
                   }
-                </div>
-              </div>
-            ))}
-          </div>
+                </td>
+              ))}
+            </tr>
+          </table>
           }
         </div>
       )}

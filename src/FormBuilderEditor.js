@@ -15,29 +15,35 @@ import LegacyComponentsOptions from './form_builder_editor_components/LegacyComp
 import ColumnsTypeSelector from './form_builder_editor_components/ColumnsTypeSelector';
 import DropdownOptions from './form_builder_editor_components/DropdownOptions';
 
-const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setEditingField,
+const FieldBuilderEditor = ({updateFormField, removeFormField, duplicateField, editingField, setEditingField,
   handleDuplicateClick, handleOptionsSaving, chooseOptionsToChange, 
   chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction}) => {
 
   const changeFieldTitleHandler = (e) => {
     setEditingField({...editingField, title: e.target.value})
-    //console.log('change editingField : ', editingField)
+    updateFormField(editingField.id, { ...editingField, title: e.target.value })
+    //console.log('changeFieldTitleHandler editingField : ', editingField)
   }
   const changeFieldLabelHandler = (e, index) => {
     const updatedLabels = [...editingField.labels];
     updatedLabels[index] = e.target.value;
     setEditingField({ ...editingField, labels: updatedLabels });
+    updateFormField(editingField.id, { ...editingField, labels: updatedLabels })
+    //console.log('changeFieldLabelHandler editingField : ', editingField)
   };
   const changeFieldRequiredHandler = (e) => {
     setEditingField({...editingField, required: !editingField.required})
+    updateFormField(editingField.id, { ...editingField, required: !editingField.require})
     //console.log('change editingField : ', editingField)
   }  
   const changeFieldReadOnlyHandler = (e) => {
     setEditingField({...editingField, read_only: !editingField.read_only})
+    updateFormField(editingField.id, { ...editingField, read_only: !editingField.read_only})
     //console.log('change editingField : ', editingField)
   }  
   const changeFieldPreFilledHandler = (e) => {
     setEditingField({...editingField, value: e.target.value})
+    updateFormField(editingField.id, { ...editingField, value: e.target.value})
   } 
 
   const changeSectionFieldPreFilledHandler = (e, sectionIndex) => {
@@ -48,10 +54,8 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     //console.log('Updated editingField.value:', newValues);
   
     // Update the editingField state with the modified value array
-    setEditingField(prevState => ({
-      ...prevState,
-      value: newValues
-    }));
+    setEditingField({...editingField, value: newValues});
+    updateFormField(editingField.id, { ...editingField, value: newValues})
   };
   const changeColumnFieldPreFilledHandler = (e, columnIndex) => {
     
@@ -59,6 +63,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     newValue[columnIndex].value = e.target.value;
     //console.log('newValue: ',  newValue)
     setEditingField({ ...editingField, value: newValue });
+    updateFormField(editingField.id, { ...editingField, value: newValue})
   };
   const changeColumnsStyleHandler = (e) => {
     let newStyle = 'tabular'
@@ -66,43 +71,73 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       newStyle = ''
     }
     setEditingField({...editingField, style: newStyle})
+    updateFormField(editingField.id, { ...editingField, style: newStyle})
   }  
 
 
   const addFieldBoxOptionHandler = (index) => {
     const newCheckboxes = [...editingField.options.slice(0, index+1),{title: 'Option', checked: false}, ...editingField.options.slice(index+1, editingField.options.length+1)]
     setEditingField({...editingField, options: newCheckboxes})
+    updateFormField(editingField.id, { ...editingField, options: newCheckboxes})
   } 
   const deleteFieldBoxOptionHandler = (index) => {
     const newCheckboxes = [...editingField.options.slice(0, index), ...editingField.options.slice(index+1, editingField.options.length+1)]
     setEditingField({...editingField, options: newCheckboxes})
+    updateFormField(editingField.id, { ...editingField, options: newCheckboxes})
   } 
   const changeFieldBoxOptionHandler = (e, index) => {
     const newCheckboxes = editingField.options.map((option, opt_index) => {
       if(opt_index === index){
-        option.title = e.target.value
-        return option
+        return { ...option, title: e.target.value };
       }else{
         return option
       }
     })
     setEditingField({...editingField, options: newCheckboxes})
+    updateFormField(editingField.id, { ...editingField, options: newCheckboxes})
   } 
   const changeFieldBoxLayoutHandler = (e) => {
     setEditingField({...editingField, layout: e.target.value})
+    updateFormField(editingField.id, { ...editingField, layout: e.target.value})
     //console.log('change editingField : ', editingField)
   } 
 
   const addFieldListOptionHandler = (index) => {
-    const newOptions = [...editingField.dropdown.slice(0, index+1),{title: 'Option', checked: false}, ...editingField.dropdown.slice(index+1, editingField.dropdown.length+1)]
-    setEditingField({...editingField, dropdown: newOptions})
+    Object.defineProperty(editingField, 'dropdown', {
+      get() {
+        return this.options;
+      },
+      set(value) {
+        this.options = value;
+      }
+    });
+    const newOptions = [...editingField.options.slice(0, index+1),{title: 'Option', checked: false}, ...editingField.options.slice(index+1, editingField.options.length+1)]
+    setEditingField({...editingField, options: newOptions})
+    updateFormField(editingField.id, { ...editingField, options: newOptions})
   } 
   const deleteFieldListOptionHandler = (index) => {
-    const newOptions = [...editingField.dropdown.slice(0, index), ...editingField.dropdown.slice(index+1, editingField.dropdown.length+1)]
-    setEditingField({...editingField, dropdown: newOptions})
+    Object.defineProperty(editingField, 'dropdown', {
+      get() {
+        return this.options;
+      },
+      set(value) {
+        this.options = value;
+      }
+    });
+    const newOptions = [...editingField.options.slice(0, index), ...editingField.options.slice(index+1, editingField.options.length+1)]
+    setEditingField({...editingField, options: newOptions})
+    updateFormField(editingField.id, { ...editingField, options: newOptions})
   } 
   const changeFieldListOptionHandler = (e, index) => {
-    const newOptions = editingField.dropdown.map((option, opt_index) => {
+    Object.defineProperty(editingField, 'dropdown', {
+      get() {
+        return this.options;
+      },
+      set(value) {
+        this.options = value;
+      }
+    });
+    const newOptions = editingField.options.map((option, opt_index) => {
       if(opt_index === index){
         option.title = e.target.value
         return option
@@ -110,7 +145,8 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
         return option
       }
     })
-    setEditingField({...editingField, dropdown: newOptions})
+    setEditingField({...editingField, options: newOptions})
+    updateFormField(editingField.id, { ...editingField, options: newOptions})
   } 
   const addListOptionHandlerInColumns = (index, sectionIndex) => {
     const newOptions = [
@@ -123,6 +159,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     newValue[sectionIndex].options = newOptions;
   
     setEditingField({ ...editingField, value: newValue });
+    updateFormField(editingField.id, { ...editingField, value: newValue})
   };
   const deleteListOptionHandlerInColumns = (index, sectionIndex) => {
     const newOptions = [
@@ -134,6 +171,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     newValue[sectionIndex].options = newOptions;
   
     setEditingField({ ...editingField, value: newValue });
+    updateFormField(editingField.id, { ...editingField, value: newValue})
   };
   const changeListOptionHandlerInColumns = (e, index, sectionIndex) => {
     const newOptions = editingField.value[sectionIndex].options.map((option, opt_index) => {
@@ -146,6 +184,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     newValue[sectionIndex].options = newOptions;
   
     setEditingField({ ...editingField, value: newValue });
+    updateFormField(editingField.id, { ...editingField, value: newValue})
   };
 
   const addBoxOptionHandlerInColumns = (index, sectionIndex) => {
@@ -157,6 +196,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     const newValue = [...editingField.value];
     newValue[sectionIndex].options = newOptions;
     setEditingField({ ...editingField, value: newValue });
+    updateFormField(editingField.id, { ...editingField, value: newValue})
   };
 
   const deleteBoxOptionHandlerInColumns = (index, sectionIndex) => {
@@ -168,6 +208,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     const newValue = [...editingField.value];
     newValue[sectionIndex].options = newOptions;
     setEditingField({ ...editingField, value: newValue });
+    updateFormField(editingField.id, { ...editingField, value: newValue})
   } 
   const changeBoxOptionHandlerInColumns = (e, index, sectionIndex) => {
     const newOptions = editingField.value[sectionIndex].options.map((option, opt_index) => {
@@ -181,11 +222,13 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     newValue[sectionIndex].options = newOptions;
   
     setEditingField({ ...editingField, value: newValue });
+    updateFormField(editingField.id, { ...editingField, value: newValue})
   }
   const changeBoxLayoutHandlerInColumns = (e, columnIndex) => {
     const newValue = [...editingField.value];
     newValue[columnIndex].layout = e.target.value;
     setEditingField({ ...editingField, value: newValue });
+    updateFormField(editingField.id, { ...editingField, value: newValue})
   } 
 
   const changeFieldReadOnlyHandlerInColumn = (columnIndex) => {
@@ -197,6 +240,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       }
     })
     setEditingField({ ...editingField, value: newValues });
+    updateFormField(editingField.id, { ...editingField, value: newValues})
   } 
 
   const [colorPickerVisible, setColorPickerVisible] = useState(null);
@@ -286,6 +330,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   const changeTitleColorHandler = (color) => {
     setColor(color);
     setEditingField({...editingField, color: color});
+    updateFormField(editingField.id, { ...editingField, color: color})
   };
 
   const handleTitleColorChange = (newHexColor) => {
@@ -389,6 +434,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       return section;
     });
     setEditingField(updatedEditingField);
+    updateFormField(editingField.id, updatedEditingField)
   };
   const handleColumnsHexChange = (e, index, optionIndex) => {
     const hex = e.target.value;
@@ -422,21 +468,32 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
   const changeOptionColorHandler = (color, index, options_index) => {
     setColor(color);
     //console.log('changeOptionColorHandler color index  :', color, index)
-    const newOptions = editingField.dropdown.map((option, opt_index) => {
+    Object.defineProperty(editingField, 'dropdown', {
+      get() {
+        return this.options;
+      },
+      set(value) {
+        this.options = value;
+      }
+    });
+    const newOptions = editingField.options.map((option, opt_index) => {
       if(opt_index === index){
         option.color = color;
       }
       return option;
     });
-    setEditingField({...editingField, dropdown: newOptions});
+    setEditingField({...editingField, options: newOptions});
+    updateFormField(editingField.id, { ...editingField, options: newOptions})
   };
 
   const changeDateFormatHandler = (selectedFormat) => {
     setEditingField({...editingField, dateFormat: selectedFormat})
+    updateFormField(editingField.id, { ...editingField, dateFormat: selectedFormat})
   };
   
   const changeTimeFormatHandler = (selectedFormat) => {
     setEditingField({...editingField, timeFormat: selectedFormat})
+    updateFormField(editingField.id, { ...editingField, timeFormat: selectedFormat})
   };
 
   const [showLogic, setShowLogic] = useState(false);
@@ -513,6 +570,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       ...prev,
       value: updatedValues,
     }));
+    updateFormField(editingField.id, { ...editingField, value: updatedValues})
   
   };
   
@@ -520,6 +578,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     const newValue = editingField.value.filter((_, index) => index !== columnIndex);
     const newLabels = editingField.labels.filter((_, index) => index !== columnIndex);
     setEditingField({ ...editingField, value: newValue, labels: newLabels });
+    updateFormField(editingField.id, { ...editingField, value: newValue, labels: newLabels })
   };
   const handleAddingNewColumn = () => {
     const newValue = [...editingField.value, {
@@ -528,6 +587,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
     }]
     const newLabels = [...editingField.labels, 'label']
     setEditingField({...editingField, value: newValue, labels: newLabels});
+    updateFormField(editingField.id, { ...editingField, value: newValue, labels: newLabels })
   }
 
 
@@ -541,7 +601,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       case 'dropdown':
         newComponent = {
           ...newComponent,
-          dropdown: [
+          options: [
             { title: 'Option 1', selected: true },
             { title: 'Option 2', selected: false },
             { title: 'Option 3', selected: false },
@@ -600,6 +660,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
       ...prev,
       adding_component: newComponent,
     }));
+    updateFormField(editingField.id, { ...editingField, adding_component: newComponent})
   };
   
   const dateFormatOptions=  [
@@ -1007,7 +1068,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
               </div>
             </div>
           }
-          {editingField.dropdown && 
+          {editingField.type === 'dropdown' && 
           <DropdownOptions editingField={editingField} changeListOptionHandler={changeFieldListOptionHandler} 
           handleColorChange={handleColorChange} toggleColorPicker={toggleColorPicker}
           colorPickerVisible={colorPickerVisible} hexColor={hexColor} rgbColor={rgbColor} cmykColor={cmykColor}
@@ -1046,7 +1107,7 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                           onClick={()=> handleOptionsSaving(value.options)} alt='save'/>
                         </div>
                       </label>
-                      {value.options.map((option, optionIndex) => (
+                      {value.options.length !== 0 ? value.options.map((option, optionIndex) => (
                         <div key={optionIndex} className="option-input">
                           <input
                             type="text"
@@ -1054,51 +1115,51 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                             value={option.title}
                           />
                           <div className="option-buttons">
-                          <div className="color-picker-container">
-                            <div
-                              className="color-preview"
-                              onClick={() => toggleColorPicker(index+'_'+optionIndex, option.color || '#FFFFFF')}
-                              style={ !option.color ? {backgroundColor: '#FFFFFF'} : option.color.includes('rgba') ? 
-                              {backgroundColor: '#FFFFFF'} : {backgroundColor: option.color}}
-                            />
-                            { (hexColor && rgbColor && cmykColor) && colorPickerVisible === index+'_'+optionIndex && (
-                              <div className="color-preview-container">
-                                <HexColorPicker  color={option.color} onChange={(color) => handleColumnsColorChange(color, index, optionIndex)} />
-                                <div className="color-format-inputs">
-                                  <div className="rgb-input-container">
-                                    <label htmlFor="rgb-input">HEX</label>
-                                    <input
-                                      type="text"
-                                      className="color-preview-input"
-                                      value={hexColor}
-                                      onChange={e => handleColumnsHexChange(e, index, optionIndex)}
-                                      placeholder="HEX"
-                                    />
-                                  </div>
-                                  <div className="rgb-input-container">
-                                    <label htmlFor="rgb-input">RGB</label>
-                                    <input
-                                      type="text"
-                                      className="color-preview-input"
-                                      value={rgbColor.join(',')}
-                                      onChange={e => handleColumnsRgbChange(e, index, optionIndex)}
-                                      placeholder="RGB (r,g,b)"
-                                    />
-                                  </div>
-                                  <div className="rgb-input-container">
-                                    <label htmlFor="rgb-input">CMYK</label>
-                                    <input
-                                      type="text"
-                                      className="color-preview-input"
-                                      value={cmykColor.join(',')}
-                                      onChange={e => handleColumnsCmykChange(e, index, optionIndex)}
-                                      placeholder="CMYK (c,m,y,k)"
-                                    />
+                            <div className="color-picker-container">
+                              <div
+                                className="color-preview"
+                                onClick={() => toggleColorPicker(index+'_'+optionIndex, option.color || '#FFFFFF')}
+                                style={ !option.color ? {backgroundColor: '#FFFFFF'} : option.color.includes('rgba') ? 
+                                {backgroundColor: '#FFFFFF'} : {backgroundColor: option.color}}
+                              />
+                              { (hexColor && rgbColor && cmykColor) && colorPickerVisible === index+'_'+optionIndex && (
+                                <div className="color-preview-container">
+                                  <HexColorPicker  color={option.color} onChange={(color) => handleColumnsColorChange(color, index, optionIndex)} />
+                                  <div className="color-format-inputs">
+                                    <div className="rgb-input-container">
+                                      <label htmlFor="rgb-input">HEX</label>
+                                      <input
+                                        type="text"
+                                        className="color-preview-input"
+                                        value={hexColor}
+                                        onChange={e => handleColumnsHexChange(e, index, optionIndex)}
+                                        placeholder="HEX"
+                                      />
+                                    </div>
+                                    <div className="rgb-input-container">
+                                      <label htmlFor="rgb-input">RGB</label>
+                                      <input
+                                        type="text"
+                                        className="color-preview-input"
+                                        value={rgbColor.join(',')}
+                                        onChange={e => handleColumnsRgbChange(e, index, optionIndex)}
+                                        placeholder="RGB (r,g,b)"
+                                      />
+                                    </div>
+                                    <div className="rgb-input-container">
+                                      <label htmlFor="rgb-input">CMYK</label>
+                                      <input
+                                        type="text"
+                                        className="color-preview-input"
+                                        value={cmykColor.join(',')}
+                                        onChange={e => handleColumnsCmykChange(e, index, optionIndex)}
+                                        placeholder="CMYK (c,m,y,k)"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            )}
-                          </div>
+                              )}
+                            </div>
                             <button
                               className="field-editor-add-button"
                               onClick={() => addListOptionHandlerInColumns(optionIndex, index)}
@@ -1129,7 +1190,15 @@ const FieldBuilderEditor = ({removeFormField, duplicateField, editingField, setE
                             </div>
                           }
                         </div>
-                      ))}
+                      ))
+                      :
+                      <button
+                        className="field-editor-add-first-option-button"
+                        onClick={() => addListOptionHandlerInColumns(0, index)}
+                      >
+                        Add new option
+                      </button>
+                    }
                     </div>
                     :
                     (value.type === 'checkbox' || value.type === 'radio') ?

@@ -16,7 +16,7 @@ export const OutsideClickProvider = ({ children }) => {
       // ||
       // event.target.closest('#choosing-options-window')
     ) {
-      console.log('click dis')
+      //console.log('click dis')
       return;
     }
 

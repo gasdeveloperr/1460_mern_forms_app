@@ -465,7 +465,7 @@ body {
   flex-direction: column;
   display: flex;
   width: 349px;
-  min-width: 260px;
+  min-width: 284px;
   height: calc(-105px + 100vh);
   box-sizing: border-box;
   overflow-y: auto;

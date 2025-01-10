@@ -83,8 +83,8 @@ const UltimateColumnComponent = ({field, columnStyle}) => {
       )}
       {field.type === 'dropdown' && (
         <td className='form-component-dropdown-div' 
-        style={{...columnStyle, backgroundColor: field.options[0].color ? field.options[0].color : ''}}>
-          {field.options[0].title}
+        style={{...columnStyle, backgroundColor: field.options[0]?.color ? field.options[0]?.color : ''}}>
+          {field.options[0]?.title}
           <img src={selector_icon} />
         </td>
       )}

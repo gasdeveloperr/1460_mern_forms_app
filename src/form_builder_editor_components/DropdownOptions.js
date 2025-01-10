@@ -19,10 +19,10 @@ const DropdownOptions = ({editingField, changeListOptionHandler,
               <img className="option-group-img" src={chooser_options_icon} alt='choose'/>
             </div>
             <img className="option-group-img" src={save_icon} 
-            onClick={()=> handleOptionsSaving(editingField.dropdown)} alt='save'/>
+            onClick={()=> handleOptionsSaving(editingField.options)} alt='save'/>
           </div>
         </label>
-          {editingField.dropdown.map((option, optionIndex)=> (
+          {editingField.options?.length !== 0 ? editingField.options?.map((option, optionIndex)=> (
             <div key={optionIndex} className="option-input">
               <input type="text" onChange={(e) => changeListOptionHandler(e, optionIndex)} value={option.title}/>
               <div className="option-buttons">
@@ -91,7 +91,14 @@ const DropdownOptions = ({editingField, changeListOptionHandler,
                 </div>
               }
             </div>
-          ))}
+          ))
+          :
+          <button
+            className="field-editor-add-first-option-button"
+            onClick={() => addListOptionHandler(0)}
+          >
+            Add new option
+          </button>}
       </div>
     </div>
    );

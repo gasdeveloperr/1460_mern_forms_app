@@ -36,15 +36,24 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
     //     setErrorMessage('');
     //   }
     // }
+    Object.defineProperty(field, 'dropdown', {
+      get() {
+        return this.options;
+      },
+      set(value) {
+        this.options = value;
+      }
+    });
     setInputValue(value);
     if(field.type === 'dropdown'){
-      const selectedOption = field.dropdown.find(
+      const selectedOption = field.options?.find(
         (option) => option.title === e.target.value
       );
       setSelectBgColor(selectedOption ? selectedOption.color : '');
     }
   };
 
+  //console.log('field in live comp: ', field)
   const textareaRef = useRef(null);
 
   const handleTextareaChange = (e) => {
@@ -101,7 +110,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
   useEffect(() => {
     if(field.type === 'dropdown'){
       // Find the initial selected option and set its color as the background
-      const initialSelectedOption = field.dropdown.find(option => option.title === field.value);
+      const initialSelectedOption = field.options?.find(option => option.title === field.value);
       if (initialSelectedOption) {
         setSelectBgColor(initialSelectedOption.color || '');
       }
@@ -262,7 +271,10 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
                     fieldtype={field.type}
                     id={field.id} 
                     name={option.title} 
-                    disabled={field.read_only}/>
+                    correctiveactiontext={option?.correctiveAction?.text || ''}
+                    correctiveactionid={option?.correctiveAction?._id || ''}
+                    disabled={field.read_only}
+                    />
                   <span className="form-component-checkmark"></span>
                   {option.title}
                 </label>
@@ -285,6 +297,8 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
                     id={field.id}
                     name={field.id}
                     value={option.title}
+                    correctiveactiontext={option?.correctiveAction?.text || ''}
+                    correctiveactionid={option?.correctiveAction?._id || ''}
                     disabled={field.read_only}
                   />
                   <span className="form-component-radiomark"></span>
@@ -300,13 +314,17 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
             <div className="form-component-dropdown">
               {field.required && <span>*</span>}
               {field.title}
-              <CustomSelector options={field.dropdown} setSelectorValue={setSelectorValue}/>
+              <CustomSelector options={field.options} 
+              selectedValue={selectorValue?.value || ''}
+              setSelectorValue={setSelectorValue}/>
               <input 
                 fieldtype={field.type}
                 id={field.id}
                 name={field.id}
                 disabled={field.read_only}
-                value={selectorValue}
+                value={selectorValue?.value}
+                correctiveactiontext={selectorValue?.correctiveAction?.text || ''}
+                correctiveactionid={selectorValue?.correctiveAction?._id || ''}
                 hidden/>
             </div>
           </label>

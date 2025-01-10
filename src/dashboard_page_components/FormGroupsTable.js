@@ -45,7 +45,7 @@ const DraggableRow = ({ form, index, moveForm, groupIndex, chooseFormToRemoveFro
   );
 };
 
-const FormGroupsTable = ({ forms, formGroups, moveForm, isSaveMode, saveFormsOrder, chooseFormToRemoveFromGroup }) => {
+const FormGroupsTable = ({ forms, formGroups, changeTitle, moveForm, isSaveMode, saveFormGroupChanges, chooseFormToRemoveFromGroup }) => {
   const userRole = getUserRole();
 
   return (
@@ -73,11 +73,16 @@ const FormGroupsTable = ({ forms, formGroups, moveForm, isSaveMode, saveFormsOrd
                               {groupIndex + 1}.
                             </td>
                             <td className="group-title" rowSpan={group.forms.length}>
-                              {group.title}
-                              {
-                                isSaveMode === group._id && 
-                                <img src={save_icon} onClick={() => saveFormsOrder()} alt="save" />
-                              }
+                              <div className='group-title-container'>
+                                <input 
+                                  value={group.title}
+                                  onChange={(e) => changeTitle(groupIndex, e.target.value)}
+                                />
+                                {
+                                  isSaveMode === group._id && 
+                                  <img src={save_icon} onClick={() => saveFormGroupChanges()} alt="save" />
+                                }
+                              </div>
                             </td>
                           </>
                         )}
@@ -98,11 +103,16 @@ const FormGroupsTable = ({ forms, formGroups, moveForm, isSaveMode, saveFormsOrd
                     {groupIndex + 1}.
                   </td>
                   <td className="group-title">
-                    {group.title}
-                    {
-                      isSaveMode === group._id && 
-                      <img src={save_icon} onClick={() => saveFormsOrder()} alt="save" />
-                    }
+                    <div className='group-title-container'>
+                      <input 
+                        value={group.title}
+                        onChange={(e) => changeTitle(groupIndex, e.target.value)}
+                      />
+                      {
+                        isSaveMode === group._id && 
+                        <img src={save_icon} onClick={() => saveFormGroupChanges()} alt="save" />
+                      }
+                    </div>
                   </td>
                   <td>
                   </td>

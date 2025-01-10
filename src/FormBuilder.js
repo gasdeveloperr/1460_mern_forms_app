@@ -13,11 +13,13 @@ import { addingNewComponent, getAuthToken } from './utils';
 import OptionsSavingWindow from './OptionsSavingWindow';
 import OptionsChoosingWindow from './OptionsChoosingWindow';
 import AddCorrectiveActionWindow from './form_builder_editor_components/AddCorrectiveActionWindow';
+import _ from 'lodash';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
   const [formType, setFormType] = useState('scored');
   const [formFields, setFormFields] = useState();
+  const [formFieldsToServer, setFormFieldsToServer] = useState();
   const { formId } = useParams();
 
   const navigate = useNavigate();
@@ -36,26 +38,30 @@ const FormBuilder = () => {
     return ref.current;
   };
 
-  const prevFormFields = usePrevious(formFields);
-
+  // const prevFormFieldsToServer = usePrevious(formFieldsToServer);
+  
   // useEffect(() => {
-  //   if (prevFormFields && !isEqual(prevFormFields, formFields)) {
-  //     updateForm(formId)
-  //     console.log('formFields update goes brrrrr>.',prevFormFields, formFields, formType )
+  //   const prevFormFieldsStr = JSON.stringify(prevFormFieldsToServer);
+  //   const currentFormFieldsStr = JSON.stringify(formFieldsToServer);
+  
+  //   console.log('Form to server could be updated:', prevFormFieldsStr, currentFormFieldsStr);
+  //   if (prevFormFieldsToServer && (prevFormFieldsStr !== currentFormFieldsStr)) {
+  //     updateForm(formId, formFieldsToServer);
+  //     console.log('Form fields to server updated!');
   //   }
-  // }, [formFields]);
-  useEffect(() => {
-    const prevFormFieldsStr = JSON.stringify(prevFormFields);
-    const currentFormFieldsStr = JSON.stringify(formFields);
-  
-    if (prevFormFields && prevFormFieldsStr !== currentFormFieldsStr) {
-      updateForm(formId);
-      console.log('Form fields updated:', prevFormFields, formFields, formType);
-    }
-    //console.log('formFields : ', formFields)
-  }, [formFields]);
-  
+  //   //console.log('triggered formFieldsToServer : ', formFieldsToServer)
+  // }, [formFieldsToServer]);
 
+  const prevFormFieldsToServer = usePrevious(_.cloneDeep(formFieldsToServer));
+
+  useEffect(() => {
+    //console.log('Form to server could be updated:', prevFormFieldsToServer, formFieldsToServer);
+      if (prevFormFieldsToServer && !_.isEqual(prevFormFieldsToServer, formFieldsToServer)) {
+          updateForm(formId, formFieldsToServer);
+          console.log('Form fields to server updated!');
+      }
+  }, [formFieldsToServer]);
+  
   const [editingField, setEditingField] = useState({id:''})
   const [editingSectionField, setEditingSectionField] = useState({id:''})
 
@@ -75,6 +81,7 @@ const FormBuilder = () => {
       setFormTitle(formData.title);
       setFormType(formData.formType);
       setFormFields(formData.fields);
+      setFormFieldsToServer(formData.fields)
     } catch (err) {
       if(err.response && err.response.status === 401){
         localStorage.removeItem('token');
@@ -93,7 +100,7 @@ const FormBuilder = () => {
     fetchForm();
   }, []);
 
-  const updateForm = async (formId) => {
+  const updateForm = async (formId, updatedFormFields) => {
 
     const token = getAuthToken();
     const config = {
@@ -106,8 +113,9 @@ const FormBuilder = () => {
       await axios.put(`${backend_point}/api/forms/${formId}`, {
         title: formTitle,
         formType: formType,
-        fields: formFields
+        fields: updatedFormFields,
       }, config);
+      setFormFields(updatedFormFields);
       //console.log('Form updated successfully:', response.data);
     } catch (error) {
       if (error.response) {
@@ -130,72 +138,103 @@ const FormBuilder = () => {
   };
 
   const [isDragging, setIsDragging] = useState(false);
-  const [dropAreaPositions, setDropAreaPositions] = useState([]);
 
-  const handleDrop = (item, dropIndex, sectionId, parentId) => {
-    if(item.index === 'bar_component'){
-      const newField = addingNewComponent(item);
-      if(sectionId){
-        // Find the section and add the new component to its 'components' array
+  const handleDrop = (item, dropIndex, sectionId) => {
+    //console.log(item, dropIndex, sectionId, parentId)
+    if (item.index === 'bar_component') {
+      const newField = addingNewComponent(item, sectionId);
+      if (sectionId) {
         const updatedFormFields = formFields.map((field) => {
           if (field.id === sectionId && field.type === 'section') {
             return {
-              ...field,
-              //components: [...field.components, newField],
-              components: [...field.components.slice(0, dropIndex), newField, ...field.components.slice(dropIndex)],
+              ...field, components: [
+                ...field.components.slice(0, dropIndex),
+                newField,
+                ...field.components.slice(dropIndex),
+              ],
             };
           }
           return field;
         });
         setFormFields(updatedFormFields);
-        //console.log('new field into section:', newField);
-
-      }else{
-        setFormFields([...formFields.slice(0, dropIndex), newField, ...formFields.slice(dropIndex)]);
-        //console.log('new field :', newField)
+        setFormFieldsToServer(updatedFormFields)
+      } else {
+        setFormFields([
+          ...formFields.slice(0, dropIndex),
+          newField,
+          ...formFields.slice(dropIndex),
+        ]);
+        setFormFieldsToServer([
+          ...formFields.slice(0, dropIndex),
+          newField,
+          ...formFields.slice(dropIndex),
+        ]);
       }
-    }else{
-      if(sectionId){
-        if(sectionId === parentId){
-          //console.log('section to section drop: ',sectionId)
-          const updatedFormFields = formFields.map((field) => {
-            if (field.id === sectionId && field.type === 'section') {
-              const itemIndex = field.components.findIndex(component => component.id === item.id);
+    } else {
+      if (sectionId) {
+        // Moving any field into section
+        const updatedFormFields = formFields.map((field) => {
+          if (field.type === 'section') {
+            // If the field is a section, remove the item if it exists in the components
+            const updatedComponents = field.components.filter((component) => component.id !== item.id);
+            return {
+              ...field,
+              components: updatedComponents,
+            };
+          }
+          return field;
+        })
+        .filter((field) => field.id !== item.id)
+        .map((field) => {
+          if (field.id === sectionId && field.type === 'section') {
+            // Add to section
+            return {
+              ...field,
+              components: [
+                ...field.components.slice(0, dropIndex),
+                {...item, sectionId: sectionId},
+                ...field.components.slice(dropIndex),
+              ],
+            };
+          }
+          return field;
+        });
         
-              // Remove the component from its current position and insert it into the new position
-              const newComponentsArray = [
-                ...field.components.slice(0, itemIndex),
-                ...field.components.slice(itemIndex + 1)
-              ];
-              const newField = { ...item}; // Assign a new ID if needed
-              setEditingField({ ...field, components: [
-                  ...newComponentsArray.slice(0, dropIndex),
-                  newField,
-                  ...newComponentsArray.slice(dropIndex)
-                ]})
+        setEditingField({ id: '' });
+        setEditingSectionField({ id: '' });
+        setFormFields(updatedFormFields);
+        setFormFieldsToServer(updatedFormFields)
+      } else if (!sectionId) {
+        const updatedFormFields = formFields.map((field) => {
+          if (field.type === 'section') {
+            // If the field is a section, remove the item if it exists in the components
+            const itemIndex = field.components.findIndex((component) => component.id === item.id);
+            if (itemIndex !== -1) {
               return {
                 ...field,
                 components: [
-                  ...newComponentsArray.slice(0, dropIndex),
-                  newField,
-                  ...newComponentsArray.slice(dropIndex)
+                  ...field.components.slice(0, itemIndex),
+                  ...field.components.slice(itemIndex + 1),
                 ],
               };
             }
-            return field;
-          });
-          
-          setFormFields(updatedFormFields);
-          //console.log('moved component within section:', updatedFormFields);
-        }else{
+          }
+          return field;
+        })
+        .filter((field) => field.id !== item.id); // Remove from the global level if it exists
 
-        }
-      }else{
-        const itemIndex = formFields.findIndex(field => field.id === item.id)
-        const newField = {...item, id: Date.now()}
-        const dragField = formFields[itemIndex];
-        const newArray = [...formFields.slice(0, itemIndex), ...formFields.slice(itemIndex+1)]
-        setFormFields([...newArray.slice(0, dropIndex), newField, ...newArray.slice(dropIndex)])
+        setEditingField({ id: '' });
+        setEditingSectionField({ id: '' });
+        setFormFields([
+          ...updatedFormFields.slice(0, dropIndex),
+          { ...item, sectionId: null },
+          ...updatedFormFields.slice(dropIndex),
+        ]);
+        setFormFieldsToServer([
+          ...updatedFormFields.slice(0, dropIndex),
+          { ...item, sectionId: null },
+          ...updatedFormFields.slice(dropIndex),
+        ]);
       }
     }
   };
@@ -230,7 +269,6 @@ const FormBuilder = () => {
   const updateChosenOptions = (newOptions) => { 
     const updatedFields = formFields.map(field => {
       if (field.id === chosenOptionsToUpdate && field.type === 'columns') {
-        console.log('found columns')
         const updatedValues = field.value.map((component, index) => {
           if(index === chosenOptionsColumnToUpdate){
             return { ...component, options: newOptions.optionsData } 
@@ -240,17 +278,10 @@ const FormBuilder = () => {
         return { ...field, value: updatedValues };
       }else{
         if (field.id === chosenOptionsToUpdate) {
-          if(field.type === 'dropdown'){
-            console.log('found dropdown')
-            return { ...field, dropdown: newOptions.optionsData };
-          }else{
-            console.log('found not dropdown', field)
-            return { ...field, options: newOptions.optionsData };
-          }
+          return { ...field, options: newOptions.optionsData };
         } else if (field.components) {
           const updatedComponents = field.components.map(componentObj => {
             if (componentObj.id === chosenOptionsToUpdate && componentObj.type === 'columns') {
-              console.log('found columns')
               const updatedValues = componentObj.value.map((component, index) => {
                 if(index === chosenOptionsColumnToUpdate){
                   return { ...component, options: newOptions.optionsData } 
@@ -260,13 +291,7 @@ const FormBuilder = () => {
               return { ...componentObj, value: updatedValues };
             }else{
               if (componentObj.id === chosenOptionsToUpdate) {
-                if(componentObj.type === 'dropdown'){
-                  console.log('found dropdown')
-                  return { ...componentObj, dropdown: newOptions.optionsData };
-                }else{
-                  console.log('found not dropdown', componentObj)
-                  return { ...componentObj, options: newOptions.optionsData };
-                }
+                return { ...componentObj, options: newOptions.optionsData };
               } 
               return componentObj;
             }
@@ -276,8 +301,9 @@ const FormBuilder = () => {
         return field;
       }
     });
-    console.log('updatedFields ', updatedFields)
+    //console.log('updatedFields ', updatedFields)
     setFormFields(updatedFields);
+    setFormFieldsToServer(updatedFields);
     closeOptionsChoosingWindow();
   }
 
@@ -290,51 +316,18 @@ const FormBuilder = () => {
     setChosenOptionsToUpdate('');
   }
   const handleAddingCorrectiveAction = (actionData) => { 
-    //console.log('chosen Option ToAddCorrective ', chosenOptionToAddCorrective)
-    const updatedFields = formFields.map(field => {
-      if (field.id === chosenOptionToAddCorrective.fieldId && field.type === 'columns') {
-        const updatedValues = field.value.map((component, index) => {
-          if(index === chosenOptionToAddCorrective.columnIndex){
-            const updatedOptions = component.options.map((option, optionIndex) => {
-              if(optionIndex === chosenOptionToAddCorrective.optionIndex){
-                console.log('found option to change in columns: ', { ...option, correctiveAction: actionData } )
-                return { ...option, correctiveAction: actionData } 
-              }
-              return option
-            });
-            return { ...component, options: updatedOptions } 
-          }
-          return component
-        });
-        return { ...field, value: updatedValues };
-      }else{
-        if (field.id === chosenOptionToAddCorrective.fieldId) {
-          if(field.type === 'dropdown'){
-            const updatedOptions = field.dropdown.map((option, optionIndex) => {
-              if(optionIndex === chosenOptionToAddCorrective.optionIndex){
-                return { ...option, correctiveAction: actionData } 
-              }
-              return option
-            });
-            return { ...field, dropdown: updatedOptions };
-          }else {
-            console.log('found not dropdown', field)
-            const updatedOptions = field.options.map((option, optionIndex) => {
-              if(optionIndex === chosenOptionToAddCorrective.optionIndex){
-                return { ...option, correctiveAction: actionData } 
-              }
-              return option
-            });
-            return { ...field, options: updatedOptions };
-          }
-        } else if (field.components) {
-          const updatedComponents = field.components.map(componentObj => {
-            if (componentObj.id === chosenOptionToAddCorrective.fieldId && componentObj.type === 'columns') {
-              const updatedValues = field.value.map((component, index) => {
+    // console.log('chosen Option ToAddCorrective ', chosenOptionToAddCorrective)
+    // console.log('chosen section id : ', editingSectionField.sectionId || 'none' )
+    if(editingSectionField.sectionId){
+      let updatedSectionComponents = []
+      const updatedFields = formFields.map(field => {
+        if(field.id === editingSectionField.sectionId){
+          updatedSectionComponents = field.components.map(componentSection => {
+            if (componentSection.id === chosenOptionToAddCorrective.fieldId && componentSection.type === 'columns') {
+              const updatedValues = componentSection.value.map((component, index) => {
                 if(index === chosenOptionToAddCorrective.columnIndex){
                   const updatedOptions = component.options.map((option, optionIndex) => {
                     if(optionIndex === chosenOptionToAddCorrective.optionIndex){
-                      console.log('found option to change : ', { ...option, correctiveAction: actionData } )
                       return { ...option, correctiveAction: actionData } 
                     }
                     return option
@@ -343,83 +336,159 @@ const FormBuilder = () => {
                 }
                 return component
               });
-              return { ...componentObj, value: updatedValues };
+              return { ...componentSection, value: updatedValues };
             }else{
-              if (componentObj.id === chosenOptionToAddCorrective.fieldId) {
-                if(componentObj.type === 'dropdown'){
-                  const updatedOptions = componentObj.dropdown.map((option, optionIndex) => {
-                    if(optionIndex === chosenOptionToAddCorrective.optionIndex){
-                      return { ...option, correctiveAction: actionData } 
-                    }
-                    return option
-                  });
-                  return { ...componentObj, dropdown: updatedOptions };
-                }else {
-                  console.log('found not dropdown', componentObj)
-                  const updatedOptions = componentObj.options.map((option, optionIndex) => {
-                    if(optionIndex === chosenOptionToAddCorrective.optionIndex){
-                      return { ...option, correctiveAction: actionData } 
-                    }
-                    return option
-                  });
-                  return { ...componentObj, options: updatedOptions };
-                }
-              } 
-              return componentObj;
+              if (componentSection.id === chosenOptionToAddCorrective.fieldId) {
+                const updatedOptions = componentSection.options?.map((option, optionIndex) => {
+                  if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                    return { ...option, correctiveAction: actionData } 
+                  }
+                  return option
+                });
+                return { ...componentSection, options: updatedOptions };
+              } else if (componentSection.components) {
+                const updatedComponents = componentSection.components.map(componentObj => {
+                  if (componentObj.id === chosenOptionToAddCorrective.fieldId && componentObj.type === 'columns') {
+                    const updatedValues = componentSection.value.map((component, index) => {
+                      if(index === chosenOptionToAddCorrective.columnIndex){
+                        const updatedOptions = component.options.map((option, optionIndex) => {
+                          if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                            return { ...option, correctiveAction: actionData } 
+                          }
+                          return option
+                        });
+                        return { ...component, options: updatedOptions } 
+                      }
+                      return component
+                    });
+                    return { ...componentObj, value: updatedValues };
+                  }else{
+                    if (componentObj.id === chosenOptionToAddCorrective.fieldId) {
+                      const updatedOptions = componentObj.options?.map((option, optionIndex) => {
+                        if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                          return { ...option, correctiveAction: actionData } 
+                        }
+                        return option
+                      });
+                      return { ...componentObj, options: updatedOptions };
+                    } 
+                    return componentObj;
+                  }
+                });
+                return { ...componentSection, components: updatedComponents };
+              }
+              return componentSection;
             }
-          });
-          console.log('updatedComponents   : ', updatedComponents)
-          return { ...field, components: updatedComponents };
+          })
+          return{...field, components: updatedSectionComponents}
         }
-        return field;
-      }
-    });
-    const updatedCurrentField = updatedFields.find(field => field.id === chosenOptionToAddCorrective.fieldId)
-    console.log('updatedCurrentField ', updatedCurrentField)
-    setEditingField(updatedCurrentField)
-    setFormFields(updatedFields);
-    setChosenOptionToAddCorrective({fieldId: '', optionIndex: '', columnIndex:''});
-    closeCorrectiveActionWindow();
+        return field
+      });
+      const updatedCurrentSectionField = updatedSectionComponents.find(field => field.id === chosenOptionToAddCorrective.fieldId)
+      const updatedCurrentField = updatedFields.find(field => field.id === editingSectionField.sectionId)
+      setEditingSectionField(updatedCurrentSectionField)
+      setEditingField(updatedCurrentField)
+      setFormFields(updatedFields);
+      setFormFieldsToServer(updatedFields);
+      setChosenOptionToAddCorrective({fieldId: '', optionIndex: '', columnIndex:''});
+      closeCorrectiveActionWindow();
+    }else{
+      const updatedFields = formFields.map(field => {
+        if (field.id === chosenOptionToAddCorrective.fieldId && field.type === 'columns') {
+          const updatedValues = field.value.map((component, index) => {
+            if(index === chosenOptionToAddCorrective.columnIndex){
+              const updatedOptions = component.options.map((option, optionIndex) => {
+                if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                  return { ...option, correctiveAction: actionData } 
+                }
+                return option
+              });
+              return { ...component, options: updatedOptions } 
+            }
+            return component
+          });
+          return { ...field, value: updatedValues };
+        }else{
+          if (field.id === chosenOptionToAddCorrective.fieldId) {
+            if(field.type === 'dropdown'){
+              const updatedOptions = field.options?.map((option, optionIndex) => {
+                if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                  return { ...option, correctiveAction: actionData } 
+                }
+                return option
+              });
+              return { ...field, options: updatedOptions };
+            }else {
+              const updatedOptions = field.options.map((option, optionIndex) => {
+                if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                  return { ...option, correctiveAction: actionData } 
+                }
+                return option
+              });
+              return { ...field, options: updatedOptions };
+            }
+          } else if (field.components) {
+            const updatedComponents = field.components.map(componentObj => {
+              if (componentObj.id === chosenOptionToAddCorrective.fieldId && componentObj.type === 'columns') {
+                const updatedValues = field.value.map((component, index) => {
+                  if(index === chosenOptionToAddCorrective.columnIndex){
+                    const updatedOptions = component.options.map((option, optionIndex) => {
+                      if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                        return { ...option, correctiveAction: actionData } 
+                      }
+                      return option
+                    });
+                    return { ...component, options: updatedOptions } 
+                  }
+                  return component
+                });
+                return { ...componentObj, value: updatedValues };
+              }else{
+                if (componentObj.id === chosenOptionToAddCorrective.fieldId) {
+                  if(componentObj.type === 'dropdown'){
+                    const updatedOptions = componentObj.options?.map((option, optionIndex) => {
+                      if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                        return { ...option, correctiveAction: actionData } 
+                      }
+                      return option
+                    });
+                    return { ...componentObj, options: updatedOptions };
+                  }else {
+                    const updatedOptions = componentObj.options.map((option, optionIndex) => {
+                      if(optionIndex === chosenOptionToAddCorrective.optionIndex){
+                        return { ...option, correctiveAction: actionData } 
+                      }
+                      return option
+                    });
+                    return { ...componentObj, options: updatedOptions };
+                  }
+                } 
+                return componentObj;
+              }
+            });
+            return { ...field, components: updatedComponents };
+          }
+          return field;
+        }
+      });
+      const updatedCurrentField = updatedFields.find(field => field.id === chosenOptionToAddCorrective.fieldId)
+      //console.log('updatedCurrentField ', updatedCurrentField)
+      setEditingField(updatedCurrentField)
+      setFormFields(updatedFields);
+      setFormFieldsToServer(updatedFields);
+      setChosenOptionToAddCorrective({fieldId: '', optionIndex: '', columnIndex:''});
+      closeCorrectiveActionWindow();
+    }
+ 
   }
   const handleRemoveCorrectiveAction = (fieldId, columnIndexRemove, optionIndexRemove) => { 
-    const updatedFields = formFields.map(field => {
-      if (field.id === fieldId && field.type === 'columns') {
-        const updatedValues = field.value.map((component, index) => {
-          if(index === columnIndexRemove){
-            const updatedOptions = component.options.map((option, optionIndex) => {
-              if(optionIndex === optionIndexRemove){
-                return { ...option, correctiveAction: {} } 
-              }
-              return option
-            });
-            return { ...component, options: updatedOptions } 
-          }
-          return component
-        });
-        return { ...field, value: updatedValues };
-      }else{
-        if (field.id === fieldId) {
-          if(field.type === 'dropdown'){
-            const updatedOptions = field.dropdown.map((option, optionIndex) => {
-              if(optionIndex === optionIndexRemove){
-                return { ...option, correctiveAction: {} } 
-              }
-              return option
-            });
-            return { ...field, dropdown: updatedOptions };
-          }else {
-            const updatedOptions = field.options.map((option, optionIndex) => {
-              if(optionIndex === optionIndexRemove){
-                return { ...option, correctiveAction: {} } 
-              }
-              return option
-            });
-            return { ...field, options: updatedOptions };
-          }
-        } else if (field.components) {
-          const updatedComponents = field.components.map(componentObj => {
-            if (componentObj.id === fieldId && componentObj.type === 'columns') {
-              const updatedValues = field.value.map((component, index) => {
+    if(editingSectionField.sectionId){
+      let updatedSectionComponents = []
+      const updatedFields = formFields.map(field => {
+        if(field.id === editingSectionField.sectionId){
+          updatedSectionComponents = field.components.map(componentSection => {
+            if (componentSection.id === fieldId && componentSection.type === 'columns') {
+              const updatedValues = componentSection.value.map((component, index) => {
                 if(index === columnIndexRemove){
                   const updatedOptions = component.options.map((option, optionIndex) => {
                     if(optionIndex === optionIndexRemove){
@@ -431,40 +500,147 @@ const FormBuilder = () => {
                 }
                 return component
               });
-              return { ...componentObj, value: updatedValues };
+              return { ...componentSection, value: updatedValues };
             }else{
-              if (componentObj.id === fieldId) {
-                if(componentObj.type === 'dropdown'){
-                  const updatedOptions = componentObj.dropdown.map((option, optionIndex) => {
-                    if(optionIndex === optionIndexRemove){
-                      return { ...option, correctiveAction: {} } 
-                    }
-                    return option
-                  });
-                  return { ...componentObj, dropdown: updatedOptions };
-                }else {
-                  console.log('found not dropdown', componentObj)
-                  const updatedOptions = componentObj.options.map((option, optionIndex) => {
-                    if(optionIndex === optionIndexRemove){
-                      return { ...option, correctiveAction: {} } 
-                    }
-                    return option
-                  });
-                  return { ...componentObj, options: updatedOptions };
-                }
-              } 
-              return componentObj;
+              if (componentSection.id === fieldId) {
+                const updatedOptions = componentSection.options?.map((option, optionIndex) => {
+                  if(optionIndex === optionIndexRemove){
+                    return { ...option, correctiveAction: {} } 
+                  }
+                  return option
+                });
+                return { ...componentSection, options: updatedOptions };
+              } else if (componentSection.components) {
+                const updatedComponents = componentSection.components.map(componentObj => {
+                  if (componentObj.id === fieldId && componentObj.type === 'columns') {
+                    const updatedValues = componentSection.value.map((component, index) => {
+                      if(index === columnIndexRemove){
+                        const updatedOptions = component.options.map((option, optionIndex) => {
+                          if(optionIndex === optionIndexRemove){
+                            return { ...option, correctiveAction: {} } 
+                          }
+                          return option
+                        });
+                        return { ...component, options: updatedOptions } 
+                      }
+                      return component
+                    });
+                    return { ...componentObj, value: updatedValues };
+                  }else{
+                    if (componentObj.id === fieldId) {
+                      const updatedOptions = componentObj.options?.map((option, optionIndex) => {
+                        if(optionIndex === optionIndexRemove){
+                          return { ...option, correctiveAction: {} }  
+                        }
+                        return option
+                      });
+                      return { ...componentObj, options: updatedOptions };
+                    } 
+                    return componentObj;
+                  }
+                });
+                return { ...componentSection, components: updatedComponents };
+              }
+              return componentSection;
             }
-          });
-          return { ...field, components: updatedComponents };
+          })
+          return{...field, components: updatedSectionComponents}
         }
-        return field;
-      }
-    });
-    const updatedCurrentField = updatedFields.find(field => field.id === fieldId)
-    setEditingField(updatedCurrentField)
-    setFormFields(updatedFields);
-    closeCorrectiveActionWindow();
+        return field
+      });
+      const updatedCurrentSectionField = updatedSectionComponents.find(field => field.id === fieldId)
+      const updatedCurrentField = updatedFields.find(field => field.id === updatedCurrentSectionField.sectionId)
+      setEditingSectionField(updatedCurrentSectionField)
+      setEditingField(updatedCurrentField)
+      setFormFields(updatedFields);
+      setFormFieldsToServer(updatedFields);
+      closeCorrectiveActionWindow();
+    }else{
+      const updatedFields = formFields.map(field => {
+        if (field.id === fieldId && field.type === 'columns') {
+          const updatedValues = field.value.map((component, index) => {
+            if(index === columnIndexRemove){
+              const updatedOptions = component.options.map((option, optionIndex) => {
+                if(optionIndex === optionIndexRemove){
+                  return { ...option, correctiveAction: {} } 
+                }
+                return option
+              });
+              return { ...component, options: updatedOptions } 
+            }
+            return component
+          });
+          return { ...field, value: updatedValues };
+        }else{
+          if (field.id === fieldId) {
+            if(field.type === 'dropdown'){
+              const updatedOptions = field.options?.map((option, optionIndex) => {
+                if(optionIndex === optionIndexRemove){
+                  return { ...option, correctiveAction: {} } 
+                }
+                return option
+              });
+              return { ...field, options: updatedOptions };
+            }else {
+              const updatedOptions = field.options.map((option, optionIndex) => {
+                if(optionIndex === optionIndexRemove){
+                  return { ...option, correctiveAction: {} } 
+                }
+                return option
+              });
+              return { ...field, options: updatedOptions };
+            }
+          } else if (field.components) {
+            const updatedComponents = field.components.map(componentObj => {
+              if (componentObj.id === fieldId && componentObj.type === 'columns') {
+                const updatedValues = field.value.map((component, index) => {
+                  if(index === columnIndexRemove){
+                    const updatedOptions = component.options.map((option, optionIndex) => {
+                      if(optionIndex === optionIndexRemove){
+                        return { ...option, correctiveAction: {} } 
+                      }
+                      return option
+                    });
+                    return { ...component, options: updatedOptions } 
+                  }
+                  return component
+                });
+                return { ...componentObj, value: updatedValues };
+              }else{
+                if (componentObj.id === fieldId) {
+                  if(componentObj.type === 'dropdown'){
+                    const updatedOptions = componentObj.options?.map((option, optionIndex) => {
+                      if(optionIndex === optionIndexRemove){
+                        return { ...option, correctiveAction: {} } 
+                      }
+                      return option
+                    });
+                    return { ...componentObj, options: updatedOptions };
+                  }else {
+                    console.log('found not dropdown', componentObj)
+                    const updatedOptions = componentObj.options.map((option, optionIndex) => {
+                      if(optionIndex === optionIndexRemove){
+                        return { ...option, correctiveAction: {} } 
+                      }
+                      return option
+                    });
+                    return { ...componentObj, options: updatedOptions };
+                  }
+                } 
+                return componentObj;
+              }
+            });
+            return { ...field, components: updatedComponents };
+          }
+          return field;
+        }
+      });
+      const updatedCurrentField = updatedFields.find(field => field.id === fieldId)
+      setEditingField(updatedCurrentField)
+      setFormFields(updatedFields);
+      setFormFieldsToServer(updatedFields);
+      closeCorrectiveActionWindow();
+    }
   }
 
   const updateFormTitleHandler = (e) => {
@@ -480,6 +656,14 @@ const FormBuilder = () => {
       field.id === id ? updatedField : field
     );
     setFormFields(updatedFormFields);
+    //setFormFieldsToServer(updatedFormFields);
+  };
+  const updateFormFieldToServer = (id, updatedField) => {
+    //console.log('update field params : ', id, updatedField)
+    const updatedFormFields = formFields.map((field) =>
+      field.id === id ? updatedField : field
+    );
+    setFormFieldsToServer(updatedFormFields);
   };
 
   const removeFormField = (id) => {
@@ -488,6 +672,7 @@ const FormBuilder = () => {
       updatedFormFields = updatedFormFields.filter((field) => field.id !== 'submit_button');
     }
     setFormFields(updatedFormFields);
+    setFormFieldsToServer(updatedFormFields);
   };
   const removeFormSectionField = (id, sectionId) => {
     const updatedFormFields = formFields.map((field) => {
@@ -502,6 +687,7 @@ const FormBuilder = () => {
   
     // Update formFields with the modified array
     setFormFields(updatedFormFields);
+    setFormFieldsToServer(updatedFormFields);
   };
 
   const handleDuplicateClick = (id) => {
@@ -525,6 +711,7 @@ const FormBuilder = () => {
   
       // Update formFields with the duplicated field
       setFormFields([...formFields, duplicatedField]);
+      setFormFieldsToServer([...formFields, duplicatedField]);
     }
   };
   
@@ -573,7 +760,7 @@ const FormBuilder = () => {
         onClose={closeCorrectiveActionWindow}/>
     
         <div className="form-builder-page-content">
-          <FormBuilderSideBar setIsDragging={setIsDragging} setDropAreaPositions ={setDropAreaPositions} 
+          <FormBuilderSideBar setIsDragging={setIsDragging} updateFormField={updateFormField}
           removeFormField={removeFormField} removeFormSectionField={removeFormSectionField} duplicateField={handleDuplicateClick}
           updateFormTypeHandler={updateFormTypeHandler} formType={formType}
           editingField={editingField} setEditingField={setEditingField}
@@ -610,7 +797,8 @@ const FormBuilder = () => {
                   <FormBuilderField key={index} field={field} index={index}
                     isDragging={isDragging} setIsDragging={setIsDragging}
                     handleDrop={handleDrop} 
-                    updateFormField={updateFormField} removeFormField={removeFormField} 
+                    updateFormField={updateFormField} updateFormFieldToServer={updateFormFieldToServer}
+                    removeFormField={removeFormField} 
                     editingField={editingField} setEditingField={setEditingField}
                     editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}/>
                 ))

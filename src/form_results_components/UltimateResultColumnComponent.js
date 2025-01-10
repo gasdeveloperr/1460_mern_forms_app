@@ -40,7 +40,7 @@ const UltimateResultColumnComponent = ({fieldValue, field}) => {
             <div
               className="form-live-component-selected-option"
               style={{
-                backgroundColor: field.dropdown.find(option => option.title === fieldValue)?.color || '#fff',
+                backgroundColor: field.options?.find(option => option.title === fieldValue)?.color || '#fff',
                 padding: '5px',
                 borderRadius: '5px',
                 color: '#000'

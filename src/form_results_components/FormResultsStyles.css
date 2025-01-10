@@ -84,3 +84,23 @@
   padding: 8px 6px;
   max-width: 300px
 }
+.form-results-table-bordless{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  text-align: left;
+}
+.form-results-td-bordless{
+  border: none;
+  font-size: 13px;
+  padding: 8px 6px;
+  max-width: 300px
+}
+.field-result-option-corrective-action{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+  color: #eaa69d;
+  margin-top: -8px;
+}

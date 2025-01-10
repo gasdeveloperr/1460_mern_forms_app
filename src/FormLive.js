@@ -133,6 +133,8 @@ const FormLive = () => {
       const fieldType = element.getAttribute('fieldtype'); 
       const columnType = element.getAttribute('columntype');
       const columnIndex = element.getAttribute('columnindex'); 
+      const correctiveActionText = element.getAttribute('correctiveactiontext'); 
+      const correctiveActionId = element.getAttribute('correctiveactionid'); 
 
       //console.log(' saving results  : ', fieldType, element)
       for(let j = 0; j < formFields.length; j++){
@@ -147,6 +149,8 @@ const FormLive = () => {
                 customType,
                 sectionName,
                 columnType,
+                correctiveActionText,
+                correctiveActionId,
               });
             }
           }
@@ -159,6 +163,8 @@ const FormLive = () => {
             customType,
             sectionName,
             columnType,
+            correctiveActionText,
+            correctiveActionId,
           });
         }
       }

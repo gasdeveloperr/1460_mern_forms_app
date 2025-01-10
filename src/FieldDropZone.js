@@ -1,12 +1,12 @@
 import { useDrop } from 'react-dnd';
 import { accept_types_array } from './consts';
 
-const FieldDropZone = ({index, isDragging, handleDrop, position, sectionId, parentId}) => {
+const FieldDropZone = ({index, isDragging, handleDrop, position, sectionId, isOldSection}) => {
 
   const useDropArea = (drop_index, onDrop) => {
     const [, drop] = useDrop({
       accept: accept_types_array,
-      drop: (item) => onDrop(item, drop_index, sectionId || '', parentId),
+      drop: (item) => onDrop(item, drop_index, sectionId || '', isOldSection || ''),
       collect: (monitor) => ({
         isOver: monitor.isOver(),
       }),

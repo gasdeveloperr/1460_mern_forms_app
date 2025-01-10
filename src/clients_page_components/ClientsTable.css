@@ -44,8 +44,14 @@
   color: #0066cc;
   text-decoration: none;
 }
-.group-title:hover {
-  text-decoration: underline;
+.group-title-container{
+  display: flex;
+  align-items: center;
+}
+.group-title-container input{
+  padding: 4px 6px !important;
+  border: none !important;
+  border-radius: 4px;
 }
 .user-name{
   color: #0066cc;

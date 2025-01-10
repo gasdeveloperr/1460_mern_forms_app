@@ -23,7 +23,7 @@ const AddCorrectiveActionWindow = ({isOpen, onClose, handleAdding}) => {
 
     try {
       const response = await axios.get(`${backend_point}/api/correctiveActions/all`, config);
-      console.log('actions taked successfully:', response.data);
+      //console.log('actions taked successfully:', response.data);
       setActions(response.data);
       setIsLoading(false);
     } catch (err) {

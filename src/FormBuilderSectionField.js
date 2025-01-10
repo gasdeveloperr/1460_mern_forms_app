@@ -66,7 +66,7 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
     if (!isRemoveButton) {
       setRemoveOpacity('1');
       setEditingSectionField(field);
-      console.log('setEditingSectionField : ',editingSectionField)
+      //console.log('setEditingSectionField : ',editingSectionField)
     }
   };
  
@@ -93,7 +93,7 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
     return (
       <div key={field.id}  style={{ opacity }} className="form-section-field-container">
         <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'top'} 
-        sectionId={sectionId} parentId={sectionId}/>
+        sectionId={sectionId} isOldSection={field.sectionId || 'old'}/>
         <div className={`form-field ${field.id === editingSectionField.id ? 'chosen-field' : '' }`} ref={formFieldRef} 
         onClick={(e) => onClickEditorHandler(e, field)}>
           <div ref={ref}>
@@ -220,8 +220,8 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
                 {field.required && <span className='required_sign'>*</span>}
                 {field.title}
               </div>
-              <div className='form-component-dropdown-div' style={{backgroundColor: field.dropdown[0].color ? field.dropdown[0].color : ''}}>
-                {field.dropdown[0].title}
+              <div className='form-component-dropdown-div' style={{backgroundColor: field.options[0]?.color ? field.options[0]?.color : ''}}>
+                {field.options[0]?.title}
                 <img src={selector_icon} />
               </div>
             </div>
@@ -460,7 +460,7 @@ const FormBuilderSectionField = ({field, index, isDragging, setIsDragging,
         </div>
         </div>
         <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'bottom'} 
-        sectionId={sectionId} parentId={sectionId}/>
+        sectionId={sectionId} isOldSection={field.sectionId || 'old'}/>
       </div>
     );
 };

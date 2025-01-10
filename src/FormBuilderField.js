@@ -13,7 +13,7 @@ import UltimateColumnComponent from './form_builder_editor_components/UltimateCo
 
 const FormBuilderField = ({field, index, isDragging, setIsDragging, 
   handleDrop, 
-  updateFormField, removeFormField, 
+  updateFormField, updateFormFieldToServer, removeFormField, 
   editingField, setEditingField,
   editingSectionField, setEditingSectionField}) => {
 
@@ -26,10 +26,11 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
   const handleOutsideClick = useCallback(() => {
     if (field.id === editingField.id) {
       setRemoveOpacity('0');
-      //console.log('clicked outside', editingField, editingSectionField)
-      if (!isEqual(field, editingField)) {
-        updateFormField(field.id, editingField);
-      }
+      //console.log('clicked outside', field, editingField)
+      //if (!isEqual(field, editingField)) {
+        //updateFormField(field.id, editingField);
+        updateFormFieldToServer(field.id, editingField)
+      //}
       setEditingField({ id: '' });
     }
   }, [field, editingField, updateFormField, setEditingField]);
@@ -91,7 +92,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
 
     return (
       <div key={field.id}  style={{ opacity }} className="form-field-container">
-        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'top'} parentId={'general'}/>
+        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'top'}/>
         <div className={`form-field ${field.id === editingField.id ? 'chosen-field' : '' }`} ref={formFieldRef} 
         onClick={(e) => onClickEditorHandler(e, field)}>
           <div ref={ref}>
@@ -218,8 +219,8 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
                 {field.required && <span className='required_sign'>*</span>}
                 {field.title}
               </div>
-              <div className='form-component-dropdown-div' style={{backgroundColor: field.dropdown[0].color ? field.dropdown[0].color : ''}}>
-                {field.dropdown[0].title}
+              <div className='form-component-dropdown-div' style={{backgroundColor: field.options[0]?.color ? field.options[0]?.color : ''}}>
+                {field.options[0]?.title}
                 <img src={selector_icon} />
               </div>
             </div>
@@ -437,15 +438,6 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
                   ))}
                   {field.value.map((value, index) => (
                     <UltimateColumnComponent key={index} field={value} columnStyle={columnStyle}/>
-                    // field.value[index].type === 'dropdown' ?
-                    // <td className='form-component-dropdown-div' style={{backgroundColor: field.value[index].options[0].color ? field.value[1].color : ''}}>
-                    //   {field.value[index].options[0].title|| '⠀'}
-                    //   <img src={selector_icon} />
-                    // </td>
-                    // :
-                    // <td className='form-component-input-div short' style={columnStyle}>
-                    //   {field.value[index].value}
-                    // </td>
                   ))}
                 </table>
               </div>
@@ -478,7 +470,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
           {/* <RemoveButton opacityVal={removeOpacity} onClick={() => handleRemoveClick(field.id)} /> */}
         </div>
         </div>
-        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'bottom'} parentId={'general'}/>
+        <FieldDropZone index={index} isDragging={isDragging} handleDrop={handleDrop} position={'bottom'}/>
       </div>
     );
 };

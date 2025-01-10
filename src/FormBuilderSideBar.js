@@ -3,8 +3,10 @@ import DraggableComponent from "./DraggableComponent";
 import FieldBuilderEditor from "./FormBuilderEditor";
 import FormBuilderSectionComponentEditor from "./form_builder_editor_components/FormBuilderSectionComponentEditor";
 
-const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormField, removeFormSectionField, duplicateField,
-    updateFormTypeHandler, formType, editingField, setEditingField, editingSectionField, setEditingSectionField,
+const FormBuilderSideBar = ({setIsDragging, updateFormField, 
+    removeFormField, removeFormSectionField, duplicateField,
+    updateFormTypeHandler, formType,
+    editingField, setEditingField, editingSectionField, setEditingSectionField,
     handleOptionsSaving, chooseOptionsToChange, chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction}) => {
 
   const handleDragStart = () => {
@@ -13,7 +15,6 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
 
   const handleDragEnd = () => {
     setIsDragging(false);
-    setDropAreaPositions([]);
   };
 
   const [sections, setSections] = useState({
@@ -34,14 +35,15 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
     <div className='left-bar'>
       {
         editingField && editingField.id !== '' && editingSectionField.id === '' ? 
-        <FieldBuilderEditor removeFormField={removeFormField} duplicateField={duplicateField}
+        <FieldBuilderEditor updateFormField={updateFormField} removeFormField={removeFormField} duplicateField={duplicateField}
         editingField={editingField} setEditingField={setEditingField}
         editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
         handleOptionsSaving={handleOptionsSaving} 
         chooseOptionsToChange={chooseOptionsToChange} 
         chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={chooseOptionToRemoveCorrectiveAction}/>
         : editingSectionField && editingSectionField.id !== '' ?
-        <FormBuilderSectionComponentEditor removeFormSectionField={removeFormSectionField} duplicateField={duplicateField}
+        <FormBuilderSectionComponentEditor updateFormFieldsFromSection={updateFormField}
+        removeFormSectionField={removeFormSectionField} duplicateField={duplicateField}
         editingField={editingField} setEditingField={setEditingField}
         editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
         handleOptionsSaving={handleOptionsSaving} 
@@ -125,27 +127,6 @@ const FormBuilderSideBar = ({setIsDragging, setDropAreaPositions, removeFormFiel
                 <DraggableComponent type="section" title="Section"
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}/>
-                {/* <DraggableComponent type="double_section" title="2 Selectors Section" 
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
-                <DraggableComponent type="triple_section" title="3 Selectors Section" 
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
-                <DraggableComponent type="two_inputs_section" title="2 Inputs Section"
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
-                <DraggableComponent type="triple_inputs_section" title="3 Inputs Section"
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
-                <DraggableComponent type="four_inputs_section" title="4 Inputs Section"
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
-                <DraggableComponent type="five_inputs_section" title="5 Inputs Section"
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/>
-                <DraggableComponent type="multi_section" title="Multiple Section"
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}/> */}
               </div>
             )}
           </div>
