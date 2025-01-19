@@ -38,9 +38,9 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange,
         setColumnStyle({...columnStyle, borderRadius: '0px', border: '1px solid rgb(211, 221, 225)'})
         setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', padding: '10px 6px'})
       }else{
-        setColumnsStyle({...columnsStyle, gap: '10px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
+        setColumnsStyle({...columnsStyle, gap: '4px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
         setColumnStyle({borderRadius: '4px'})
-        setColumnLabelStyle({...columnLabelStyle, border: 'none', padding: '8px'})
+        setColumnLabelStyle({...columnLabelStyle, border: 'none', padding: '2px 4px'})
       }
     }
   }, [field])

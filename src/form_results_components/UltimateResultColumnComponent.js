@@ -17,19 +17,19 @@ const UltimateResultColumnComponent = ({fieldValue, field}) => {
             </label>
             ))
             :
-            <div className="form-live-component-value">
+            <div className="form-result-component-value">
               No selection
             </div>
           }
         </div>
       )
       : field.type === 'name' ? (
-        <div className="form-live-component-value">
+        <div className="form-result-component-value">
           {fieldValue?.first_name} {fieldValue?.last_name}
         </div>
       )
       : field.type === 'date_time' ? (
-        <div className="form-live-component-value">
+        <div className="form-result-component-value">
           {fieldValue?.date} {fieldValue?.time}
         </div>
       )
@@ -38,10 +38,9 @@ const UltimateResultColumnComponent = ({fieldValue, field}) => {
           {/* Show the selected dropdown option and color */}
           {fieldValue ? (
             <div
-              className="form-live-component-selected-option"
+              className="form-result-component-value"
               style={{
                 backgroundColor: field.options?.find(option => option.title === fieldValue)?.color || '#fff',
-                padding: '5px',
                 borderRadius: '5px',
                 color: '#000'
               }}

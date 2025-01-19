@@ -16,7 +16,7 @@ export const readonly_types_array = ['short_answer', 'long_answer', 'title', 'ad
 export const ordinalArray = [
   '1st', '2nd', '3rd', '4th', '5th', 
   '6th', '7th', '8th', '9th', '10th', 
-  '11th', '12th'
+  '11th', '12th', '13th', '14th', '15th'
 ];
      
 export const titles_to_types_object = {
@@ -45,7 +45,7 @@ export const titles_to_types_object = {
   'multi_section' : 'Multiple Section',
 };
 
-export const backend_point = 'https://one460-forms-backend.onrender.com'
+export const backend_point = 'http://localhost:5000'
 //'http://localhost:5000'
 //'https://one460-forms-backend.onrender.com'
 

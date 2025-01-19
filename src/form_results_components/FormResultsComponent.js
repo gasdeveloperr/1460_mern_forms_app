@@ -16,49 +16,97 @@ const FormResultsComponent = ({ field, data }) => {
   return (
     <>
       {field.type === 'short_answer' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className='form-results-component-title'>
             {field.title}:
           </div>
           {!field.read_only &&
-            <div className="form-live-component-value">
-              {fieldData ? fieldData.value : 'No response'}
+            <div className="form-result-component-value">
+              {
+                fieldData.value && fieldData.value.result ? fieldData.value.result
+                : fieldData.value && !fieldData.value.result ? fieldData.value
+                : ''
+              }
             </div>
           }
         </div>
       )}
       {field.type === 'email' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className='form-results-component-title'>
             {field.title}:
           </div>
           {!field.read_only &&
-            <div className="form-live-component-value">
-              {fieldData ? fieldData.value : 'No response'}
+            <div className="form-result-component-value">
+              {
+                fieldData.value && fieldData.value.result ? fieldData.value.result
+                : fieldData.value && !fieldData.value.result ? fieldData.value
+                : ''
+              }
             </div>
           }
         </div>
       )}
       {field.type === 'number' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className='form-results-component-title'>
             {field.title}:
           </div>
           {!field.read_only &&
-            <div className="form-live-component-value">
-              {fieldData ? fieldData.value : 'No response'}
+            <div className="form-result-component-value">
+              {
+                fieldData.value && fieldData.value.result ? fieldData.value.result
+                : fieldData.value && !fieldData.value.result ? fieldData.value
+                : ''
+              }
+            </div>
+          }
+        </div>
+      )}
+      {field.type === 'address' && (
+        <div className="form-result-component-container">
+          <div className='form-results-component-title'>
+            {field.title}:
+          </div>
+          {!field.read_only &&
+            <div className="form-result-component-value">
+              {
+                fieldData.value && fieldData.value.result ? fieldData.value.result
+                : fieldData.value && !fieldData.value.result ? fieldData.value
+                : ''
+              }
+            </div>
+          }
+        </div>
+      )}
+      {field.type === 'phone' && (
+        <div className="form-result-component-container">
+          <div className='form-results-component-title'>
+            {field.title}:
+          </div>
+          {!field.read_only &&
+            <div className="form-result-component-value">
+              {
+                fieldData.value && fieldData.value.result ? fieldData.value.result
+                : fieldData.value && !fieldData.value.result ? fieldData.value
+                : ''
+              }
             </div>
           }
         </div>
       )}
 
       {field.type === 'long_answer' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className='form-results-component-title'>
             {field.title}:
           </div>
-          <div className="form-live-component-value">
-            {fieldData ? fieldData.value : 'No response'}
+          <div className="form-result-component-value">
+            {
+              fieldData.value && fieldData.value.result ? fieldData.value.result
+              : fieldData.value && !fieldData.value.result ? fieldData.value
+              : ''
+            }
           </div>
         </div>
       )}
@@ -71,7 +119,7 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'radio' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className='form-results-component-title'>
             {field.title}:
           </div>
@@ -109,7 +157,7 @@ const FormResultsComponent = ({ field, data }) => {
       )}
 
       {field.type === 'checkbox' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className='form-results-component-title'>
             {field.title}:
           </div>
@@ -141,7 +189,7 @@ const FormResultsComponent = ({ field, data }) => {
                 </label>
                 ))
                 :
-                <div className="form-live-component-value">
+                <div className="form-result-component-value">
                   No selection
                 </div>
               }
@@ -150,28 +198,28 @@ const FormResultsComponent = ({ field, data }) => {
       )}
 
       {field.type === 'name' && fieldData && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className='form-results-component-title'>
             {field.title}:
           </div>
-          <div className="form-live-component-value">
+          <div className="form-result-component-value">
             {fieldData.value.first_name} {fieldData.value.last_name}
           </div>
         </div>
       )}
 
       {field.type === 'date_time' && fieldData && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className='form-results-component-title'>
             {field.title}:
           </div>
-          <div className="form-live-component-value">
+          <div className="form-result-component-value">
             {fieldData.value.date} {fieldData.value.time}
           </div>
         </div>
       )}
       {field.type === 'dropdown' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className="form-results-component-title">
             {field.title}:
           </div>
@@ -180,10 +228,9 @@ const FormResultsComponent = ({ field, data }) => {
             {
               fieldData.value && fieldData.value.result ? 
                 <>
-                  <div className="form-live-component-selected-option"
+                  <div className="form-result-component-value"
                     style={{
                       backgroundColor: field.options?.find(option => option.title === fieldData.value)?.color || '#fff',
-                      padding: '5px',
                       borderRadius: '5px',
                       color: '#000'
                     }}
@@ -198,7 +245,7 @@ const FormResultsComponent = ({ field, data }) => {
                   }
                 </>
               : fieldData.value && !fieldData.value.result ?
-                <div className="form-live-component-selected-option"
+                <div className="form-result-component-value"
                 style={{
                   backgroundColor: field.options?.find(option => option.title === fieldData.value)?.color || '#fff',
                   padding: '5px',
@@ -214,7 +261,7 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'double_section' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className="form-results-component-title">
             {field.title}
           </div>
@@ -231,7 +278,7 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'triple_section' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className="form-results-component-title">
             {field.title}
           </div>
@@ -255,7 +302,7 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'two_inputs_section' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className="form-results-component-title">
             {field.title}
           </div>
@@ -272,7 +319,7 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'triple_inputs_section' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className="form-results-component-title">
             {field.title}
           </div>
@@ -289,7 +336,7 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'four_inputs_section' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className="form-results-component-title">
             {field.title}
           </div>
@@ -306,7 +353,7 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'five_inputs_section' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className="form-results-component-title">
             {field.title}
           </div>
@@ -323,7 +370,7 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'multi_section' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className="form-results-component-title">
             {field.title}
           </div>
@@ -346,7 +393,7 @@ const FormResultsComponent = ({ field, data }) => {
         </div>
       )}
       {field.type === 'columns' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className="form-results-component-title">
             {field.title}
           </div>
@@ -396,11 +443,11 @@ const FormResultsComponent = ({ field, data }) => {
       )}
 
       {field.type === 'file_upload' && (
-        <div className="form-live-component-container">
+        <div className="form-result-component-container">
           <div className='form-results-component-title'>
             {field.title}:
           </div>
-          <div className="form-live-component-value">
+          <div className="form-result-component-value">
             {fieldData ? 'File uploaded' : 'No file uploaded'}
           </div>
         </div>

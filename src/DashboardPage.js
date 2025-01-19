@@ -10,7 +10,7 @@ import DashboardSideMenu from './dashboard_page_components/DashboardSideMenu';
 import DashboardTable from './dashboard_page_components/DashboardTable';
 import FormGroupSavingWindow from './form_group_components/FormGroupSavingWindow';
 import FormGroupChoosingWindow from './form_group_components/FormGroupChoosingWindow';
-import FormGroupsTable from './dashboard_page_components/FormGroupsTable';
+import FormGroupsPage from './FormGroupsPage';
 
 function DashboardPage() {
 
@@ -38,7 +38,6 @@ function DashboardPage() {
         'Authorization': `${token}`,
       },
     };
-
 
     try {
       const response = await axios.get(`${backend_point}/api/forms/all`, config);
@@ -89,7 +88,6 @@ function DashboardPage() {
   };
 
   const deleteFormHandler = async (formId) => {
-
     const token = getAuthToken();
     const config = {
       headers: {
@@ -111,7 +109,6 @@ function DashboardPage() {
   };
 
   const deleteFormGroupHandler = async (groupId) => {
-
     const token = getAuthToken();
     const config = {
       headers: {
@@ -289,12 +286,19 @@ function DashboardPage() {
         handleAddingForm={() => createFormHandler()}
         handleCreatingFormGroup={handleCreatingFormGroup}
         changeActiveOptionHandler={changeActiveOptionHandler}/>
+        {
+          activeOption === 'formsGroups' ?
+          <FormGroupsPage forms={forms} formGroups={formGroups} 
+          deleteFormGroupHandler={deleteFormGroupHandler} 
+          chooseFormToAddIntoGroup={chooseFormToAddIntoGroup} chooseFormToRemoveFromGroup={handleRemoveFromGroup}
+          changeTitle={changeTitle} moveForm={moveForm} 
+          isLoading={isLoading} setIsLoading={setIsLoading} isSaveMode={saveMode} 
+          saveFormGroupChanges={saveFormGroupChanges} getFormGroupsHandler={getFormGroupsHandler}/>
+          :
         <div className="table-page-body">
           <div className="table-page-heading">
             <div className="dashboard-page-title">
-              {activeOption === 'forms' ? 'Assessments' : 
-              (activeOption === 'formsGroups' || activeOption === 'addingformsGroup') 
-              ? 'Groups' : ''}
+              Assessments
             </div>
             {/* <FilterSearchBar
               onFilterChange={handleFilterChange} 
@@ -317,22 +321,13 @@ function DashboardPage() {
                 {isError}
               </div>
               :
-              activeOption === 'forms' ?
               <DashboardTable forms={forms} formGroups={formGroups} 
               deleteFormHandler={deleteFormHandler} 
               chooseFormToAddIntoGroup={chooseFormToAddIntoGroup}/>
-              : 
-              activeOption === 'formsGroups' ?
-              <FormGroupsTable forms={forms} formGroups={formGroups} 
-              deleteFormGroupHandler={deleteFormGroupHandler} 
-              chooseFormToAddIntoGroup={chooseFormToAddIntoGroup} chooseFormToRemoveFromGroup={handleRemoveFromGroup}
-              changeTitle={changeTitle} moveForm={moveForm} 
-              isSaveMode={saveMode} saveFormGroupChanges={saveFormGroupChanges}/>
-              :
-              <></>
             }
           </div>
         </div>
+        }
       </div>
     </div>
   );

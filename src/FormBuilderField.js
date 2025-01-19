@@ -83,7 +83,7 @@ const FormBuilderField = ({field, index, isDragging, setIsDragging,
         setColumnStyle({...columnStyle, borderRadius: '0px', border: '1px solid rgb(211, 221, 225)'})
         setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', padding: '8px'})
       }else{
-        setColumnsStyle({...columnsStyle, gap: '10px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
+        setColumnsStyle({...columnsStyle, gap: '4px', gridTemplateColumns: `repeat(${field.labels.length}, 1fr)`})
         setColumnStyle({borderRadius: '4px'})
         setColumnLabelStyle({...columnLabelStyle, border: 'none', padding: '0'})
       }

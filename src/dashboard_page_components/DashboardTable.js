@@ -2,7 +2,7 @@ import React from 'react';
 import '../clients_page_components/ClientsTable.css';
 import './DashboardPage.css';
 import { formatDate, getUserRole } from '../utils';
-import trash_icon from '../icons/trash-can-white.svg'
+import trash_icon from '../icons/trash-can.svg'
 import open_icon from '../icons/open-form-icon.svg'
 import edit_icon from '../icons/edit-form-icon.svg'
 
@@ -39,7 +39,7 @@ const DashboardTable = ({ forms, formGroups, deleteFormHandler, chooseFormToAddI
                   <a href={`/forms/builder/${form._id}`}>{form.title}</a>
                 </td>
                 <td className='forms-action' align="center">
-                  {(userRole === 'editor' || userRole ==='admin') &&
+                  {(userRole === 'editor' || userRole ==='admin' || userRole === 'manager') &&
                     <a href={`/forms/builder/${form._id}`}>
                       <img src={edit_icon}  className="forms-action-edit-img"/>
                     </a>
@@ -57,7 +57,7 @@ const DashboardTable = ({ forms, formGroups, deleteFormHandler, chooseFormToAddI
                   {formatDate(form.last_changed)}
                 </td>
                 <td className="forms-action" align="center">
-                  {(userRole === 'editor' || userRole === 'admin') && (
+                  {(userRole === 'editor' || userRole === 'admin' || userRole === 'manager') && (
                     form.groupId ? (
                       <div style={{display:'flex', gap: '12px', alignItems:'center', justifyContent:'flex-start'}}>
                         <span style={{fontWeight: '600'}}>
@@ -72,8 +72,8 @@ const DashboardTable = ({ forms, formGroups, deleteFormHandler, chooseFormToAddI
                   )}
                 </td>
                 <td className='forms-action' align="center"> 
-                  {(userRole === 'editor' || userRole ==='admin') &&
-                    <div className="delete" onClick={() => deleteFormHandler(form._id)}>
+                  {(userRole === 'editor' || userRole ==='admin' || userRole === 'manager') &&
+                    <div className="form-action-button" onClick={() => deleteFormHandler(form._id)}>
                       <img src={trash_icon} className="remove-icon"/>
                     </div>
                   }

@@ -15,71 +15,146 @@ import axios from 'axios';
 import DocxViewerComponent from './DocxViewerComponent';
 import AddFolderWindow from './AddFolderWindow';
 
+const FolderContents = ({ item, openFolders, handleFolderClick, handleDocumentClick, selectedDocument, 
+  level = 0 }) => {
+  if (item.type === 'file') {
+    return (
+      <li className="file-title"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDocumentClick(item, item.path);
+        }}
+      >
+        <img src={file_icon} className="size20-icon" alt="file icon" />
+        <div 
+          className={'file-title-text' + (selectedDocument?.fileUrl === item.fileUrl ? '-chosen' : '')}
+        >
+          {item.name}
+        </div>
+      </li>
+    );
+  }
+
+  return (
+    <li className="folder-item">
+      <div className="folder-title" onClick={() => handleFolderClick(item.path)}>
+        <img src={openFolders[item.path] ? open_folder_icon : folder_icon} 
+          className='folder-icon' 
+          alt="folder icon" 
+        />
+        {decodeURIComponent(item.name)}
+      </div>
+      {openFolders[item.path] && (
+        <ul className="file-sublist">
+          {item.children.map((child, index) => (
+            <FolderContents
+              key={`${child.path}-${index}`}
+              item={child}
+              openFolders={openFolders}
+              handleFolderClick={handleFolderClick}
+              handleDocumentClick={handleDocumentClick}
+              selectedDocument={selectedDocument}
+              level={level + 1}
+            />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+};
 
 const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [previewOption, setPreviewOption] = useState('content');
-  
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
 
   const [selectedFile, setSelectedFile] = useState(null);
 
-
   const [currentPath, setCurrentPath] = useState([]);
-
   const [organizedFiles, setOrganizedFiles] = useState({})
 
   const organizeFilesByFolder = (files) => {
-    const result = {};
+    const root = {
+      name: 'Root',
+      type: 'folder',
+      children: [],
+      path: ''
+    };
   
     files.forEach((file) => {
-      if(file){
+      if (file && file.fileUrl) {
         // Extract folder path from the file URL
         const urlParts = new URL(file.fileUrl);
-        const folderPath = urlParts.pathname.split('/').slice(1, -1).join('/');
-
-    
-        // If no folder, use root as default
-        const folder = folderPath || 'General';
-    
-        // Initialize folder array if not already present
-        if (!result[folder]) {
-          result[folder] = {folderLevel: '', files:[]};
-        }
-    
-        // Push the file data into the respective folder
-        result[folder].files.push({
-          fileName: file.fileName,
-          fileUrl: file.fileUrl,
-          fileType: file.fileType,
-          fileSize: file.fileSize,
+        const pathParts = urlParts.pathname.split('/').slice(1, -1);
+        const fileName = urlParts.pathname.split('/').pop();
+  
+        let currentLevel = root;
+        let currentPath = '';
+  
+        pathParts.forEach((folderName) => {
+          currentPath = currentPath ? `${currentPath}/${folderName}` : folderName;
+          // Find or create folder at current level
+          let folder = currentLevel.children.find(
+            item => item.type === 'folder' && item.name === folderName
+          );
+  
+          if (!folder) {
+            folder = {
+              name: folderName,
+              type: 'folder',
+              children: [],
+              path: currentPath
+            };
+            currentLevel.children.push(folder);
+          }
+          currentLevel = folder;
         });
+        if(file.fileType !== 'folder'){
+          // Add file to the deepest level
+          currentLevel.children.push({
+            name: file.fileName || fileName,
+            type: 'file',
+            fileUrl: file.fileUrl,
+            fileType: file.fileType,
+            fileSize: file.fileSize,
+            path: currentPath ? `${currentPath}/${fileName}` : fileName
+          });
+        }
       }
     });
   
-    return result;
-
-      // const test ='/Network%20Assessment/sub_Network%20Assessment/1734691511032-Section%20Form-16.pdf'
-      
-      
-      // const testPath = test.split('/').slice(1, -1).join('/');
-      // const testArray = testPath.split('/')
-      // console.log('testArray', testArray)
-      
-      // testArray.map((folder, folderIndex) => {
-      //   result[folder] = {folderLevel: '', files:[]}
-      // })
-  };
+    // Helper function to sort folders and files
+    const sortItems = (items) => {
+      return items.sort((a, b) => {
+        // Folders come before files
+        if (a.type !== b.type) {
+          return a.type === 'folder' ? -1 : 1;
+        }
+        // Alphabetical sort within same type
+        return a.name.localeCompare(b.name);
+      });
+    };
   
-
+    // Recursively sort all levels
+    const sortRecursively = (node) => {
+      if (node.children) {
+        node.children = sortItems(node.children);
+        node.children.forEach(child => {
+          if (child.type === 'folder') {
+            sortRecursively(child);
+          }
+        });
+      }
+      return node;
+    };
+    return sortRecursively(root);
+  };
   useEffect(() => {
-    //console.log(organizeFilesByFolder(files))
     setOrganizedFiles(organizeFilesByFolder(files))
   },[files])
 
   const [fileType, setFileType] = useState("");
-
   const userId = getUserId()
   
   const uploadFileToAWS = async (file) => {
@@ -87,9 +162,7 @@ const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
   
     const fileData = new FormData();
     fileData.append('document', file);
-    if(currentPath.category !== 'General'){
-      fileData.append('folderName', currentPath.category || currentPath.subcategory || '');
-    }
+    fileData.append('currentPath', JSON.stringify(currentPath) || '');
     
     try {
       const response = await axios.post(`${backend_point}/api/awsFiles/upload`, fileData, {
@@ -143,45 +216,36 @@ const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
   };
 
   const [openFolders, setOpenFolders] = useState({});
-
   const handleDocumentClick = (document) => {
-    const urlParts = new URL(document.fileUrl);
-    const folderPath = urlParts.pathname.split('/').slice(1, -1).join('/');
-    console.log('currentPath: ',folderPath)
-    // setCurrentPath((prevPath) => [...prevPath.slice(0, -1), document.fileName]);
+    // Extract path using the new path property
+    const pathArray = document.path.split('/').filter(Boolean);
+    //console.log('currentPath: ', currentPath);
+    setCurrentPath(pathArray);
     setSelectedDocument(document);
-    const fileExtension = document.fileName.split(".").pop().toLowerCase();
+    const fileExtension = document.name.split('.').pop().toLowerCase();
     setFileType(fileExtension);
   };
-
-  const handleFolderClick = (folderName) => {
-    if(!selectedDocument){
-      console.log('currentPath: ',currentPath)
-      const isFolderOpen = openFolders[folderName];
-      if(isFolderOpen && currentPath.includes(decodeURIComponent(folderName))){
-
-      }else{
-
-      }
-      setCurrentPath((prevPath) => [...prevPath, decodeURIComponent(folderName)]);
-    }
-    toggleFolder(folderName);
-  };
   
-  const handleSubfolderClick = (parentFolder, subfolder) => {
-    const fullPath = `${parentFolder}/${subfolder}`;
-    setOpenFolders((prevState) => ({
-      ...prevState,
-      [fullPath]: !prevState[fullPath],
-    }));
-  
-    setCurrentPath((prevPath) => {
-      if (prevPath.includes(fullPath)) {
-        return prevPath.slice(0, prevPath.indexOf(fullPath));
+  const handleFolderClick = (folderPath) => {
+    if (!selectedDocument) {
+      //console.log('currentPath: ', currentPath);
+      const isFolderOpen = openFolders[folderPath];
+      const pathArray = folderPath.split('/').filter(Boolean);
+      
+      if (isFolderOpen && currentPath.join('/') === folderPath) {
+        // If closing current folder, move up one level
+        setCurrentPath(pathArray.slice(0, -1));
       } else {
-        return [...prevPath, fullPath];
+        // If opening folder, set it as current path
+        setCurrentPath(pathArray);
       }
-    });
+    }
+    
+    // Toggle folder open/closed state
+    setOpenFolders(prev => ({
+      ...prev,
+      [folderPath]: !prev[folderPath]
+    }));
   };
   
   const toggleFolder = (folder) => {
@@ -212,14 +276,14 @@ const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
       <div className="breadcrumb">
         <div>
           <span onClick={() => setCurrentPath([])}>Home</span>
-          {/* {currentPath?.map((part, index) => (
+          {currentPath?.map((part, index) => (
             <span 
               key={index} 
               onClick={() => setCurrentPath(currentPath.slice(0, index + 1))}
             >
-              &gt; {part}
+              &nbsp;&gt; {decodeURIComponent(part)} 
             </span>
-          ))} */}
+          ))}
         </div>
         
           <div className='document-management-options'>
@@ -230,9 +294,9 @@ const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
             style={{ display: 'none' }}
             id="file-input"
             />
-            {/* <div className='document-management-option' onClick={() => setIsCreatingFolder(true)}>
+            <div className='document-management-option' onClick={() => setIsCreatingFolder(true)}>
               <img src={add_folder_icon} className='size22-icon' alt="add folder" />
-            </div> */}
+            </div>
             <div className='document-management-option' onClick={() => document.getElementById('file-input').click()}>
               <img src={updload_icon} className='size24-icon' alt="upload file" />
             </div>
@@ -240,6 +304,20 @@ const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
       </div>
       <div className="document-management-content">
         <div className="sidebar">
+          <ul className="file-sublist">
+            {organizedFiles.children?.map((item, index) => (
+              <FolderContents
+                key={`${item.path}-${index}`}
+                item={item}
+                openFolders={openFolders}
+                handleFolderClick={handleFolderClick}
+                handleDocumentClick={handleDocumentClick}
+                selectedDocument={selectedDocument}
+              />
+            ))}
+          </ul>
+        </div>
+        {/* <div className="sidebar">
           <ul className="file-sublist">
             {organizedFiles &&
             Object.entries(organizedFiles).map(([folder, folderFiles]) => (
@@ -275,14 +353,14 @@ const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
         <div className="document-viewer">
           {
           selectedDocument  ? (
           <div className="document-preview">
             <h3 className="document-preview-title"> 
-              <img src={getFileIcon(selectedDocument.fileName)} className='size24-icon' alt="doc" />
-              {selectedDocument.fileName}
+              <img src={getFileIcon(selectedDocument.name)} className='size24-icon' alt="doc" />
+              {selectedDocument.name}
             </h3>
             <div className="document-preview-body">
               <div className="document-preview-options">

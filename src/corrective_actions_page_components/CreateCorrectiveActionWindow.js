@@ -22,7 +22,7 @@ const CreateCorrectiveActionWindow = ({isOpen, onClose, setIsLoading}) => {
 
     setIsLoading(true);
     try {
-      await axios.put(`${backend_point}/api/correctiveAction/new`, 
+      await axios.post(`${backend_point}/api/correctiveActions/new`, 
         { text: text, logic: logic }, 
         config
       );
@@ -56,7 +56,7 @@ const CreateCorrectiveActionWindow = ({isOpen, onClose, setIsLoading}) => {
               required
             />
           </div>
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="name">Show action if option value equal to:</label>
             <input
               type="text"
@@ -65,7 +65,7 @@ const CreateCorrectiveActionWindow = ({isOpen, onClose, setIsLoading}) => {
               onChange={(e) => setLogic(e.target.value)}
               required
             />
-          </div>
+          </div> */}
           <div className="form-actions">
             <button className='modal-button' type="submit">Create</button>
             <button className='usual-button' type="button" onClick={() => onClose()}>Cancel</button>

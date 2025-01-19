@@ -200,6 +200,31 @@ export const addingNewComponent = (componentData, sectionId) => {
   }
   return newField; 
 };
+export const addingNewCustomComponent = (componentData, sectionId) => {
+  const newField = {
+    id: Date.now(),
+    type: componentData.type,
+    title: componentData.title,
+    value: componentData.value || '',
+    options: componentData.options || [],
+    layout: componentData.layout || '',
+    required: componentData.required || false,
+    read_only: componentData.read_only || false,
+  };
+  if(sectionId){
+    newField.sectionId = sectionId
+  }
+  if(componentData.type === 'name'){
+    newField.labels = componentData.labels
+  }
+  if (componentData.type === 'section') {
+    const unicIdComponents = componentData.components.map(component => {
+      return {...component, id: Date.now()+ Math.floor(Math.random() * 1000), sectionId: newField.id}
+    });
+    newField.components = unicIdComponents
+  }
+  return newField; 
+};
 
   // Function to initialize and update formData based on fieldType
   export function initializeFieldData({ element, columnIndex, elementBack, 

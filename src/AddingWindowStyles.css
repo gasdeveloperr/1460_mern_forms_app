@@ -21,6 +21,14 @@
   overflow-y: auto;
 }
 
+.window-content-title{
+  margin-top: 0;
+  font-weight: 400;
+  font-size: 22px;
+}
+.window-content-title-field-name{
+  font-weight: 600;
+}
 .window-content h2 {
   margin-top: 0;
 }

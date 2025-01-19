@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DraggableComponent from "./DraggableComponent";
 import FieldBuilderEditor from "./FormBuilderEditor";
 import FormBuilderSectionComponentEditor from "./form_builder_editor_components/FormBuilderSectionComponentEditor";
+import { getAuthToken } from "./utils";
+import Spinner from "./Spinner";
+import { backend_point } from "./consts";
+import axios from "axios";
 
 const FormBuilderSideBar = ({setIsDragging, updateFormField, 
     removeFormField, removeFormSectionField, duplicateField,
     updateFormTypeHandler, formType,
     editingField, setEditingField, editingSectionField, setEditingSectionField,
-    handleOptionsSaving, chooseOptionsToChange, chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction}) => {
+    handleOptionsSaving, chooseOptionsToChange, chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction,
+    setIsCustomFieldSavingWindow}) => {
 
   const handleDragStart = () => {
     setIsDragging(true);
@@ -21,14 +26,49 @@ const FormBuilderSideBar = ({setIsDragging, updateFormField,
     basic: true,
     advanced: true,
     layout: true,
+    custom_fields: false,
     formSettings: false,
   });
+
+  const [customFields, setCustomFields] = useState([])
+  const [customFieldsLoader, setCustomFieldsLoader] = useState(false)
+
+  useEffect(() => {
+    fetchCustomFields();
+  },[])
 
   const toggleSection = (section) => {
     setSections((prevSections) => ({
       ...prevSections,
       [section]: !prevSections[section],
     }));
+  };
+
+  const fetchCustomFields = async () => {
+    const token = getAuthToken();
+    const config = {
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+
+    setCustomFieldsLoader(true);
+    try {
+      const response = await axios.get(`${backend_point}/api/customFields/all`, config);
+      setCustomFields(response.data);
+      console.log('customFields : ', customFields)
+      setCustomFieldsLoader(false);
+    } catch (error) {
+      if (error.response) {
+        console.error('Error saving action:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received from the server');
+      } else {
+        console.error('Error:', error.message);
+      }
+    } finally {
+      setCustomFieldsLoader(false);
+    }
   };
 
   return (
@@ -40,7 +80,8 @@ const FormBuilderSideBar = ({setIsDragging, updateFormField,
         editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
         handleOptionsSaving={handleOptionsSaving} 
         chooseOptionsToChange={chooseOptionsToChange} 
-        chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={chooseOptionToRemoveCorrectiveAction}/>
+        chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={chooseOptionToRemoveCorrectiveAction}
+        setIsCustomFieldSavingWindow={setIsCustomFieldSavingWindow}/>
         : editingSectionField && editingSectionField.id !== '' ?
         <FormBuilderSectionComponentEditor updateFormFieldsFromSection={updateFormField}
         removeFormSectionField={removeFormSectionField} duplicateField={duplicateField}
@@ -48,7 +89,8 @@ const FormBuilderSideBar = ({setIsDragging, updateFormField,
         editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField}
         handleOptionsSaving={handleOptionsSaving} 
         chooseOptionsToChange={chooseOptionsToChange} 
-        chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={chooseOptionToRemoveCorrectiveAction}/>
+        chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={chooseOptionToRemoveCorrectiveAction}
+        setIsCustomFieldSavingWindow={setIsCustomFieldSavingWindow}/>
         :
         <div className="form-builder-components">
           <div className="section-group">
@@ -127,6 +169,27 @@ const FormBuilderSideBar = ({setIsDragging, updateFormField,
                 <DraggableComponent type="section" title="Section"
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}/>
+              </div>
+            )}
+          </div>
+          <div className="section-group">
+            <div className="section-header" onClick={() => toggleSection('custom_fields')}>
+              <span className={`toggle-icon ${sections.custom_fields ? 'open' : 'closed'}`}>&#9660;</span>
+              Custom fields
+            </div>
+            {sections.custom_fields && (
+              <div className="section-content">
+                {
+                  customFieldsLoader ?
+                  <Spinner/>
+                  : customFields && customFields.length !== 0 ?
+                  customFields.map((field, fieldIndex) => (
+                    <DraggableComponent key={fieldIndex} type={field.type} title={field.title} fieldData={field}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}/>
+                  ))
+                  : <></>
+                }
               </div>
             )}
           </div>

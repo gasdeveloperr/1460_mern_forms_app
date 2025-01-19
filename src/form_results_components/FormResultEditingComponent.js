@@ -1,23 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react';
-import file_upload_icon from './icons/file-upload-icon.svg'
-import calendar_icon from './icons/calendar-icon.svg'
-import time_icon from './icons/time-icon.svg' 
-import CustomSelector from './form_live_components/CustomSelector';
-import TripleSectionFormComponent from './form_live_components/TripleSectionFormComponent';
-import DoubleSectionFormComponent from './form_live_components/DoubleSectionFormComponent';
-import DoubleInputsSectionFormComponent from './form_live_components/DoubleInputsSectionFormComponent';
-import TripleInputsSectionFormComponent from './form_live_components/TripleInputsSectionFormComponent';
-import FourSectionFormComponent from './form_live_components/FourSectionFormComponent';
-import FiveSectionFormComponent from './form_live_components/FiveSectionFormComponent';
-import FileUploadFormComponent from './form_live_components/FileUploadFormComponent';
-import AutoResizingTextareaComponent from './form_live_components/AutoResizingTextareaComponent';
-import MultipleSectionFormComponent from './form_live_components/MultipleSectionFormComponent';
-import ColumnsFormComponent from './form_live_components/ColumnsFormComponent';
-import AddButtonComponent from './form_live_components/AddButtonComponent';
+import calendar_icon from '../icons/calendar-icon.svg'
+import time_icon from '../icons/time-icon.svg' 
+import CustomSelector from '../form_live_components/CustomSelector';
+import TripleSectionFormComponent from '../form_live_components/TripleSectionFormComponent';
+import DoubleSectionFormComponent from '../form_live_components/DoubleSectionFormComponent';
+import DoubleInputsSectionFormComponent from '../form_live_components/DoubleInputsSectionFormComponent';
+import TripleInputsSectionFormComponent from '../form_live_components/TripleInputsSectionFormComponent';
+import FourSectionFormComponent from '../form_live_components/FourSectionFormComponent';
+import FiveSectionFormComponent from '../form_live_components/FiveSectionFormComponent';
+import FileUploadFormComponent from '../form_live_components/FileUploadFormComponent';
+import AutoResizingTextareaComponent from '../form_live_components/AutoResizingTextareaComponent';
+import MultipleSectionFormComponent from '../form_live_components/MultipleSectionFormComponent';
+import ColumnsFormComponent from '../form_live_components/ColumnsFormComponent';
+import AddButtonComponent from '../form_live_components/AddButtonComponent';
 
 
 
-const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddingComponent, isSectionComponent}) => {
+const FormResultEditingComponent = ({field, data, index, sectionIndex, 
+  onFileChange, handleAddingComponent, isSectionComponent}) => {
+
+
+  let fieldPreData = {};
+  if (data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) {
+    fieldPreData = data[field.id];
+    console.log('field pre-data :', fieldPreData, data[field.id])
+  } else if(field.type !== 'title'){
+    //console.log(`No data found for field ID: ${field.id}`);
+    fieldPreData = '';
+  }
 
   const [inputValue, setInputValue] = useState(field.value || '');
   const [errorMessage, setErrorMessage] = useState('');
@@ -123,7 +133,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
     return (
       <>
         {field.type === 'short_answer' && (
-          <label key={field.id} className="form-live-component-container">
+          <label key={field.id} className="form-result-component-container">
             <div className="form-short-answer">
               <div className='form-component-title'>
                 {field.required && <span>*</span>}
@@ -137,7 +147,10 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               )}
               {!field.read_only &&
                 <input className='form-live-input' id={field.id} 
-                  fieldtype={field.type} value={inputValue}
+                  fieldtype={field.type} value={inputValue} 
+                  placeholder={fieldPreData.value && fieldPreData.value.result ? fieldPreData.value.result
+                    : fieldPreData.value && !fieldPreData.value.result ? fieldPreData.value
+                    : ''}
                   name={field.title} onChange={handleInputChange} 
                   required={field.required} 
                   disabled={field.read_only}/>
@@ -156,7 +169,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'email'  && (
-          <label key={field.id} className="form-live-component-container">
+          <label key={field.id} className="form-result-component-container">
             <div className="form-short-answer">
               <div className='form-component-title'>
                 {field.required && <span>*</span>}
@@ -170,7 +183,10 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               )}
               <input className='form-live-input' id={field.id} 
                 fieldtype={field.type}
-                name={field.title}
+                name={field.title} value={inputValue} 
+                placeholder={fieldPreData.value && fieldPreData.value.result ? fieldPreData.value.result
+                  : fieldPreData.value && !fieldPreData.value.result ? fieldPreData.value
+                  : ''}
                 onChange={e => handleInputChange(e, field.type)} 
                 required={field.required} 
                 disabled={field.read_only}/>
@@ -178,7 +194,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </label>
         )}
         {field.type === 'number'  && (
-          <label key={field.id} className="form-live-component-container">
+          <label key={field.id} className="form-result-component-container">
             <div className="form-short-answer">
               <div className='form-component-title'>
                 {field.required && <span>*</span>}
@@ -192,7 +208,10 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               )}
               <input className='form-live-input' id={field.id} 
                 fieldtype={field.type}
-                name={field.title}
+                name={field.title} value={inputValue} 
+                placeholder={fieldPreData.value && fieldPreData.value.result ? fieldPreData.value.result
+                  : fieldPreData.value && !fieldPreData.value.result ? fieldPreData.value
+                  : ''}
                 onChange={e => handleInputChange(e, field.type)} 
                 required={field.required} 
                 disabled={field.read_only}/>
@@ -200,7 +219,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </label>
         )}
         {field.type === 'address' && (
-          <label key={field._id} className="form-live-component-container">
+          <label key={field._id} className="form-result-component-container">
             <div className="form-short-answer">
               <div className='form-component-title'>
                 {field.required && <span>*</span>}
@@ -208,7 +227,10 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               </div>
               <input className='form-live-input' id={field.id} 
                 fieldtype={field.type}
-                name={field.title}
+                name={field.title} value={inputValue} 
+                placeholder={fieldPreData.value && fieldPreData.value.result ? fieldPreData.value.result
+                  : fieldPreData.value && !fieldPreData.value.result ? fieldPreData.value
+                  : ''}
                 onChange={handleInputChange} 
                 required={field.required} 
                 disabled={field.read_only}/>
@@ -216,7 +238,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </label>
         )}
         {field.type === 'phone' && (
-          <label key={field._id} className="form-live-component-container">
+          <label key={field._id} className="form-result-component-container">
             <div className="form-short-answer">
               <div className='form-component-title'>
                 {field.required && <span>*</span>}
@@ -224,7 +246,10 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               </div>
               <input className='form-live-input' id={field.id} 
                 fieldtype={field.type}
-                name={field.title}
+                name={field.title} value={inputValue} 
+                placeholder={fieldPreData.value && fieldPreData.value.result ? fieldPreData.value.result
+                  : fieldPreData.value && !fieldPreData.value.result ? fieldPreData.value
+                  : ''}
                 onChange={handleInputChange} 
                 required={field.required} 
                 disabled={field.read_only}/>
@@ -238,7 +263,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               {field.title}
             </div>
             <div className="form-component-name-fields">
-              <label key={field._id+'0'} className="form-live-component-container">
+              <label key={field._id+'0'} className="form-result-component-container">
                 <input className='form-live-input' id={field.id} 
                   fieldtype={field.type} customtype='first_name' 
                   name={field.title+'_'+field.labels[0]} 
@@ -248,7 +273,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
                   {field.labels[0]}
                 </div>
               </label>
-              <label key={field._id+'1'} className="form-live-component-container">
+              <label key={field._id+'1'} className="form-result-component-container">
                 <input className='form-live-input' id={field.id} 
                   fieldtype={field.type} customtype='last_name' 
                   name={field.title+'_'+field.labels[1]} 
@@ -261,58 +286,91 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
             </div>
           </div>
         )}
-        {field.type === 'checkbox' && (
-          <label key={field.id} className="form-live-component-container">
+        
+        {field.type === 'radio' && (
+          <label key={field.id} className="form-result-component-container">
             <div className='form-component-title'>
               {field.title}
             </div>
             <div className={`form-component-container ${field.layout}`}>
-              { field.options.map((option, index)=> (
-                <label key={index} className={`form-component-checkbox-container ${field.layout}`}>
-                  <input type="checkbox" 
-                    fieldtype={field.type}
-                    id={field.id} 
-                    name={option.title} 
-                    correctiveactiontext={option?.correctiveAction?.text || ''}
-                    correctiveactionid={option?.correctiveAction?._id || ''}
-                    disabled={field.read_only}
-                    />
-                  <span className="form-component-checkmark"></span>
-                  {option.title}
-                </label>
-                ))
-              }
+              {field.options.map((option, index) => {
+                  let matchingValue
+                  if(fieldPreData.value && fieldPreData.value.result){
+                    matchingValue = fieldPreData.value.result === option.title
+                  } else if(fieldPreData.value && !fieldPreData.value.result){
+                    matchingValue = fieldPreData.value === option.title
+                  }
+                  return (
+                    <div key={index}>
+                      <label className={`form-component-radio-container ${field.layout}`}>
+                        <input
+                          type="radio"
+                          fieldtype={field.type}
+                          id={field.id}
+                          name={option.title}
+                          correctiveactiontext={option?.correctiveAction?.text || ''}
+                          correctiveactionid={option?.correctiveAction?._id || ''}
+                          defaultChecked={!!matchingValue}
+                          disabled={field.read_only}
+                        />
+                        <span className="form-component-radiomark"></span>
+                        {option.title}
+                      </label>
+                      {/* Show corrective action only for matched options that have it */}
+                      {matchingValue?.correctiveActionData && (
+                        <div className="field-result-option-corrective-action">
+                          Corrective action: {matchingValue.correctiveActionData.text}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
             </div>
           </label>
         )}
-        {field.type === 'radio' && (
-          <label key={field.id} className="form-live-component-container">
+        {field.type === 'checkbox' && (
+          <label key={field.id} className="form-result-component-container">
             <div className='form-component-title'>
               {field.title}
             </div>
             <div className={`form-component-container ${field.layout}`}>
-              { field.options.map((option, index)=> (
-                <label key={index} className='form-component-radio-container'>
-                  <input
-                    type="radio"
-                    fieldtype={field.type}
-                    id={field.id}
-                    name={field.id}
-                    value={option.title}
-                    correctiveactiontext={option?.correctiveAction?.text || ''}
-                    correctiveactionid={option?.correctiveAction?._id || ''}
-                    disabled={field.read_only}
-                  />
-                  <span className="form-component-radiomark"></span>
-                  {option.title}
-                </label>
-                ))
-              }
+              {field.options.map((option, index) => {
+                let matchingValue
+                if(fieldPreData && fieldPreData.value.length !== 0){
+                  matchingValue = fieldPreData.value?.find(value => 
+                    value.result === option.title || value === option.title
+                  );
+                }
+                return (
+                  <div key={index}>
+                    <label className={`form-component-checkbox-container ${field.layout}`}>
+                      <input
+                        type="checkbox"
+                        fieldtype={field.type}
+                        id={field.id}
+                        name={option.title}
+                        correctiveactiontext={option?.correctiveAction?.text || ''}
+                        correctiveactionid={option?.correctiveAction?._id || ''}
+                        defaultChecked={!!matchingValue}
+                        disabled={field.read_only}
+                      />
+                      <span className="form-component-checkmark"></span>
+                      {option.title}
+                    </label>
+                    {/* Show corrective action only for matched options that have it */}
+                    {matchingValue?.correctiveActionData && (
+                      <div className="field-result-option-corrective-action">
+                        Corrective action: {matchingValue.correctiveActionData.text}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </label>
         )}
         {field.type === 'dropdown' && (
-          <label key={field.id} htmlFor={field.id} className="form-live-component-container">
+          <label key={field.id} htmlFor={field.id} className="form-result-component-container">
             <div className="form-component-dropdown">
               {field.required && <span>*</span>}
               {field.title}
@@ -332,7 +390,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </label>
         )}
         {field.type === 'double_section' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <div className="form-component-title">
               {field.required && <span>*</span>}
               {field.title} 
@@ -341,7 +399,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'triple_section' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <div className="form-component-title">
               {field.required && <span>*</span>}
               {field.title} 
@@ -350,7 +408,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'two_inputs_section' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <div className="form-component-title">
               {field.required && <span>*</span>}
               {field.title} 
@@ -359,7 +417,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'triple_inputs_section' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <div className="form-component-title">
               {field.required && <span>*</span>}
               {field.title} 
@@ -368,7 +426,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'four_inputs_section' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <div className="form-component-title">
               {field.required && <span>*</span>}
               {field.title} 
@@ -377,7 +435,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'five_inputs_section' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <div className="form-component-title">
               {field.required && <span>*</span>}
               {field.title} 
@@ -386,7 +444,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'multi_section' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <div className="form-component-title">
               {field.required && <span>*</span>}
               {field.title} 
@@ -395,7 +453,7 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'columns' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <div className="form-component-title">
               {field.required && <span>*</span>}
               {field.title} 
@@ -405,25 +463,25 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
           </div>
         )}
         {field.type === 'add_component_button' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <AddButtonComponent field={field} index={index} handleAddingComponent={handleAddingComponent}/>
           </div>
         )}
         {field.type === 'date_time' && (
-          <div className="form-live-component-container">
+          <div className="form-result-component-container">
             <div className='form-component-title'>
               {field.required && <span>*</span>}
               {field.title}
             </div>
             <div className='form-live-date-time-container'>
-              <label key={field._id} className="form-live-component-container">
+              <label key={field._id} className="form-result-component-container">
                 <div className="form-date-time-answer">
                   <input className='form-live-input' id={field.id} fieldtype={field.type} customtype='date' name={field.title+'_date'} placeholder={field.dateFormat}
                   onChange={handleInputChange} required={field.required} disabled={field.read_only}/>
                   <img src={calendar_icon}/>
                 </div>
               </label>
-              <label key={field._id} className="form-live-component-container">
+              <label key={field._id} className="form-result-component-container">
                 <div className="form-date-time-answer">
                   <input className='form-live-input' id={field.id} fieldtype={field.type} customtype='time' name={field.title+'_time'} placeholder='hh:mm'
                   onChange={handleInputChange} required={field.required} disabled={field.read_only}/>
@@ -440,4 +498,4 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
     );
 };
 
-export default FormLiveComponent;
+export default FormResultEditingComponent;

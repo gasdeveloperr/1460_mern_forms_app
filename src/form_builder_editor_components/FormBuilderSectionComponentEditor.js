@@ -16,7 +16,8 @@ import ColumnsTypeSelector from './ColumnsTypeSelector';
 const FormBuilderSectionComponentEditor = ({ updateFormFieldsFromSection, 
   removeFormSectionField, duplicateField, editingField, setEditingField,
   editingSectionField, setEditingSectionField,  handleDuplicateClick, handleOptionsSaving,
-  chooseOptionsToChange, chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction}) => {
+  chooseOptionsToChange, chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction,
+  setIsCustomFieldSavingWindow}) => {
 
   const changeFieldTitleHandler = (e) => {
     const updatedComponents = editingField.components.map((field) => {
@@ -896,6 +897,10 @@ const FormBuilderSectionComponentEditor = ({ updateFormFieldsFromSection,
           <button className="field-editor-remove-field" id="duplicate_icon" help-title="duplicate" 
           onClick={() => duplicateField(editingSectionField.id)}>
             <img src={duplicate_icon} className="remove-icon"/>
+          </button>
+          <button className="field-editor-remove-field" id="save_icon" help-title="save" 
+          onClick={setIsCustomFieldSavingWindow}>
+            <img src={save_icon} className="size18-icon"/>
           </button>
         </div>
       </div>

@@ -5,7 +5,7 @@ import axios from 'axios';
 import Spinner from './Spinner';
 import trash_icon from './icons/trash-can-white.svg'
 import { backend_point } from './consts';
-import { getAuthToken, getUserId, getUserRole } from './utils';
+import { getAuthToken, getCurrentOrganization, getUserId, getUserRole } from './utils';
 import DashboardTable from './dashboard_page_components/DashboardTable';
 import DocumentsSideMenu from './documents_page_components/DocumentsSideMenu';
 import DocumentsManagement from './documents_page_components/DocumentsManagement';
@@ -18,6 +18,7 @@ function DocumentsPage() {
 
   const userRole = getUserRole();
   const userId = getUserId();
+  const organizationId = getCurrentOrganization()
 
   const [files, setFiles] = useState([])
 
@@ -33,9 +34,12 @@ function DocumentsPage() {
         'Authorization': `${token}`,
       },
     };
+    const backend_request = (userRole === 'admin' || userRole === 'manager') ? 
+    `/clients/${organizationId}` 
+    : `/users/${userId}`;
 
     try {
-      const response = await axios.get(`${backend_point}/api/users/${userId}`, config);
+      const response = await axios.get(`${backend_point}/api${backend_request}`, config);
       setIsLoading(false);
       setFiles(response.data.files);
       console.log('user files ',response.data.files)

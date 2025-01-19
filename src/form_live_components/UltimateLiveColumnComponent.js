@@ -4,9 +4,12 @@ import time_icon from '../icons/time-icon.svg'
 import file_upload_icon from '../icons/file-upload-icon.svg'
 import CustomSelector from './CustomSelector'
 import FileUploadFormComponent from './FileUploadFormComponent'
+import { useState } from 'react'
 
 const UltimateLiveColumnComponent = ({field, columnValue, labelName, columnStyle, isTabular,
   columnIndex, sectionValues, handleValueChange, onFileChange}) => {
+
+    const [selectorValue, setSelectorValue] = useState(null);
 
   return ( 
     <>
@@ -105,9 +108,9 @@ const UltimateLiveColumnComponent = ({field, columnValue, labelName, columnStyle
         <>
           <CustomSelector
             options={columnValue.options}
-            selectedValue={sectionValues[columnIndex]}
+            selectedValue={selectorValue?.value || ''}
             columnStyle={columnStyle} isTabular={isTabular}
-            setSelectorValue={(selectedOption) => handleValueChange(selectedOption, columnIndex)}
+            setSelectorValue={setSelectorValue}
           />
           <input
             fieldtype={field.type}
@@ -117,7 +120,9 @@ const UltimateLiveColumnComponent = ({field, columnValue, labelName, columnStyle
             sectionName={labelName}
             customtype="columns"
             disabled={columnValue.read_only}
-            value={sectionValues[columnIndex]}
+            value={selectorValue?.value}
+            correctiveactiontext={selectorValue?.correctiveAction?.text || ''}
+            correctiveactionid={selectorValue?.correctiveAction?._id || ''}
             onChange={() => {}}
             hidden
           />

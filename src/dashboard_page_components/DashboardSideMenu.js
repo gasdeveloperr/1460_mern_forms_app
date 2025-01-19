@@ -7,11 +7,13 @@ import add_form_icon from '../icons/add-form-icon.svg'
 import add_form_group_icon from '../icons/add-form-group-icon.svg'
 import arrow_menu_icon from '../icons/arrow-side-menu-icon.svg'
 import '../clients_page_components/ClientsSideMenu.css';
+import { getUserRole } from '../utils';
 
 
 const DashboardSideMenu = ({ activeOption, handleAddingForm, handleCreatingFormGroup, changeActiveOptionHandler}) => {
 
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const userRole = getUserRole()
 
   return (
     <div className="side-menu-component">
@@ -52,26 +54,29 @@ const DashboardSideMenu = ({ activeOption, handleAddingForm, handleCreatingFormG
               </div>
             </div>
             <div className="side-menu-separator"/>
-            <div className="side-menu-list">
-              <a className='side-menu-list-header'  href="/forms/dashboard">
-                <img src={form_groups_icon} className="side-menu-list-header-icon"/>
-                  Form's Groups
-              </a>
-              <div
-                className={`menu-item${activeOption === 'formsGroups' ? '-active' : ''}`}
-                onClick={() => changeActiveOptionHandler('formsGroups')}
-              >
-                <img src={form_groups_icon} className="menu-item-icon"/>
-                <span className="menu-item__label">Groups</span>
+            {
+              userRole === 'admin' &&
+              <div className="side-menu-list">
+                <a className='side-menu-list-header'  href="/forms/dashboard">
+                  <img src={form_groups_icon} className="side-menu-list-header-icon"/>
+                    Form's Groups
+                </a>
+                <div
+                  className={`menu-item${activeOption === 'formsGroups' ? '-active' : ''}`}
+                  onClick={() => changeActiveOptionHandler('formsGroups')}
+                >
+                  <img src={form_groups_icon} className="menu-item-icon"/>
+                  <span className="menu-item__label">Groups</span>
+                </div>
+                <div
+                  className={`menu-item${activeOption === 'addingformsGroup' ? '-active' : ''}`}
+                  onClick={() => handleCreatingFormGroup()}
+                >
+                  <img src={add_form_group_icon} className="menu-item-icon"/>
+                  <span className="menu-item__label">Create forms group </span>
+                </div>
               </div>
-              <div
-                className={`menu-item${activeOption === 'addingformsGroup' ? '-active' : ''}`}
-                onClick={() => handleCreatingFormGroup()}
-              >
-                <img src={add_form_group_icon} className="menu-item-icon"/>
-                <span className="menu-item__label">Create forms group </span>
-              </div>
-            </div>
+            }
             </>
           }
         </nav>

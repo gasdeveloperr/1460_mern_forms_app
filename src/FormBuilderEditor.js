@@ -17,7 +17,8 @@ import DropdownOptions from './form_builder_editor_components/DropdownOptions';
 
 const FieldBuilderEditor = ({updateFormField, removeFormField, duplicateField, editingField, setEditingField,
   handleDuplicateClick, handleOptionsSaving, chooseOptionsToChange, 
-  chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction}) => {
+  chooseOptionToAddCorrectiveAction, chooseOptionToRemoveCorrectiveAction,
+  setIsCustomFieldSavingWindow}) => {
 
   const changeFieldTitleHandler = (e) => {
     setEditingField({...editingField, title: e.target.value})
@@ -690,6 +691,10 @@ const FieldBuilderEditor = ({updateFormField, removeFormField, duplicateField, e
             <button className="field-editor-remove-field" id="duplicate_icon" help-title="duplicate" 
             onClick={() => duplicateField(editingField.id)}>
               <img src={duplicate_icon} className="remove-icon"/>
+            </button>
+            <button className="field-editor-remove-field" id="save_icon" help-title="save" 
+            onClick={setIsCustomFieldSavingWindow}>
+              <img src={save_icon} className="size18-icon"/>
             </button>
           </div>
         </div>

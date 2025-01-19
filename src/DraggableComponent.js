@@ -2,12 +2,13 @@ import { useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 
 
-const DraggableComponent = ({ type, title, onDragStart, onDragEnd }) => {
+const DraggableComponent = ({ type, title, fieldData, onDragStart, onDragEnd }) => {
   const [{ isDragging }, drag] = useDrag({
     type: type,
     item: {
       type: type, title: title,
       index:'bar_component',
+      fieldData: fieldData || '',
       onDragStart,
       onDragEnd,
     },

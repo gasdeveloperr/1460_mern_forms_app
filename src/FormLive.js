@@ -171,12 +171,12 @@ const FormLive = () => {
     }
     const submittedTime = Date.now();
     const formSubmsn = {
-      formData: formData,
-      fileData: fileData,
       formTitle: formTitle,
+      userData: {id: userId, email: userEmail},
+      fileData: fileData,
+      formData: formData,
       formType: formType,
       fields: formFields,
-      userData: {id: userId, email: userEmail},
       submittedAt: submittedTime
     }
     //console.log('data from the submit : ',formSubmsn);

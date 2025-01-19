@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../AddingWindowStyles.css';
 import { backend_point } from '../consts';
-import { getAuthToken, getCurrentOrganization } from '../utils';
+import { getAuthToken, getCurrentOrganization, getUserId } from '../utils';
 
 
 const AddFolderWindow = ({isOpen, onClose, currentPath}) => {
@@ -12,6 +12,7 @@ const AddFolderWindow = ({isOpen, onClose, currentPath}) => {
     e.preventDefault();
     const token = getAuthToken();
     const organization = getCurrentOrganization()
+    const userId = getUserId()
     const config = {
       headers: {
         'Authorization': `${token}`,
@@ -22,9 +23,10 @@ const AddFolderWindow = ({isOpen, onClose, currentPath}) => {
       const response = await axios.post(`${backend_point}/api/awsFiles/createNewFolder`, {
         folderName: folderName,
         organization: organization,
-        currentPath: currentPath,
+        currentPath: decodeURIComponent(currentPath),
+        userId: userId,
       }, config);
-      console.log('Form Group saved successfully:', response.data);
+      console.log('Folder saved successfully:', response.data);
       onClose();
     } catch (error) {
       if (error.response) {

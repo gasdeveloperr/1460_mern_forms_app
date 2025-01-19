@@ -33,6 +33,7 @@
   white-space: nowrap;
 }
 .field-editor-remove-field{
+  display: flex;
   background-color: transparent;
   border: none;
   cursor: pointer;

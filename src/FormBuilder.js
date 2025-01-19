@@ -9,11 +9,12 @@ import { accept_types_array, backend_point } from './consts';
 import isEqual from 'lodash/isEqual';
 import Spinner from './Spinner';
 import { useNavigate } from 'react-router-dom';
-import { addingNewComponent, getAuthToken } from './utils';
+import { addingNewComponent, addingNewCustomComponent, getAuthToken } from './utils';
 import OptionsSavingWindow from './OptionsSavingWindow';
 import OptionsChoosingWindow from './OptionsChoosingWindow';
 import AddCorrectiveActionWindow from './form_builder_editor_components/AddCorrectiveActionWindow';
 import _ from 'lodash';
+import SaveNewCustomFieldWindow from './form_builder_editor_components/SaveNewCustomFieldWindow';
 
 const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
@@ -142,7 +143,13 @@ const FormBuilder = () => {
   const handleDrop = (item, dropIndex, sectionId) => {
     //console.log(item, dropIndex, sectionId, parentId)
     if (item.index === 'bar_component') {
-      const newField = addingNewComponent(item, sectionId);
+      let newField = {};
+      if(item.fieldData !== ''){
+        newField = addingNewCustomComponent(item.fieldData, sectionId);
+      }else{
+        newField = addingNewComponent(item, sectionId);
+      }
+      console.log(' new field from sidebar : ', newField)
       if (sectionId) {
         const updatedFormFields = formFields.map((field) => {
           if (field.id === sectionId && field.type === 'section') {
@@ -247,6 +254,7 @@ const FormBuilder = () => {
   const [isOptionsChoosingWindow, setIsOptionsChoosingWindow] = useState(false);
   const [isCorrectiveActionWindow, setIsCorrectiveActionWindow] = useState(false);
   const [chosenOptionToAddCorrective, setChosenOptionToAddCorrective] = useState('');
+  const [isCustomFieldSavingWindow, setIsCustomFieldSavingWindow] = useState(false);
 
   const handleOptionsSaving = (optionsData) => {
     setOptions(optionsData);
@@ -758,6 +766,8 @@ const FormBuilder = () => {
         onClose={closeOptionsChoosingWindow}/>
         <AddCorrectiveActionWindow  isOpen={isCorrectiveActionWindow} handleAdding={handleAddingCorrectiveAction} 
         onClose={closeCorrectiveActionWindow}/>
+        <SaveNewCustomFieldWindow isOpen={isCustomFieldSavingWindow} onClose={() => setIsCustomFieldSavingWindow(false)}
+          editingField={editingField} editingSectionField={editingSectionField}/>
     
         <div className="form-builder-page-content">
           <FormBuilderSideBar setIsDragging={setIsDragging} updateFormField={updateFormField}
@@ -767,7 +777,8 @@ const FormBuilder = () => {
           editingSectionField={editingSectionField} setEditingSectionField={setEditingSectionField} 
           handleOptionsSaving={handleOptionsSaving} 
           chooseOptionsToChange={chooseOptionsToChange} 
-          chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={handleRemoveCorrectiveAction}/>
+          chooseOptionToAddCorrectiveAction={chooseOptionToAddCorrectiveAction} chooseOptionToRemoveCorrectiveAction={handleRemoveCorrectiveAction}
+          setIsCustomFieldSavingWindow={setIsCustomFieldSavingWindow}/>
           <div className='form-builder-part'>
            {formFields && 
            <div className='form-constructor' >
