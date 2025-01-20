@@ -401,6 +401,8 @@ const FormBuilder = () => {
       setChosenOptionToAddCorrective({fieldId: '', optionIndex: '', columnIndex:''});
       closeCorrectiveActionWindow();
     }else{
+      let oldSectionId = '';
+      let updatedSectionComponents = []
       const updatedFields = formFields.map(field => {
         if (field.id === chosenOptionToAddCorrective.fieldId && field.type === 'columns') {
           const updatedValues = field.value.map((component, index) => {
@@ -436,9 +438,10 @@ const FormBuilder = () => {
               return { ...field, options: updatedOptions };
             }
           } else if (field.components) {
-            const updatedComponents = field.components.map(componentObj => {
-              if (componentObj.id === chosenOptionToAddCorrective.fieldId && componentObj.type === 'columns') {
-                const updatedValues = field.value.map((component, index) => {
+            const updatedComponents = field.components.map(componentSection => {
+              if (componentSection.id === chosenOptionToAddCorrective.fieldId && componentSection.type === 'columns') {
+                oldSectionId = field.id;
+                const updatedValues = componentSection.value.map((component, index) => {
                   if(index === chosenOptionToAddCorrective.columnIndex){
                     const updatedOptions = component.options.map((option, optionIndex) => {
                       if(optionIndex === chosenOptionToAddCorrective.optionIndex){
@@ -450,44 +453,58 @@ const FormBuilder = () => {
                   }
                   return component
                 });
-                return { ...componentObj, value: updatedValues };
+                return { ...componentSection, value: updatedValues };
               }else{
-                if (componentObj.id === chosenOptionToAddCorrective.fieldId) {
-                  if(componentObj.type === 'dropdown'){
-                    const updatedOptions = componentObj.options?.map((option, optionIndex) => {
+                if (componentSection.id === chosenOptionToAddCorrective.fieldId) {
+                  oldSectionId = field.id;
+                  if(componentSection.type === 'dropdown'){
+                    const updatedOptions = componentSection.options?.map((option, optionIndex) => {
                       if(optionIndex === chosenOptionToAddCorrective.optionIndex){
                         return { ...option, correctiveAction: actionData } 
                       }
                       return option
                     });
-                    return { ...componentObj, options: updatedOptions };
+                    return { ...componentSection, options: updatedOptions };
                   }else {
-                    const updatedOptions = componentObj.options.map((option, optionIndex) => {
+                    const updatedOptions = componentSection.options.map((option, optionIndex) => {
                       if(optionIndex === chosenOptionToAddCorrective.optionIndex){
                         return { ...option, correctiveAction: actionData } 
                       }
                       return option
                     });
-                    return { ...componentObj, options: updatedOptions };
+                    return { ...componentSection, options: updatedOptions };
                   }
                 } 
-                return componentObj;
+                return componentSection;
               }
             });
+            if(oldSectionId === field.id){
+              updatedSectionComponents = updatedComponents
+            }
             return { ...field, components: updatedComponents };
           }
           return field;
         }
       });
-      const updatedCurrentField = updatedFields.find(field => field.id === chosenOptionToAddCorrective.fieldId)
-      //console.log('updatedCurrentField ', updatedCurrentField)
-      setEditingField(updatedCurrentField)
-      setFormFields(updatedFields);
-      setFormFieldsToServer(updatedFields);
-      setChosenOptionToAddCorrective({fieldId: '', optionIndex: '', columnIndex:''});
-      closeCorrectiveActionWindow();
+      if(oldSectionId){
+        const updatedCurrentSectionField = updatedSectionComponents.find(field => field.id === chosenOptionToAddCorrective.fieldId)
+        const updatedCurrentField = updatedFields.find(field => field.id === oldSectionId)
+        setEditingSectionField(updatedCurrentSectionField)
+        setEditingField(updatedCurrentField)
+        setFormFields(updatedFields);
+        setFormFieldsToServer(updatedFields);
+        setChosenOptionToAddCorrective({fieldId: '', optionIndex: '', columnIndex:''});
+        closeCorrectiveActionWindow();
+      }else{
+        const updatedCurrentField = updatedFields.find(field => field.id === chosenOptionToAddCorrective.fieldId)
+        //console.log('updatedCurrentField ', updatedCurrentField)
+        setEditingField(updatedCurrentField)
+        setFormFields(updatedFields);
+        setFormFieldsToServer(updatedFields);
+        setChosenOptionToAddCorrective({fieldId: '', optionIndex: '', columnIndex:''});
+        closeCorrectiveActionWindow();
+      }
     }
- 
   }
   const handleRemoveCorrectiveAction = (fieldId, columnIndexRemove, optionIndexRemove) => { 
     if(editingSectionField.sectionId){
@@ -564,6 +581,8 @@ const FormBuilder = () => {
       setFormFieldsToServer(updatedFields);
       closeCorrectiveActionWindow();
     }else{
+      let oldSectionId = '';
+      let updatedSectionComponents = []
       const updatedFields = formFields.map(field => {
         if (field.id === fieldId && field.type === 'columns') {
           const updatedValues = field.value.map((component, index) => {
@@ -601,7 +620,8 @@ const FormBuilder = () => {
           } else if (field.components) {
             const updatedComponents = field.components.map(componentObj => {
               if (componentObj.id === fieldId && componentObj.type === 'columns') {
-                const updatedValues = field.value.map((component, index) => {
+                oldSectionId = field.id;
+                const updatedValues = componentObj.value.map((component, index) => {
                   if(index === columnIndexRemove){
                     const updatedOptions = component.options.map((option, optionIndex) => {
                       if(optionIndex === optionIndexRemove){
@@ -638,16 +658,27 @@ const FormBuilder = () => {
                 return componentObj;
               }
             });
+            if(oldSectionId === field.id){
+              updatedSectionComponents = updatedComponents
+            }
             return { ...field, components: updatedComponents };
           }
           return field;
         }
       });
-      const updatedCurrentField = updatedFields.find(field => field.id === fieldId)
-      setEditingField(updatedCurrentField)
-      setFormFields(updatedFields);
-      setFormFieldsToServer(updatedFields);
-      closeCorrectiveActionWindow();
+      if(oldSectionId){
+        const updatedCurrentSectionField = updatedSectionComponents.find(field => field.id === fieldId)
+        const updatedCurrentField = updatedFields.find(field => field.id === oldSectionId)
+        setEditingSectionField(updatedCurrentSectionField)
+        setEditingField(updatedCurrentField)
+        setFormFields(updatedFields);
+        setFormFieldsToServer(updatedFields);
+      }else{
+        const updatedCurrentField = updatedFields.find(field => field.id === fieldId)
+        setEditingField(updatedCurrentField)
+        setFormFields(updatedFields);
+        setFormFieldsToServer(updatedFields);
+      }
     }
   }
 

@@ -82,13 +82,13 @@ const FormResultView = ({form, currentVersion, toMainBoardHandler,
             </div>
           </div>
         </div>
-        <div className="form-result-container">
+        <div className="form-result-container" id="result-to-convert">
           {
             displayVersion && displayVersion.fileData ?
             <PDFViewerComponent form={displayVersion} />
             :
             displayVersion &&
-            <form className="form-result-content" id="result-to-convert">
+            <form className="form-result-content" >
               <div className="form-result-timestamp">
                 {displayVersion?.timestamp ? `${formatDate(displayVersion?.timestamp)}`
                 : `${formatDate(form?.submittedAt)}`}

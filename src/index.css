@@ -780,7 +780,26 @@ body {
 }
 .form-component-dynamic-columns-table{
   display: grid;
+  position: relative;
 }
+.form-component-dynamic-columns-table-add-row{
+  position: absolute;
+  bottom: -16px;
+  right: -16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(211, 221, 225);
+  border-radius: 20px;
+  cursor: pointer;
+}
+.form-component-dynamic-columns-table-add-row:hover{
+  background-color: rgb(234, 234, 234);
+}
+
 .form-component-dynamic-columns-table td{
   
 }
@@ -1223,6 +1242,9 @@ body {
 #edit_results:hover,
 #cancel_editing:hover,
 #submit_changes:hover{
+  content: attr(help-title);
+}
+#add_new_row:hover{
   content: attr(help-title);
 }
 

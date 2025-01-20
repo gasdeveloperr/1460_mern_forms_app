@@ -76,7 +76,7 @@ const FormGroupCoverPageEditor = ({formGroupCoverPage, updateFormGroup}) => {
   }, []);
 
   const PreviewMode = () => (
-    <div className="preview-container">
+    <div className="cover-page-preview-container">
       {/* <div className="header-gradient"> */}
         <div className="header-content">
         <img className='preview-cover-page-image' src={cover_page_image}/>

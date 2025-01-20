@@ -74,6 +74,14 @@ const FieldBuilderEditor = ({updateFormField, removeFormField, duplicateField, e
     setEditingField({...editingField, style: newStyle})
     updateFormField(editingField.id, { ...editingField, style: newStyle})
   }  
+  const changeColumnsSettingHandler = (e) => {
+    let newSetting = 'add_row'
+    if(editingField.settings && editingField.settings === 'add_row'){
+      newSetting = ''
+    }
+    setEditingField({...editingField, settings: newSetting})
+    updateFormField(editingField.id, { ...editingField, settings: newSetting})
+  }  
 
 
   const addFieldBoxOptionHandler = (index) => {
@@ -784,6 +792,14 @@ const FieldBuilderEditor = ({updateFormField, removeFormField, duplicateField, e
                       <input type="checkbox" id="column_style" className='field-editor_checkbox' 
                       checked={editingField.style === 'tabular'} onChange={changeColumnsStyleHandler}/>
                       Tabular
+                    </label>
+                  </div>
+                  <label className="field-editor__label">COLUMNS SETTINGS</label>
+                  <div className='field-editor_checkbox_container'>
+                    <label htmlFor="column_settings" className="field-editor-label">
+                      <input type="checkbox" id="column_settings" className='field-editor_checkbox' 
+                      checked={editingField?.settings === 'add_row'} onChange={changeColumnsSettingHandler}/>
+                      Add row feature
                     </label>
                   </div>
                 </div>

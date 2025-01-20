@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import UltimateLiveColumnComponent from './UltimateLiveColumnComponent';
+import add_icon from '../icons/plus-icon.svg'
 
 const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange, onFileChange }) => {
   const [sectionValues, setSectionValues] = useState([]);
@@ -24,6 +25,9 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange,
     } else {
       handleInputsChange(value, index);
     }
+  };
+  const handleAddingNewRow = () => {
+    const updatedField = {}
   };
   const minMaxValue = '1fr'
 
@@ -60,6 +64,13 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange,
           handleValueChange={handleValueChange} onFileChange={onFileChange}/>
         </td>
       ))}
+      {
+        field.settings && field.settings === 'add_row' &&
+        <div className="form-component-dynamic-columns-table-add-row" 
+        id='add_new_row' onClick={() => handleAddingNewRow()}>
+          <img src={add_icon} alt="" className="size22-icon"/>
+        </div>
+      }
     </table>
   );
 };

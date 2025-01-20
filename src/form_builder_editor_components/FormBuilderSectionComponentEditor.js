@@ -125,6 +125,22 @@ const FormBuilderSectionComponentEditor = ({ updateFormFieldsFromSection,
     setEditingField({ ...editingField, components: updatedComponents });
     updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
   }  
+  const changeColumnsSettingHandler = (e) => {
+    let newSetting = 'add_row'
+    if(editingSectionField.settings && editingSectionField.settings === 'add_row'){
+      newSetting = ''
+    }
+  
+    const updatedComponents = editingField.components.map((field) => {
+      if (field.id === editingSectionField.id) {
+        return { ...field, settings: newSetting };
+      }
+      return field;
+    });
+    setEditingSectionField({...editingSectionField, settings: newSetting,});
+    setEditingField({ ...editingField, components: updatedComponents });
+    updateFormFieldsFromSection(editingField.id, { ...editingField, components: updatedComponents})
+  }  
   
   // Add a checkbox option at a specific index within a component
   const addFieldBoxOptionHandler = (index) => {
@@ -961,7 +977,15 @@ const FormBuilderSectionComponentEditor = ({ updateFormFieldsFromSection,
                     Tabular
                   </label>
                 </div>
-              </div>
+                <label className="field-editor__label">COLUMNS SETTINGS</label>
+                <div className='field-editor_checkbox_container'>
+                  <label htmlFor="column_settings" className="field-editor-label">
+                    <input type="checkbox" id="column_settings" className='field-editor_checkbox' 
+                    checked={editingField?.settings === 'add_row'} onChange={changeColumnsSettingHandler}/>
+                    Add row feature
+                  </label>
+                </div>
+              </div> 
             }
           </div>)
           }

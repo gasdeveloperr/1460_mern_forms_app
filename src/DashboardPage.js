@@ -41,7 +41,7 @@ function DashboardPage() {
 
     try {
       const response = await axios.get(`${backend_point}/api/forms/all`, config);
-      console.log('forms taked successfully:', response.data);
+      //console.log('forms taked successfully:', response.data);
       setForms(response.data);
     } catch (err) {
       if(err.response && err.response.status === 401){
@@ -81,7 +81,6 @@ function DashboardPage() {
       navigate(`/forms/builder/${formData._id}`);
 
     } catch (err) {
-      console.log('we have error on front');
       setIsError('Error creating form, please try again');
       console.error('Error creating form:', err);
     }
@@ -139,7 +138,7 @@ function DashboardPage() {
     };
     try {
       const response = await axios.get(`${backend_point}/api/formGroups/all`, config);
-      console.log('FormGroups taked successfully:', response.data);
+      //console.log('FormGroups taked successfully:', response.data);
       setIsLoading(false);
       setFormGroups(response.data);
     } catch (error) {
@@ -226,7 +225,7 @@ function DashboardPage() {
 
   const changeActiveOptionHandler = (option) => {
     setActiveOption(option);
-    console.log(activeOption)
+    //console.log(activeOption)
   }
 
   const moveForm = async(dragIndex, hoverIndex, groupIndex) => {
@@ -251,7 +250,7 @@ function DashboardPage() {
   };
 
   const saveFormGroupChanges = async() => {
-    console.log('group to save ',groupToSave)
+    //console.log('group to save ',groupToSave)
     const token = getAuthToken();
     const config = {
       headers: {

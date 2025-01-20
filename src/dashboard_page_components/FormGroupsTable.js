@@ -103,7 +103,7 @@ const FormGroupsTable = ({ forms, formGroups, changeTitle, moveForm,
                             {userRole === 'admin' && (
                               <td className="group-title" rowSpan={group.forms.length}>
                                 <div onClick={() => handleOpenGroupPreview(group)}>
-                                  <img className='size26-icon' src={open_icon} alt=''/>
+                                  <img className='size28-icon' src={open_icon} alt=''/>
                                 </div>
                               </td>
                             )}
@@ -149,7 +149,7 @@ const FormGroupsTable = ({ forms, formGroups, changeTitle, moveForm,
                   {userRole === 'admin' && (
                     <td className="group-title">
                       <div onClick={() => handleOpenGroupPreview(group)}>
-                        <img className='size26-icon' src={open_icon} alt=''/>
+                        <img className='size28-icon' src={open_icon} alt=''/>
                       </div>
                     </td>
                   )}

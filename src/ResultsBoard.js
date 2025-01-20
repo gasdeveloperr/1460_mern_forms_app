@@ -9,6 +9,7 @@ import FormResultView from './form_results_components/FormResultView';
 import arrow_menu_icon from './icons/arrow-side-menu-icon.svg';
 import './ResultsBoardPage.css';
 import jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js';
 import FormResultsEditing from './form_results_components/FormResultsEditing';
 
 function ResultsBoard() {
@@ -107,25 +108,89 @@ function ResultsBoard() {
     }
   };
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     const formTitle = detailResult.title;
-    const input = document.getElementById("result-to-convert");
+    const tempContainer = document.createElement('div');
+    tempContainer.style.visibility = 'hidden';
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.zIndex = '-9999';
+    document.body.appendChild(tempContainer);
   
-    const elementWidth = input.offsetWidth;
-    const elementHeight = input.offsetHeight;
+    // Clone the preview container
+    const previewContainer = document.getElementById("result-to-convert")
+    const clone = previewContainer.cloneNode(true);
+    
+    // Add specific styles for PDF generation
+    const style = document.createElement('style');
+    style.textContent = `
+      .result-to-convert {
+        padding: 12px 36px !important;
+        margin: 0;
+        border: none;
+        background-color: white;
+      }
+    `;
+    clone.prepend(style);
+    tempContainer.appendChild(clone);
   
-    const orientation = elementWidth > '700' ? "l" : "p";
-  
-    const pdf = new jsPDF(orientation, "mm", "a4");
-    pdf.html(input, {
-      callback: function (pdf) {
-        pdf.save(`${formTitle}.pdf`);
+    // Configure html2pdf options
+    const opt = {
+      margin: [0, 0, 0, 0],
+      filename: `${formTitle}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { 
+        scale: 2,
+        useCORS: true,
+        logging: true,
+        letterRendering: true,
+        allowTaint: true,
+        removeContainer: true,
+        // Prevent extra whitespace
+        scrollY: 0,
+        windowHeight: window.document.documentElement.scrollHeight
       },
-      x: 6,
-      y: 4,
-      html2canvas: { scale: 0.315 },
-    });
-  };
+      jsPDF: { 
+        unit: 'mm', 
+        format: 'a4', 
+        orientation: 'portrait',
+        compress: true,
+        putTotalPages: false
+      },
+      pagebreak: { 
+        mode: ['avoid-all', 'css'],
+        after: '.div-to-convert'
+      }
+    };
+
+    try {
+      await html2pdf().from(clone).set(opt).save();
+    } catch (error) {
+      console.error('PDF generation error:', error);
+    } finally {
+      document.body.removeChild(tempContainer);
+    }
+    };
+
+
+  // const handleDownloadPDF = () => {
+  //   const formTitle = detailResult.title;
+  //   const input = document.getElementById("result-to-convert");
+  
+  //   const elementWidth = input.offsetWidth;
+  //   const elementHeight = input.offsetHeight;
+  
+  //   const orientation = elementWidth > '700' ? "l" : "p";
+  
+  //   const pdf = new jsPDF(orientation, "mm", "a4");
+  //   pdf.html(input, {
+  //     callback: function (pdf) {
+  //       pdf.save(`${formTitle}.pdf`);
+  //     },
+  //     x: 6,
+  //     y: 4,
+  //     html2canvas: { scale: 0.315 },
+  //   });
+  // };
 
   const handleSaveWarning = () => {
     setSaveWarning(true);

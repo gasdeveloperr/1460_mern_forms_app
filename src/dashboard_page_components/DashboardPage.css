@@ -51,7 +51,7 @@
 .form-group-cover-page-edit{
   padding: 10px;
 }
-.preview-container {
+.cover-page-preview-container {
   min-height: 600px;
   background-color: white;
   border-radius: 0.5rem;
@@ -59,6 +59,21 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   position: relative;
+}
+.preview-container {
+  min-height: 600px;
+  background-color: #525659;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(211, 221, 225);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  position: relative;
+}
+.div-to-convert{
+  min-height: 600px;
+  background-color: white;
+  margin-bottom: 20px;
+  padding: 20px !important;
 }
 .preview-cover-page-image{
   height: 320px;
@@ -110,7 +125,7 @@
 
 /* Document content styles */
 .cover-page-content {
-  padding-top: 36px;
+  padding: 36px 12px;
   text-align: center;
 }
 
@@ -121,7 +136,7 @@
 }
 
 .info-section {
-  margin-bottom: 3rem;
+  margin-bottom: 180px;
 }
 
 .info-section > div {

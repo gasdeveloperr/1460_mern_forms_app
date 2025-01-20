@@ -207,12 +207,14 @@ const FormLive = () => {
   };
 
   
-  const handleAddingComponent = (componentData, addingIndex) => {
-    const newField = addingNewComponent(componentData.adding_component);
-    console.log('handleAddingComponent : ', addingIndex, newField)
-    console.log('formFields.slice(0, addingIndex) : ', formFields.slice(0, addingIndex))
-    console.log('formFields.slice(addingIndex) : ', formFields.slice(addingIndex))
-    setFormFields([...formFields.slice(0, addingIndex), newField, ...formFields.slice(addingIndex)])
+  const handleAddingComponent = (fieldId, updated, addingIndex) => {
+    console.log(fieldId)
+    setFormFields()
+    // const newField = addingNewComponent(componentData.adding_component);
+    // console.log('handleAddingComponent : ', addingIndex, newField)
+    // console.log('formFields.slice(0, addingIndex) : ', formFields.slice(0, addingIndex))
+    // console.log('formFields.slice(addingIndex) : ', formFields.slice(addingIndex))
+    // setFormFields([...formFields.slice(0, addingIndex), newField, ...formFields.slice(addingIndex)])
   };
 
   return (
