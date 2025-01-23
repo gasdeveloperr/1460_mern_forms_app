@@ -125,25 +125,26 @@ const FormLive = () => {
     const formData = {};
 
     const formElements = event.target.elements;
-    console.log('form elements  : ',formElements);
+    //console.log('form elements  : ',formElements);
     for (let i = 0; i < formElements.length; i++) {
       const element = formElements[i];
       const customType = element.getAttribute('customtype'); 
       const sectionName = element.getAttribute('sectionName'); 
       const fieldType = element.getAttribute('fieldtype'); 
       const columnType = element.getAttribute('columntype');
-      const columnIndex = element.getAttribute('columnindex'); 
+      const columnIndex = element.getAttribute('columnindex');
+      const rowIndex = element.getAttribute('rowindex'); 
       const correctiveActionText = element.getAttribute('correctiveactiontext'); 
       const correctiveActionId = element.getAttribute('correctiveactionid'); 
 
-      //console.log(' saving results  : ', fieldType, element)
+      // console.log(' saving results  : ', fieldType, element, columnIndex, rowIndex)
       for(let j = 0; j < formFields.length; j++){
         if(formFields[j].type === 'section'){
           for (let k = 0; k < formFields[j].components.length; k++) {
             const elementBack = formFields[j].components[k];
-            console.log(element.id, elementBack.id)
+            //console.log(element.id, elementBack.id)
             if (element.id == elementBack.id) {
-              initializeFieldData({element, columnIndex, elementBack,
+              initializeFieldData({element, columnIndex, rowIndex, elementBack,
                 formData,
                 fieldType,
                 customType,
@@ -157,7 +158,7 @@ const FormLive = () => {
         }
         const elementBack = formFields[j];
         if (element.id == elementBack.id ) {
-          initializeFieldData({element, columnIndex, elementBack,
+          initializeFieldData({element, columnIndex, rowIndex, elementBack,
             formData,
             fieldType,
             customType,
@@ -190,7 +191,7 @@ const FormLive = () => {
 
     try {
       const response = await axios.post(`${backend_point}/api/subm_forms/${formId}`, formSubmsn, config);
-      console.log('Form updated successfully:', response.data);
+      //console.log('Form updated successfully:', response.data);
       setIsLoading(false);
       setIsSubmited(true);
       setFile(null)
@@ -207,14 +208,24 @@ const FormLive = () => {
   };
 
   
-  const handleAddingComponent = (fieldId, updated, addingIndex) => {
-    console.log(fieldId)
-    setFormFields()
-    // const newField = addingNewComponent(componentData.adding_component);
-    // console.log('handleAddingComponent : ', addingIndex, newField)
-    // console.log('formFields.slice(0, addingIndex) : ', formFields.slice(0, addingIndex))
-    // console.log('formFields.slice(addingIndex) : ', formFields.slice(addingIndex))
-    // setFormFields([...formFields.slice(0, addingIndex), newField, ...formFields.slice(addingIndex)])
+  const handleAddingComponent = (fieldId, updatedField) => {
+    //console.log(fieldId, updatedField)
+    const updatedFields = formFields.map(field => {
+      if (field.id === fieldId && field.type === 'columns') {
+        return { ...field, value: updatedField};
+      }else{
+         if (field.components) {
+          const updatedComponents = field.components.map(componentObj => {
+            if (componentObj.id === fieldId && componentObj.type === 'columns') {
+              return { ...componentObj, value: updatedField};
+            }
+          });
+          return { ...field, components: updatedComponents };
+        }
+        return field;
+      }
+    });
+    setFormFields(updatedFields)
   };
 
   return (

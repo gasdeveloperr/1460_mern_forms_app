@@ -6,24 +6,27 @@ import CustomSelector from './CustomSelector'
 import FileUploadFormComponent from './FileUploadFormComponent'
 import { useState } from 'react'
 
-const UltimateLiveColumnComponent = ({field, columnValue, labelName, columnStyle, isTabular,
-  columnIndex, sectionValues, handleValueChange, onFileChange}) => {
+const UltimateLiveColumnComponent = ({field, columnValue, 
+  labelName, columnStyle, isTabular,
+  rowIndex, columnIndex, sectionValues, 
+  handleValueChange, onFileChange}) => {
 
-    const [selectorValue, setSelectorValue] = useState(null);
-
+  const [selectorValue, setSelectorValue] = useState(null);
+  
   return ( 
     <>
       {(columnValue.type === 'short_answer' || columnValue.type === 'long_answer') && (
         <input
           className="form-live-input"
           id={field.id}
-          columnIndex={columnIndex}
+          columnindex={columnIndex}
+          rowIndex={rowIndex}
           style={{height: isTabular ? '100%' : '', border: isTabular ? 'none' : ''}} 
           fieldtype={field.type}
           columnType={columnValue.type}
-          value={sectionValues[columnIndex]}
+          value={sectionValues[rowIndex * field.labels.length + columnIndex]}
           name={`${field.id}-${columnIndex}`}
-          onChange={(e) => handleValueChange(e.target.value, columnIndex)}
+          onChange={(e) => handleValueChange(e.target.value, rowIndex, columnIndex)}
           required={columnValue.required}
           disabled={columnValue.read_only}
         />
@@ -33,10 +36,11 @@ const UltimateLiveColumnComponent = ({field, columnValue, labelName, columnStyle
           className="form-live-input"
           id={field.id}
           columnIndex={columnIndex}
+          rowIndex={rowIndex}
           style={{height: isTabular ? '100%' : '', border: isTabular ? 'none' : ''}} 
           fieldtype={field.type}
           columnType={columnValue.type}
-          value={sectionValues[columnIndex]}
+          value={sectionValues[rowIndex * field.labels.length + columnIndex]}
           name={`${field.id}-${columnIndex}`}
           onChange={(e) => handleValueChange(e.target.value, columnIndex)}
           required={columnValue.required}
@@ -52,6 +56,7 @@ const UltimateLiveColumnComponent = ({field, columnValue, labelName, columnStyle
                 fieldtype={field.type}
                 id={field.id} 
                 columnIndex={columnIndex}
+                rowIndex={rowIndex}
                 name={option.title} 
                 columnType={'checkbox'}
                 customtype="columns"
@@ -72,6 +77,7 @@ const UltimateLiveColumnComponent = ({field, columnValue, labelName, columnStyle
                 fieldtype={field.type}
                 id={field.id}
                 columnIndex={columnIndex}
+                rowIndex={rowIndex}
                 name={field.id}
                 columnType={'radio'}
                 sectionName={labelName}
@@ -116,6 +122,7 @@ const UltimateLiveColumnComponent = ({field, columnValue, labelName, columnStyle
             fieldtype={field.type}
             id={field.id}
             columnIndex={columnIndex}
+            rowIndex={rowIndex}
             name={field.id}
             sectionName={labelName}
             customtype="columns"

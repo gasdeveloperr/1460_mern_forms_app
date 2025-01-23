@@ -981,7 +981,7 @@ const FormBuilderSectionComponentEditor = ({ updateFormFieldsFromSection,
                 <div className='field-editor_checkbox_container'>
                   <label htmlFor="column_settings" className="field-editor-label">
                     <input type="checkbox" id="column_settings" className='field-editor_checkbox' 
-                    checked={editingField?.settings === 'add_row'} onChange={changeColumnsSettingHandler}/>
+                    checked={editingSectionField?.settings === 'add_row'} onChange={changeColumnsSettingHandler}/>
                     Add row feature
                   </label>
                 </div>

@@ -782,6 +782,9 @@ body {
   display: grid;
   position: relative;
 }
+.form-component-dynamic-columns-table-row{
+  display: grid;
+}
 .form-component-dynamic-columns-table-add-row{
   position: absolute;
   bottom: -16px;

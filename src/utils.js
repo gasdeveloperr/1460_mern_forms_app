@@ -227,7 +227,7 @@ export const addingNewCustomComponent = (componentData, sectionId) => {
 };
 
   // Function to initialize and update formData based on fieldType
-  export function initializeFieldData({ element, columnIndex, elementBack, 
+  export function initializeFieldData({ element, columnIndex, rowIndex, elementBack, 
     formData, fieldType, customType, sectionName, columnType,
     correctiveActionText,
     correctiveActionId }) {
@@ -238,7 +238,7 @@ export const addingNewCustomComponent = (componentData, sectionId) => {
         text: correctiveActionText,
         id: correctiveActionId
     }
-    console.log('saving this corrective action : ', correctiveActionData)
+    //console.log('saving this corrective action : ', correctiveActionData)
 
     }
     if (!formData[element.id]) {
@@ -309,41 +309,37 @@ export const addingNewCustomComponent = (componentData, sectionId) => {
         formData[element.id].value.push(element.value);
         break;
       case 'columns' :
-        switch(columnType){
-          case 'checkbox' :
+        if (!Array.isArray(formData[element.id].value[rowIndex])) {
+          formData[element.id].value[rowIndex] = [];
+        }
+        switch (columnType) {
+          case 'checkbox':
             if (element.checked) {
-              if (!Array.isArray(formData[element.id].value[columnIndex])) {
-                formData[element.id].value[columnIndex] = [];
+              if (!Array.isArray(formData[element.id].value[rowIndex][columnIndex])) {
+                formData[element.id].value[rowIndex][columnIndex] = [];
               }
-              if(correctiveActionData){
-                formData[element.id].value[columnIndex].push({result: element.name, correctiveActionData: correctiveActionData});
-              }else{
-                formData[element.id].value[columnIndex].push({result: element.name});
+              const entry = { result: element.name };
+              if (correctiveActionData) {
+                entry.correctiveActionData = correctiveActionData;
               }
+              formData[element.id].value[rowIndex][columnIndex].push(entry);
             }
             break;
-          case 'radio' :
-            formData[element.id].value[columnIndex] = ''
-            if (element.checked) {
-              if(correctiveActionData){
-                formData[element.id].value[columnIndex] = {result: element.value, correctiveActionData: correctiveActionData};
-              }else{
-                formData[element.id].value[columnIndex] = {result: element.value};
-              }
-            } 
+          case 'radio':
+            if (!formData[element.id].value[rowIndex]) {
+              formData[element.id].value[rowIndex] = [];
+            }
+            formData[element.id].value[rowIndex][columnIndex] = element.checked
+              ? { result: element.value, correctiveActionData }
+              : '';
             break;
           case 'dropdown':
-            formData[element.id].value[columnIndex] = ''
-            if (element.checked) {
-              if(correctiveActionData){
-                formData[element.id].value[columnIndex] = {result: element.value, correctiveActionData: correctiveActionData};
-              }else{
-                formData[element.id].value[columnIndex] = {result: element.value};
-              }
-            } 
+            formData[element.id].value[rowIndex][columnIndex] = element.checked
+              ? { result: element.value, correctiveActionData }
+              : '';
             break;
           default:
-            formData[element.id].value[columnIndex] = element.value;
+            formData[element.id].value[rowIndex][columnIndex] = element.value;
             break;
         }
         break;
@@ -395,4 +391,5 @@ export const addingNewCustomComponent = (componentData, sectionId) => {
         }
         break;
     }
+    //console.log('formData : ', formData)
   }

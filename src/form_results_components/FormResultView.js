@@ -17,11 +17,12 @@ const FormResultView = ({form, currentVersion, toMainBoardHandler,
   useEffect(() => {
     if(form.versions && form.versions[currentVersion-1]){
       setDisplayVersion(form.versions[currentVersion-1])
-      console.log('setted : ', form.versions[currentVersion-1])
+     // console.log('setted : ', form.versions[currentVersion-1])
     }else{
+      //console.log('form : ', form)
       setDisplayVersion(form)
     }
-    console.log(' FormResultView displayVersion : ', displayVersion)
+    //console.log(' FormResultView displayVersion : ', displayVersion)
 
   },[form, currentVersion])
 

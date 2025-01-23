@@ -7,7 +7,8 @@ const FormResultsComponent = ({ field, data }) => {
   let fieldData = {};
   if (data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) {
     fieldData = data[field.id];
-    //console.log('field data :', fieldData, data[field.id])
+    //console.log('fieldData : ', fieldData)
+    //console.log('field : ', field)
   } else if(field.type !== 'title'){
     //console.log(`No data found for field ID: ${field.id}`);
     return null;
@@ -22,10 +23,14 @@ const FormResultsComponent = ({ field, data }) => {
           </div>
           {!field.read_only &&
             <div className="form-result-component-value">
-              {
-                fieldData.value && fieldData.value.result ? fieldData.value.result
-                : fieldData.value && !fieldData.value.result ? fieldData.value
-                : ''
+              { 
+                fieldData.value && fieldData.value.result ? 
+                fieldData.value.result
+                : 
+                fieldData.value && !Object.hasOwn(fieldData.value, 'result') ? 
+                fieldData.value
+                : 
+                ' '
               }
             </div>
           }
@@ -38,10 +43,14 @@ const FormResultsComponent = ({ field, data }) => {
           </div>
           {!field.read_only &&
             <div className="form-result-component-value">
-              {
-                fieldData.value && fieldData.value.result ? fieldData.value.result
-                : fieldData.value && !fieldData.value.result ? fieldData.value
-                : ''
+              { 
+                fieldData.value && fieldData.value.result ? 
+                fieldData.value.result
+                : 
+                fieldData.value && !Object.hasOwn(fieldData.value, 'result') ? 
+                fieldData.value
+                : 
+                ' '
               }
             </div>
           }
@@ -54,10 +63,14 @@ const FormResultsComponent = ({ field, data }) => {
           </div>
           {!field.read_only &&
             <div className="form-result-component-value">
-              {
-                fieldData.value && fieldData.value.result ? fieldData.value.result
-                : fieldData.value && !fieldData.value.result ? fieldData.value
-                : ''
+              { 
+                fieldData.value && fieldData.value.result ? 
+                fieldData.value.result
+                : 
+                fieldData.value && !Object.hasOwn(fieldData.value, 'result') ? 
+                fieldData.value
+                : 
+                ' '
               }
             </div>
           }
@@ -70,10 +83,14 @@ const FormResultsComponent = ({ field, data }) => {
           </div>
           {!field.read_only &&
             <div className="form-result-component-value">
-              {
-                fieldData.value && fieldData.value.result ? fieldData.value.result
-                : fieldData.value && !fieldData.value.result ? fieldData.value
-                : ''
+              { 
+                fieldData.value && fieldData.value.result ? 
+                fieldData.value.result
+                : 
+                fieldData.value && !Object.hasOwn(fieldData.value, 'result') ? 
+                fieldData.value
+                : 
+                ' '
               }
             </div>
           }
@@ -86,10 +103,14 @@ const FormResultsComponent = ({ field, data }) => {
           </div>
           {!field.read_only &&
             <div className="form-result-component-value">
-              {
-                fieldData.value && fieldData.value.result ? fieldData.value.result
-                : fieldData.value && !fieldData.value.result ? fieldData.value
-                : ''
+              { 
+                fieldData.value && fieldData.value.result ? 
+                fieldData.value.result
+                : 
+                fieldData.value && !Object.hasOwn(fieldData.value, 'result') ? 
+                fieldData.value
+                : 
+                ' '
               }
             </div>
           }
@@ -102,11 +123,15 @@ const FormResultsComponent = ({ field, data }) => {
             {field.title}:
           </div>
           <div className="form-result-component-value">
-            {
-              fieldData.value && fieldData.value.result ? fieldData.value.result
-              : fieldData.value && !fieldData.value.result ? fieldData.value
-              : ''
-            }
+              { 
+                fieldData.value && fieldData.value.result ? 
+                fieldData.value.result
+                : 
+                fieldData.value && !Object.hasOwn(fieldData.value, 'result') ? 
+                fieldData.value
+                : 
+                ' '
+              }
           </div>
         </div>
       )}
@@ -137,12 +162,12 @@ const FormResultsComponent = ({ field, data }) => {
                 </label>
                 {
                   fieldData.value.correctiveActionData &&
-                <div className="field-result-option-corrective-action">
-                   Corrective action: {fieldData.value.correctiveActionData.text}
-                </div>
+                  <div className="field-result-option-corrective-action">
+                    Corrective action: {fieldData.value.correctiveActionData.text}
+                  </div>
                 }
               </>
-            : fieldData.value ? 
+            : fieldData.value && !Object.hasOwn(fieldData.value, 'result')? 
             <label className={`form-component-radio-container ${field.layout}`}>
               <input type="radio" 
                 name={fieldData.value} 
@@ -174,9 +199,12 @@ const FormResultsComponent = ({ field, data }) => {
                     <span className="form-component-checkmark"></span>
                     {value.result}
                   </label>
-                  <div className="field-result-option-corrective-action">
-                    Corrective action: {value.correctiveActionData.text}
-                  </div>
+                  {
+                    value.correctiveActionData &&
+                    <div className="field-result-option-corrective-action">
+                      Corrective action: {value.correctiveActionData.text}
+                    </div>
+                  }
                 </>
                 :
                 <label key={index} className={`form-component-checkbox-container ${field.layout}`}>
@@ -244,7 +272,7 @@ const FormResultsComponent = ({ field, data }) => {
                     </div>
                   }
                 </>
-              : fieldData.value && !fieldData.value.result ?
+              : fieldData.value && !Object.hasOwn(fieldData.value, 'result') ?
                 <div className="form-result-component-value"
                 style={{
                   backgroundColor: field.options?.find(option => option.title === fieldData.value)?.color || '#fff',
@@ -394,51 +422,82 @@ const FormResultsComponent = ({ field, data }) => {
       )}
       {field.type === 'columns' && (
         <div className="form-result-component-container">
-          <div className="form-results-component-title">
-            {field.title}
-          </div>
-          {
-            field.style && field.style === 'tabular' ? 
+          <div className="form-results-component-title">{field.title}</div>
+          {field.style && field.style === 'tabular' ? (
             <table className="form-results-table">
-              <tr>
-                {field.labels.map((label, index) => (
-                  <td className="form-results-td">
-                    {label}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                {field.value.map((value, index) => (
-                  <td className="form-results-td">
-                    {
-                      fieldData.value && fieldData.value[index] &&
-                      <UltimateResultColumnComponent fieldValue={fieldData.value[index]} field={value}/>
-                    }
-                  </td>
-                ))}
-              </tr>
-            </table>
-          :
-          <table className="form-results-table">
-            <tr>
-              {field.labels.map((label, labelIndex) => (
-                <td key={labelIndex} className="form-results-td-bordless">
-                  {label}
-                </td>
-              ))}
-            </tr>
-            <tr>
-              {field.value.map((value, valueIndex) => (
-                <td key={valueIndex} className="form-results-td-bordless">
-                  {
-                    fieldData.value && fieldData.value[valueIndex] &&
-                    <UltimateResultColumnComponent fieldValue={fieldData.value[valueIndex]} field={value}/>
+              <thead>
+                <tr>
+                  {field.labels.map((label, index) => (
+                    <td key={index} className="form-results-td">
+                      {label}
+                    </td>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {fieldData.value.map((row, rowIndex) => (
+                  <>
+                    {Array.isArray(row) ? 
+                      <tr key={rowIndex}>
+                        {row.map((column, columnIndex) => (
+                          <td key={columnIndex} className="form-results-td">
+                            <UltimateResultColumnComponent
+                              fieldValue={column}
+                              field={field.value[rowIndex * field.labels.length + columnIndex]}
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                    :
+                    <td className="form-results-td">
+                      {
+                        fieldData.value && fieldData.value[rowIndex] &&
+                        <UltimateResultColumnComponent fieldValue={fieldData.value[rowIndex]} field={row}/>
+                      }
+                    </td>
                   }
-                </td>
-              ))}
-            </tr>
-          </table>
-          }
+                  </>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <table className="form-results-table">
+              <thead>
+                <tr>
+                  {field.labels.map((label, labelIndex) => (
+                    <td key={labelIndex} className="form-results-td-bordless">
+                      {label}
+                    </td>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {fieldData.value.map((row, rowIndex) => (
+                  <>
+                    {Array.isArray(row) ? 
+                    <tr key={rowIndex}>
+                      {row.map((column, columnIndex) => (
+                        <td key={columnIndex} className="form-results-td-bordless">
+                          <UltimateResultColumnComponent
+                            fieldValue={column}
+                            field={field.value[rowIndex * field.labels.length + columnIndex]}
+                          />
+                        </td>
+                      ))}
+                    </tr>
+                    :
+                    <td className="form-results-td-bordless">
+                      {
+                        fieldData.value && fieldData.value[rowIndex] &&
+                        <UltimateResultColumnComponent fieldValue={fieldData.value[rowIndex]} field={row}/>
+                      }
+                    </td>
+                  }
+                  </>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       )}
 

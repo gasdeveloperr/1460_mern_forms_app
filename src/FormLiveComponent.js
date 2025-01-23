@@ -54,6 +54,9 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
       setSelectBgColor(selectedOption ? selectedOption.color : '');
     }
   };
+  const handleFieldChange = (updatedField) => {
+    handleAddingComponent(field.id, updatedField)
+  };
 
   //console.log('field in live comp: ', field)
   const textareaRef = useRef(null);
@@ -401,7 +404,8 @@ const FormLiveComponent = ({field, index, sectionIndex, onFileChange, handleAddi
               {field.title} 
             </div>
             <ColumnsFormComponent field={field} handleInputsChange={handleColumnInputsChange} 
-            handleSelectorChange={handleColumnSelectorChange} onFileChange={onFileChange}/>
+            handleSelectorChange={handleColumnSelectorChange} handleFieldChange={handleFieldChange}
+            onFileChange={onFileChange}/>
           </div>
         )}
         {field.type === 'add_component_button' && (
