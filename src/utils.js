@@ -284,7 +284,7 @@ export const addingNewCustomComponent = (componentData, sectionId) => {
     //setting element type for subm data field
     formData[element.id].type = fieldType;
 
-    //console.log('formData : ', formData)
+    //console.log('element.id  : ',element.id, formData[element.id])
 
     switch(fieldType){
       case 'double_section' :
@@ -329,14 +329,22 @@ export const addingNewCustomComponent = (componentData, sectionId) => {
             if (!formData[element.id].value[rowIndex]) {
               formData[element.id].value[rowIndex] = [];
             }
-            formData[element.id].value[rowIndex][columnIndex] = element.checked
-              ? { result: element.value, correctiveActionData }
-              : '';
+            if (element.checked) {
+              const entry = { result: element.value };
+              if (correctiveActionData) {
+                entry.correctiveActionData = correctiveActionData;
+              }
+              formData[element.id].value[rowIndex][columnIndex] = entry;
+            } else {
+              formData[element.id].value[rowIndex][columnIndex] = '';
+            }
             break;
           case 'dropdown':
-            formData[element.id].value[rowIndex][columnIndex] = element.checked
-              ? { result: element.value, correctiveActionData }
-              : '';
+            if(correctiveActionData){
+              formData[element.id].value[rowIndex][columnIndex] = {result: element.value, correctiveActionData: correctiveActionData};
+            }else{
+              formData[element.id].value[rowIndex][columnIndex] = {result: element.value};
+            }
             break;
           default:
             formData[element.id].value[rowIndex][columnIndex] = element.value;
@@ -356,8 +364,9 @@ export const addingNewCustomComponent = (componentData, sectionId) => {
         if (element.checked) {
           if(correctiveActionData){
             formData[element.id].value = {result: element.value, correctiveActionData: correctiveActionData};
+          }else{
+            formData[element.id].value = {result: element.value};
           }
-          formData[element.id].value = {result: element.value};
         }
         break;
       case 'dropdown':

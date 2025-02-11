@@ -59,6 +59,13 @@ function DocumentsPage() {
     fetchUser();
   }, []);
 
+  const [newFolderAdded, setNewFolderAdded] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchUser();
+  }, [newFolderAdded]);
+
   const createFormHandler = async () => {
     const token = getAuthToken();
     const config = {
@@ -134,7 +141,7 @@ function DocumentsPage() {
                 {isError}
               </div>
               :
-              <DocumentsManagement files={files} updateUserData={fetchUser} setIsLoading={setIsLoading}/>
+              <DocumentsManagement files={files} updateUserData={fetchUser} setIsLoading={setIsLoading} setNewFolderAdded={setNewFolderAdded}/>
               // forms.map((form) => (
               //   <div className="form-list-item" key={form._id}>
               //     {form.title}

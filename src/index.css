@@ -512,7 +512,7 @@ body {
   flex-direction: column;
   background: #FFF;
   height: 100%;
-  max-width: 1440px;
+  max-width: 80vw;
   padding: 20px 0px;
 }
 
@@ -781,6 +781,7 @@ body {
 .form-component-dynamic-columns-table{
   display: grid;
   position: relative;
+  margin-bottom: 4px;
 }
 .form-component-dynamic-columns-table-row{
   display: grid;
@@ -811,7 +812,7 @@ body {
   min-height: 20.8px;
 }
 .form-component-column {
-  /* min-width: 30px; */
+  min-width: 30px;
 }
 .form-component-double-section-container{
   display: grid;

@@ -33,11 +33,11 @@ const FormResultsEditing = ({form, currentVersion,
   useEffect(() => {
     if(form.versions && form.versions[currentVersion-1]){
       setDisplayVersion(form.versions[currentVersion-1])
-      console.log('setted : ', form.versions[currentVersion-1])
+      //console.log('setted : ', form.versions[currentVersion-1])
     }else{
       setDisplayVersion(form)
     }
-    console.log(' FormResultView displayVersion : ', displayVersion)
+    //console.log(' FormResultView displayVersion : ', displayVersion)
 
   },[form, currentVersion])
 
@@ -114,7 +114,7 @@ const FormResultsEditing = ({form, currentVersion,
     const formData = {};
 
     const formElements = event.target.elements;
-    console.log('form elements  : ',formElements);
+    //console.log('form elements  : ',formElements);
     for (let i = 0; i < formElements.length; i++) {
       const element = formElements[i];
       const customType = element.getAttribute('customtype'); 
@@ -130,7 +130,7 @@ const FormResultsEditing = ({form, currentVersion,
         if(formFields[j].type === 'section'){
           for (let k = 0; k < formFields[j].components.length; k++) {
             const elementBack = formFields[j].components[k];
-            console.log(element.id, elementBack.id)
+            //console.log(element.id, elementBack.id)
             if (element.id == elementBack.id) {
               initializeFieldData({element, columnIndex, elementBack,
                 formData,

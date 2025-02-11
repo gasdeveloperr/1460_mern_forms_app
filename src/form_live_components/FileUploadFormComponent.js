@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import file_upload_icon from '../icons/file-upload-icon.svg'
+import file_icon from '../icons/file-icon.svg'
 
 const FileUploadFormComponent = ({field, onFileChange }) => {
   const [message, setMessage] = useState('');
@@ -25,11 +27,23 @@ const FileUploadFormComponent = ({field, onFileChange }) => {
           onChange={handleFileChange}
           hidden
         />
-        <label htmlFor={field.id} className="form-file-label">
-          {field.required && <span>*</span>}
-          {field.title}
-        </label>
-        {fileName && <p>Selected file: {fileName}</p>}
+        {
+          fileName ?
+          <div className='form-live-component-container-label'>
+            <img className='size24-icon' src={file_icon}/> 
+            {fileName}
+          </div>
+          :
+          field.title ?
+          <div className='form-live-component-container-label'>
+            {field.required && <span>*</span>}
+            {field.title}
+          </div>
+          :
+          <div className='form-live-component-container-label'>
+            <img className='size24-icon' src={file_upload_icon}/>
+          </div>
+        }
         {message && <p>{message}</p>}
       </label>
     </div>

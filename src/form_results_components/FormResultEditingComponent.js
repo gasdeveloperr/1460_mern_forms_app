@@ -11,8 +11,8 @@ import FiveSectionFormComponent from '../form_live_components/FiveSectionFormCom
 import FileUploadFormComponent from '../form_live_components/FileUploadFormComponent';
 import AutoResizingTextareaComponent from '../form_live_components/AutoResizingTextareaComponent';
 import MultipleSectionFormComponent from '../form_live_components/MultipleSectionFormComponent';
-import ColumnsFormComponent from '../form_live_components/ColumnsFormComponent';
 import AddButtonComponent from '../form_live_components/AddButtonComponent';
+import EditingColumnsComponent from './EditingColumnsComponent';
 
 
 
@@ -23,7 +23,7 @@ const FormResultEditingComponent = ({field, data, index, sectionIndex,
   let fieldPreData = {};
   if (data && data.hasOwnProperty(field.id) && data[field.id] !== undefined) {
     fieldPreData = data[field.id];
-    console.log('field pre-data :', fieldPreData, data[field.id])
+    //console.log('field pre-data :', fieldPreData, data[field.id])
   } else if(field.type !== 'title'){
     //console.log(`No data found for field ID: ${field.id}`);
     fieldPreData = '';
@@ -376,7 +376,8 @@ const FormResultEditingComponent = ({field, data, index, sectionIndex,
               {field.title}
               <CustomSelector options={field.options} 
               selectedValue={selectorValue?.value || ''}
-              setSelectorValue={setSelectorValue}/>
+              setSelectorValue={setSelectorValue}
+              preFilledData={fieldPreData.value}/>
               <input 
                 fieldtype={field.type}
                 id={field.id}
@@ -458,8 +459,9 @@ const FormResultEditingComponent = ({field, data, index, sectionIndex,
               {field.required && <span>*</span>}
               {field.title} 
             </div>
-            <ColumnsFormComponent field={field} handleInputsChange={handleColumnInputsChange} 
-            handleSelectorChange={handleColumnSelectorChange} onFileChange={onFileChange}/>
+            <EditingColumnsComponent field={field} handleInputsChange={handleColumnInputsChange} 
+            handleSelectorChange={handleColumnSelectorChange} onFileChange={onFileChange} 
+            preFilledData={fieldPreData.value}/>
           </div>
         )}
         {field.type === 'add_component_button' && (

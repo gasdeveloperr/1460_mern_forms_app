@@ -118,6 +118,9 @@ function ResultsBoard() {
   
     // Clone the preview container
     const previewContainer = document.getElementById("result-to-convert")
+    const elementWidth = previewContainer.offsetWidth;
+
+    const docOrientation = elementWidth > 800 ? 'landscape' : 'portrait';
     const clone = previewContainer.cloneNode(true);
     
     // Add specific styles for PDF generation
@@ -152,7 +155,7 @@ function ResultsBoard() {
       jsPDF: { 
         unit: 'mm', 
         format: 'a4', 
-        orientation: 'portrait',
+        orientation: docOrientation,
         compress: true,
         putTotalPages: false
       },
@@ -169,28 +172,7 @@ function ResultsBoard() {
     } finally {
       document.body.removeChild(tempContainer);
     }
-    };
-
-
-  // const handleDownloadPDF = () => {
-  //   const formTitle = detailResult.title;
-  //   const input = document.getElementById("result-to-convert");
-  
-  //   const elementWidth = input.offsetWidth;
-  //   const elementHeight = input.offsetHeight;
-  
-  //   const orientation = elementWidth > '700' ? "l" : "p";
-  
-  //   const pdf = new jsPDF(orientation, "mm", "a4");
-  //   pdf.html(input, {
-  //     callback: function (pdf) {
-  //       pdf.save(`${formTitle}.pdf`);
-  //     },
-  //     x: 6,
-  //     y: 4,
-  //     html2canvas: { scale: 0.315 },
-  //   });
-  // };
+  };
 
   const handleSaveWarning = () => {
     setSaveWarning(true);

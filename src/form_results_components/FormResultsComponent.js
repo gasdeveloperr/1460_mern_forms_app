@@ -162,7 +162,7 @@ const FormResultsComponent = ({ field, data }) => {
                 </label>
                 {
                   fieldData.value.correctiveActionData &&
-                  <div className="field-result-option-corrective-action">
+                  <div className="field-result-option-corrective-action-box">
                     Corrective action: {fieldData.value.correctiveActionData.text}
                   </div>
                 }
@@ -201,12 +201,12 @@ const FormResultsComponent = ({ field, data }) => {
                   </label>
                   {
                     value.correctiveActionData &&
-                    <div className="field-result-option-corrective-action">
+                    <div className="field-result-option-corrective-action-box">
                       Corrective action: {value.correctiveActionData.text}
                     </div>
                   }
                 </>
-                :
+                : value.result !== '' ?
                 <label key={index} className={`form-component-checkbox-container ${field.layout}`}>
                   <input type="checkbox" 
                     name={value} 
@@ -215,6 +215,7 @@ const FormResultsComponent = ({ field, data }) => {
                   <span className="form-component-checkmark"></span>
                   {value}
                 </label>
+                : <></>
                 ))
                 :
                 <div className="form-result-component-value">

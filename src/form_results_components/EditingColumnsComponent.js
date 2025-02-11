@@ -1,86 +1,11 @@
-// import { useState, useEffect } from 'react';
-// import UltimateLiveColumnComponent from './UltimateLiveColumnComponent';
-// import add_icon from '../icons/plus-icon.svg'
-
-// const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange, onFileChange }) => {
-//   const [sectionValues, setSectionValues] = useState([]);
-
-//   // Initialize values based on field structure
-//   useEffect(() => {
-//     const initialValues = field.value.map((col) => {
-//       if (col.type === 'dropdown') {
-//         return col.options.find(option => option.selected)?.title || '';
-//       }
-//       return col.value || '';
-//     });
-//     setSectionValues(initialValues);
-//   }, [field.value]);
-
-//   const handleValueChange = (value, index) => {
-//     const newValues = [...sectionValues];
-//     newValues[index] = value;
-//     setSectionValues(newValues);
-//     if (field.value[index].type === 'dropdown') {
-//       handleSelectorChange(value, index);
-//     } else {
-//       handleInputsChange(value, index);
-//     }
-//   };
-//   const handleAddingNewRow = () => {
-//     const updatedField = {}
-//   };
-  // const minMaxValue = '1fr'
-
-  // const [columnsStyle, setColumnsStyle] = useState({ gridTemplateColumns: 'repeat(3, '+minMaxValue+')'});
-  // const [columnStyle, setColumnStyle] = useState({ borderRadius: '4px'});
-  // const [columnLabelStyle, setColumnLabelStyle] = useState({ border: '1px solid rgb(211, 221, 225)',  padding: '10px 6px'});
-
-  // useEffect(() =>{
-  //   if(field && field.labels){
-  //     if(field && field.style && field.style === 'tabular'){
-  //       setColumnsStyle({...columnsStyle, gap: '0px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
-  //       setColumnStyle({...columnStyle, borderRadius: '0px', border: '1px solid rgb(211, 221, 225)'})
-  //       setColumnLabelStyle({...columnLabelStyle, border: '1px solid rgb(211, 221, 225)', padding: '10px 6px'})
-  //     }else{
-  //       setColumnsStyle({...columnsStyle, gap: '4px', gridTemplateColumns: `repeat(${field.labels.length}, ${minMaxValue})`})
-  //       setColumnStyle({borderRadius: '4px'})
-  //       setColumnLabelStyle({...columnLabelStyle, border: 'none', padding: '2px 4px'})
-  //     }
-  //   }
-  // }, [field])
-
-//   return (
-//     <table className={"form-component-dynamic-columns-table"} style={columnsStyle}>
-//       {field.labels.map((label, index) => (
-//         <td className="form-section-table-label" style={columnLabelStyle}>
-//           {label}
-//         </td>
-//       ))}
-//       {field.value.map((value, index) => (
-//         <td className="form-component-column" key={index} style={columnStyle}>
-//           <UltimateLiveColumnComponent field={field} columnValue={value} labelName={field.labels[index]}
-//           columnStyle={columnStyle} isTabular={field.style === "tabular"}
-//           columnIndex={index} sectionValues={sectionValues}
-//           handleValueChange={handleValueChange} onFileChange={onFileChange}/>
-//         </td>
-//       ))}
-      // {
-      //   field.settings && field.settings === 'add_row' &&
-      //   <div className="form-component-dynamic-columns-table-add-row" 
-      //   id='add_new_row' onClick={() => handleAddingNewRow()}>
-      //     <img src={add_icon} alt="" className="size22-icon"/>
-      //   </div>
-      // }
-//     </table>
-//   );
-// };
-
-// export default ColumnsFormComponent;
 import { useState, useEffect } from 'react';
-import UltimateLiveColumnComponent from './UltimateLiveColumnComponent';
+import UltimateLiveColumnComponent from './UltimateEditingColumnComponent';
 import add_icon from '../icons/plus-icon.svg';
+import UltimateResultColumnComponent from './UltimateResultColumnComponent';
+import UltimateEditingColumnComponent from './UltimateEditingColumnComponent';
 
-const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange, onFileChange, handleFieldChange }) => {
+const EditingColumnsComponent = ({ field, handleInputsChange, 
+  handleSelectorChange, onFileChange, handleFieldChange, preFilledData }) => {
   const [rows, setRows] = useState([]);
   const [sectionValues, setSectionValues] = useState([]);
 
@@ -196,7 +121,7 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange,
            key={rowIndex} style={columnsStyle}>
             {row.map((col, colIndex) => (
               <td className="form-component-column" key={colIndex} style={columnStyle}>
-                <UltimateLiveColumnComponent
+                <UltimateEditingColumnComponent
                   field={field}
                   columnValue={col}
                   labelName={field.labels[colIndex]}
@@ -206,6 +131,7 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange,
                   isTabular={field.style === 'tabular'}
                   handleValueChange={(value) => handleValueChange(value, rowIndex, colIndex)}
                   onFileChange={onFileChange}
+                  preFilledData={preFilledData[rowIndex][colIndex]}
                 />
               </td>
             ))}
@@ -223,4 +149,4 @@ const ColumnsFormComponent = ({ field, handleInputsChange, handleSelectorChange,
   );
 };
 
-export default ColumnsFormComponent;
+export default EditingColumnsComponent;

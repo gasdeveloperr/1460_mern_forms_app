@@ -2,11 +2,25 @@ import React, { useState, useEffect, useRef } from 'react';
 import './CustomSelector.css';
 import dropdown_icon from '../icons/dropdown-icon.svg';
 
-const CustomSelector = ({ options, selectedValue, isTabular, setSelectorValue }) => {
+const CustomSelector = ({ options, selectedValue, isTabular, setSelectorValue, preFilledData }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(preFilledData || null);
   const selectRef = useRef(null);
 
+  useEffect(() => {
+    //console.log('preFilledData in CustomSelector:', preFilledData);
+    if(preFilledData && preFilledData.result!==''){
+      const initialSelectedOption = options.find(option => option.title === preFilledData.result);
+      if (initialSelectedOption) {
+        setSelectedOption(initialSelectedOption);
+      }
+    }else{
+      const initialSelectedOption = options.find(option => option.title === selectedValue);
+      if (initialSelectedOption) {
+        setSelectedOption(initialSelectedOption);
+      }
+    }
+  }, []);
   useEffect(() => {
     const initialSelectedOption = options.find(option => option.title === selectedValue);
     if (initialSelectedOption) {
@@ -47,7 +61,7 @@ const CustomSelector = ({ options, selectedValue, isTabular, setSelectorValue })
     <div
       ref={selectRef}
       className="custom-select-container"
-      style={{ height: isTabular ? '100%' : '' }}
+      style={{ height: isTabular ? '100%' : ''}}
     >
       <div
         className="custom-select-display"
@@ -55,6 +69,7 @@ const CustomSelector = ({ options, selectedValue, isTabular, setSelectorValue })
           borderRadius: isTabular ? '0px' : '',
           border: isTabular ? 'none' : '',
           backgroundColor: selectedOption ? selectedOption.color : '#fff',
+          padding: isTabular ? '0px 2px' : '' 
         }}
         onClick={toggleDropdown}
       >

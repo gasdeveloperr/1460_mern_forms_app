@@ -2,14 +2,14 @@ import plus_icon from '../icons/plus-icon.svg'
 import calendar_icon from '../icons/calendar-icon.svg'
 import time_icon from '../icons/time-icon.svg' 
 import file_upload_icon from '../icons/file-upload-icon.svg'
-import CustomSelector from './CustomSelector'
-import FileUploadFormComponent from './FileUploadFormComponent'
+import CustomSelector from '../form_live_components/CustomSelector'
+import FileUploadFormComponent from '../form_live_components/FileUploadFormComponent'
 import { useState } from 'react'
 
-const UltimateLiveColumnComponent = ({field, columnValue, 
+const UltimateEditingColumnComponent = ({field, columnValue, 
   labelName, columnStyle, isTabular,
   rowIndex, columnIndex, sectionValues, 
-  handleValueChange, onFileChange}) => {
+  handleValueChange, onFileChange, preFilledData}) => {
 
   const [selectorValue, setSelectorValue] = useState(null);
   
@@ -117,6 +117,7 @@ const UltimateLiveColumnComponent = ({field, columnValue,
             selectedValue={selectorValue?.value || ''}
             columnStyle={columnStyle} isTabular={isTabular}
             setSelectorValue={setSelectorValue}
+            preFilledData={preFilledData}
           />
           <input
             fieldtype={field.type}
@@ -176,4 +177,4 @@ const UltimateLiveColumnComponent = ({field, columnValue,
    );
 }
  
-export default UltimateLiveColumnComponent;
+export default UltimateEditingColumnComponent;

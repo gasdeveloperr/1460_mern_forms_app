@@ -275,6 +275,8 @@ const FormBuilder = () => {
   }
   // console.log('chosenOptionsToUpdate  and chosenOptions', chosenOptionsToUpdate, newOptions, formFields)
   const updateChosenOptions = (newOptions) => { 
+    let updatedSectionComponents = []
+    let oldSectionId = '';
     const updatedFields = formFields.map(field => {
       if (field.id === chosenOptionsToUpdate && field.type === 'columns') {
         const updatedValues = field.value.map((component, index) => {
@@ -290,6 +292,7 @@ const FormBuilder = () => {
         } else if (field.components) {
           const updatedComponents = field.components.map(componentObj => {
             if (componentObj.id === chosenOptionsToUpdate && componentObj.type === 'columns') {
+              oldSectionId = field.id;
               const updatedValues = componentObj.value.map((component, index) => {
                 if(index === chosenOptionsColumnToUpdate){
                   return { ...component, options: newOptions.optionsData } 
@@ -304,12 +307,23 @@ const FormBuilder = () => {
               return componentObj;
             }
           });
+          if(oldSectionId === field.id){
+            updatedSectionComponents = updatedComponents
+          }
           return { ...field, components: updatedComponents };
         }
         return field;
       }
     });
-    //console.log('updatedFields ', updatedFields)
+    if(oldSectionId){
+      const updatedCurrentSectionField = updatedSectionComponents.find(field => field.id === chosenOptionsToUpdate)
+      const updatedCurrentField = updatedFields.find(field => field.id === oldSectionId)
+      setEditingSectionField(updatedCurrentSectionField)
+      setEditingField(updatedCurrentField)
+    }else{
+      const updatedCurrentField = updatedFields.find(field => field.id === chosenOptionsToUpdate)
+      setEditingField(updatedCurrentField)
+    }
     setFormFields(updatedFields);
     setFormFieldsToServer(updatedFields);
     closeOptionsChoosingWindow();

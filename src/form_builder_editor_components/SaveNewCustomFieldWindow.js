@@ -12,7 +12,7 @@ const SaveNewCustomFieldWindow = ({isOpen, onClose, editingField, editingSection
   const [fieldData, setFieldData] = useState({})
 
   useEffect(() => {
-    console.log(" editingField, editingSectionField, : ",  editingField, editingSectionField)
+    //console.log(" editingField, editingSectionField, : ",  editingField, editingSectionField)
     if(editingSectionField.id !== ''){
       setFieldData(editingSectionField)
     }else{
@@ -30,7 +30,7 @@ const SaveNewCustomFieldWindow = ({isOpen, onClose, editingField, editingSection
 
     setIsLoading(true);
     try {
-      console.log(" fieldData ", fieldData)
+      //console.log(" fieldData ", fieldData)
       await axios.post(`${backend_point}/api/customFields/new`, 
         { title: fieldData.title, 
           type: fieldData.type, 

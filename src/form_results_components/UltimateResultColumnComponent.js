@@ -1,6 +1,6 @@
 const UltimateResultColumnComponent = ({fieldValue, field}) => {
-  //console.log('fieldValue  :', fieldValue)
-  //console.log(' field :',  field)
+  // console.log('fieldValue  :', fieldValue)
+  // console.log(' field :',  field)
   return ( 
     <>
     {field.type === 'short_answer' && (
@@ -95,7 +95,7 @@ const UltimateResultColumnComponent = ({fieldValue, field}) => {
                 </label>
                 {
                   fieldValue.correctiveActionData &&
-                  <div className="field-result-option-corrective-action">
+                  <div className="field-result-option-corrective-action-box">
                     Corrective action: {fieldValue.correctiveActionData.text}
                   </div>
                 }
@@ -131,12 +131,12 @@ const UltimateResultColumnComponent = ({fieldValue, field}) => {
                   </label>
                   {
                     value.correctiveActionData &&
-                    <div className="field-result-option-corrective-action">
+                    <div className="field-result-option-corrective-action-box">
                       Corrective action: {value.correctiveActionData.text}
                     </div>
                   }
                 </>
-                :
+                : value.result !== '' ?
                 <label key={index} className={`form-component-checkbox-container ${field.layout}`}>
                   <input type="checkbox" 
                     name={value} 
@@ -145,6 +145,7 @@ const UltimateResultColumnComponent = ({fieldValue, field}) => {
                   <span className="form-component-checkmark"></span>
                   {value}
                 </label>
+                : <></>
                 ))
                 :
                 <div className="form-result-component-value">
@@ -175,11 +176,11 @@ const UltimateResultColumnComponent = ({fieldValue, field}) => {
           <div className="form-live-component-dropdown-value">
             {/* Show the selected dropdown option and color */}
             {
-              fieldValue && fieldValue.result ? 
+              fieldValue && fieldValue.result  ? 
                 <>
                   <div className="form-result-component-value"
                     style={{
-                      backgroundColor: field.options?.find(option => option.title === fieldValue)?.color || '#fff',
+                      backgroundColor: field.options?.find(option => option.title === fieldValue.result)?.color || '#fff',
                       borderRadius: '5px',
                       color: '#000'
                     }}
@@ -193,7 +194,7 @@ const UltimateResultColumnComponent = ({fieldValue, field}) => {
                     </div>
                   }
                 </>
-              : fieldValue && !fieldValue.result ?
+              : fieldValue && !Object.hasOwn(fieldValue, 'result')?
                 <div className="form-result-component-value"
                 style={{
                   backgroundColor: field.options?.find(option => option.title === fieldValue)?.color || '#fff',

@@ -5,7 +5,7 @@ import { backend_point } from '../consts';
 import { getAuthToken, getCurrentOrganization, getUserId } from '../utils';
 
 
-const AddFolderWindow = ({isOpen, onClose, currentPath}) => {
+const AddFolderWindow = ({isOpen, onClose, currentPath, setNewFolderAdded}) => {
   const [folderName, setFolderName] = useState('');
 
   const handleSubmit = async(e) => {
@@ -26,7 +26,8 @@ const AddFolderWindow = ({isOpen, onClose, currentPath}) => {
         currentPath: decodeURIComponent(currentPath),
         userId: userId,
       }, config);
-      console.log('Folder saved successfully:', response.data);
+      //console.log('Folder saved successfully:', response.data);
+      setNewFolderAdded(prev => !prev);
       onClose();
     } catch (error) {
       if (error.response) {

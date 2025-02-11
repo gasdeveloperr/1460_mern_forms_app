@@ -209,7 +209,8 @@ const FormLive = () => {
 
   
   const handleAddingComponent = (fieldId, updatedField) => {
-    //console.log(fieldId, updatedField)
+    // console.log(fieldId, updatedField)
+    // console.log('formFields : ', formFields)
     const updatedFields = formFields.map(field => {
       if (field.id === fieldId && field.type === 'columns') {
         return { ...field, value: updatedField};
@@ -219,6 +220,7 @@ const FormLive = () => {
             if (componentObj.id === fieldId && componentObj.type === 'columns') {
               return { ...componentObj, value: updatedField};
             }
+            return field;
           });
           return { ...field, components: updatedComponents };
         }

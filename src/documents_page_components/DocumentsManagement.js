@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './DocumentPage.css'
 import folder_icon from '../icons/folder-icon.svg'
 import open_folder_icon from '../icons/folder-open-icon.svg'
-import add_folder_icon from '../icons/add-folder-icon.svg'
+import add_folder_icon from '../icons/add-folder-icon-new.svg'
 import file_icon from '../icons/file-icon.svg'
+import add_file_icon from '../icons/add-file-icon-new.svg'
 import updload_icon from '../icons/upload-icon.svg'
 import file_export from '../icons/file-export-icon.svg'
 import pdf_icon from '../icons/file-pdf-icon.svg'
@@ -63,7 +64,7 @@ const FolderContents = ({ item, openFolders, handleFolderClick, handleDocumentCl
   );
 };
 
-const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
+const DocumentsManagement = ({files, updateUserData, setIsLoading, setNewFolderAdded}) => {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [previewOption, setPreviewOption] = useState('content');
@@ -272,7 +273,7 @@ const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
   return (
     <div className="document-management">
       <AddFolderWindow isOpen={isCreatingFolder} onClose={() => setIsCreatingFolder(false)} 
-        currentPath={currentPath}/>
+        currentPath={currentPath} setNewFolderAdded={setNewFolderAdded}/>
       <div className="breadcrumb">
         <div>
           <span onClick={() => setCurrentPath([])}>Home</span>
@@ -295,10 +296,10 @@ const DocumentsManagement = ({files, updateUserData, setIsLoading}) => {
             id="file-input"
             />
             <div className='document-management-option' onClick={() => setIsCreatingFolder(true)}>
-              <img src={add_folder_icon} className='size22-icon' alt="add folder" />
+              <img src={add_folder_icon} className='size28-icon' alt="add folder" />
             </div>
             <div className='document-management-option' onClick={() => document.getElementById('file-input').click()}>
-              <img src={updload_icon} className='size24-icon' alt="upload file" />
+              <img src={add_file_icon} className='size24-icon' alt="add file" />
             </div>
           </div>
       </div>
