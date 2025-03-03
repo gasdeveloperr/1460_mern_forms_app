@@ -46,7 +46,7 @@ export const titles_to_types_object = {
   'multi_section' : 'Multiple Section',
 };
 
-export const backend_point = 'https://one460-forms-backend.onrender.com'
+export const backend_point = 'http://localhost:5000'
 //'http://localhost:5000'
 //'https://one460-forms-backend.onrender.com'
 
